@@ -7,6 +7,7 @@
 *.opensdf
 Debug
 .DS_Store
+.vs
 Rainbone.dir
 CmakeFiles
 CMakeCache.txt
