@@ -1,0 +1,1 @@
+bin\Rainbone.exe -config ./config/single.xml
