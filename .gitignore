@@ -3,5 +3,17 @@
 *.out
 *.app
 
+# Merge files
+*.orig
+
+# Binaries
+bin
+
+# Build
+build
+
+# Batfiles
+run.command
+
 # OSX files
 .DS_Store
