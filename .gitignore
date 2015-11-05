@@ -1,3 +1,4 @@
+#Visual Studio
 *.vcxproj
 *.sln
 *.vcxproj.filters
@@ -6,11 +7,29 @@
 *.sdf
 *.opensdf
 Debug
-.DS_Store
 .vs
 Rainbone.dir
 CmakeFiles
 CMakeCache.txt
 cmake_install.cmake
 x64
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Merge files
+*.orig
+
+# Binaries
 bin
+
+# Build
+build
+
+# Batfiles
+run.command
+
+# OSX files
+.DS_Store

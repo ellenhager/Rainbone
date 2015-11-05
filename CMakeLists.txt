@@ -14,8 +14,10 @@ set_property (TARGET ${TARGET} PROPERTY XCODE_ATTRIBUTE_${XCODE_PROPERTY}
 	    ${XCODE_VALUE})
 endmacro (set_xcode_property)
 
+file(GLOB SOURCES src/*.cpp)
+
 add_executable(${APP_NAME}
-	src/main.cpp)
+	${SOURCES})
 	
 set(EXAMPE_TARGET_PATH ${PROJECT_SOURCE_DIR})
 set(EXECUTABLE_OUTPUT_PATH ${EXAMPE_TARGET_PATH})
@@ -33,39 +35,29 @@ if( APPLE )
 	endif()
 endif()
 	
-if(NOT DEFINED SGCT_RELEASE_LIBRARY)
-	if(SGCT_CPP11)	
-		find_library(SGCT_RELEASE_LIBRARY
-			NAMES sgct_cpp11 libsgct_cpp11 REQUIRED)
-	else()
-		find_library(SGCT_RELEASE_LIBRARY
-			NAMES sgct libsgct REQUIRED)
-	endif()
-endif()
-		
-if(NOT DEFINED SGCT_DEBUG_LIBRARY)		
-	if(SGCT_CPP11)	
-		find_library(SGCT_DEBUG_LIBRARY 
-			NAMES sgct_cpp11d libsgct_cpp11d REQUIRED)
-	else()
-		find_library(SGCT_DEBUG_LIBRARY 
-			NAMES sgctd libsgctd REQUIRED)
-	endif()
+if(SGCT_CPP11)	
+	find_library(SGCT_RELEASE_LIBRARY
+		NAMES sgct_cpp11 libsgct_cpp11 REQUIRED)
+	find_library(SGCT_DEBUG_LIBRARY 
+		NAMES sgct_cpp11d libsgct_cpp11d REQUIRED)
+else()
+	find_library(SGCT_RELEASE_LIBRARY
+		NAMES sgct libsgct REQUIRED)
+	find_library(SGCT_DEBUG_LIBRARY 
+		NAMES sgctd libsgctd REQUIRED)
 endif()
 
-if(NOT DEFINED SGCT_INCLUDE_DIRECTORY)
-	if( WIN32 )
-		find_path(SGCT_INCLUDE_DIRECTORY 
-			NAMES sgct
-			PATHS $ENV{SGCT_ROOT_DIR}/include NO_DEFAULT_PATH
-			REQUIRED)
-	else()
-		find_path(SGCT_INCLUDE_DIRECTORY 
-			NAMES sgct
-			PATH_SUFFIXES sgct
-			PATHS $ENV{SGCT_ROOT_DIR}/include
-			REQUIRED)
-	endif()
+if( WIN32 )
+	find_path(SGCT_INCLUDE_DIRECTORY 
+		NAMES sgct
+		PATHS $ENV{SGCT_ROOT_DIR}/include NO_DEFAULT_PATH
+		REQUIRED)
+else()
+	find_path(SGCT_INCLUDE_DIRECTORY 
+		NAMES sgct
+		PATH_SUFFIXES sgct
+		PATHS $ENV{SGCT_ROOT_DIR}/include
+		REQUIRED)
 endif()
 	
 set(SGCT_LIBS
@@ -80,13 +72,13 @@ include_directories(${SGCT_INCLUDE_DIRECTORY})
 if( MSVC )
 	set(LIBS
 		${SGCT_LIBS}
-		${OPENGL_gl_LIBRARY}
+		${OPENGL_LIBRARY}
 		ws2_32
 	)
 elseif( WIN32 ) #MINGW or similar
 	set(LIBS
 		${SGCT_LIBS}
-		${OPENGL_gl_LIBRARY}
+		${OPENGL_LIBRARY}
 		ws2_32
 	)
 elseif( APPLE )
@@ -96,25 +88,26 @@ elseif( APPLE )
 
 	set(LIBS
 		${SGCT_LIBS}
-		${OPENGL_gl_LIBRARY}
+		${OPENGL_LIBRARY}
 		${COCOA_LIBRARY}
 		${IOKIT_LIBRARY}
 		${COREVIDEO_LIBRARY}
 	)
 else() #linux
-	find_package(X11 REQUIRED)
-	find_package(Threads REQUIRED)
+	find_library(X11_LIBRARY X11 REQUIRED)
+	find_library(XRANDR_LIBRARY Xrandr REQUIRED)
+	find_library(XI_LIBRARY Xi REQUIRED)
+	find_library(XXF86VM_LIBRARY Xxf86vm)
+	find_library(PTHREAD pthread REQUIRED)
 
 	set(LIBS
 		${SGCT_LIBS}
-		${OPENGL_gl_LIBRARY}
-		${X11_X11_LIB}
-		${X11_Xrandr_LIB}
-		${X11_Xinerama_LIB}
-		${X11_Xinput_LIB}
-		${X11_Xxf86vm_LIB}
-		${X11_Xcursor_LIB}
-		${CMAKE_THREAD_LIBS_INIT}		
+		${OPENGL_LIBRARY}
+		${X11_LIBRARY}
+		${XRANDR_LIBRARY}
+		${XI_LIBRARY}
+		${XXF86VM_LIBRARY}
+		${PTHREAD}
 	)
 endif()
 
@@ -167,8 +160,8 @@ else()
 	set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 endif()
 	
-#if( CMAKE_COMPILER_IS_GNUCXX )
-#	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++ -static")
-#endif()
+if( CMAKE_COMPILER_IS_GNUCXX )
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++ -static")
+endif()
 
 target_link_libraries(${APP_NAME} ${LIBS})
