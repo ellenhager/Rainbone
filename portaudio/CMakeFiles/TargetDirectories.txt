@@ -1,0 +1,2 @@
+/Users/marcus/Documents/Utbildning/LinkopingsUniversitet/5/ImmersivaMiljoer/Rainbone/portaudio/CMakeFiles/portaudio_static.dir
+/Users/marcus/Documents/Utbildning/LinkopingsUniversitet/5/ImmersivaMiljoer/Rainbone/portaudio/CMakeFiles/portaudio.dir

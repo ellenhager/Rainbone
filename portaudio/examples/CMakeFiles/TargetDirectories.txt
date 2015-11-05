@@ -1,0 +1,15 @@
+/Users/marcus/Documents/Utbildning/LinkopingsUniversitet/5/ImmersivaMiljoer/Rainbone/portaudio/examples/CMakeFiles/paex_ocean_shore.dir
+/Users/marcus/Documents/Utbildning/LinkopingsUniversitet/5/ImmersivaMiljoer/Rainbone/portaudio/examples/CMakeFiles/pa_devs.dir
+/Users/marcus/Documents/Utbildning/LinkopingsUniversitet/5/ImmersivaMiljoer/Rainbone/portaudio/examples/CMakeFiles/paex_wmme_surround.dir
+/Users/marcus/Documents/Utbildning/LinkopingsUniversitet/5/ImmersivaMiljoer/Rainbone/portaudio/examples/CMakeFiles/paex_sine_c++.dir
+/Users/marcus/Documents/Utbildning/LinkopingsUniversitet/5/ImmersivaMiljoer/Rainbone/portaudio/examples/CMakeFiles/paex_record.dir
+/Users/marcus/Documents/Utbildning/LinkopingsUniversitet/5/ImmersivaMiljoer/Rainbone/portaudio/examples/CMakeFiles/paex_saw.dir
+/Users/marcus/Documents/Utbildning/LinkopingsUniversitet/5/ImmersivaMiljoer/Rainbone/portaudio/examples/CMakeFiles/paex_wmme_ac3.dir
+/Users/marcus/Documents/Utbildning/LinkopingsUniversitet/5/ImmersivaMiljoer/Rainbone/portaudio/examples/CMakeFiles/paex_write_sine_nonint.dir
+/Users/marcus/Documents/Utbildning/LinkopingsUniversitet/5/ImmersivaMiljoer/Rainbone/portaudio/examples/CMakeFiles/paex_mono_asio_channel_select.dir
+/Users/marcus/Documents/Utbildning/LinkopingsUniversitet/5/ImmersivaMiljoer/Rainbone/portaudio/examples/CMakeFiles/pa_fuzz.dir
+/Users/marcus/Documents/Utbildning/LinkopingsUniversitet/5/ImmersivaMiljoer/Rainbone/portaudio/examples/CMakeFiles/paex_read_write_wire.dir
+/Users/marcus/Documents/Utbildning/LinkopingsUniversitet/5/ImmersivaMiljoer/Rainbone/portaudio/examples/CMakeFiles/paex_sine.dir
+/Users/marcus/Documents/Utbildning/LinkopingsUniversitet/5/ImmersivaMiljoer/Rainbone/portaudio/examples/CMakeFiles/paex_write_sine.dir
+/Users/marcus/Documents/Utbildning/LinkopingsUniversitet/5/ImmersivaMiljoer/Rainbone/portaudio/examples/CMakeFiles/paex_pink.dir
+/Users/marcus/Documents/Utbildning/LinkopingsUniversitet/5/ImmersivaMiljoer/Rainbone/portaudio/examples/CMakeFiles/paex_record_file.dir
