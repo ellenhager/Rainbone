@@ -2,29 +2,24 @@
 # SGCT Project Authors see Authors.txt
 
 cmake_minimum_required(VERSION 2.8)
-SET(APP_NAME 3D_test)
+SET(APP_NAME rainbone)
 
 SET(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "add a postfix, usually d on windows")
 SET(CMAKE_RELEASE_POSTFIX "" CACHE STRING "add a postfix, usually empty on windows")
 
 PROJECT(${APP_NAME})
 
-macro (set_xcode_property TARGET XCODE_PROPERTY XCODE_VALUE)
-set_property (TARGET ${TARGET} PROPERTY XCODE_ATTRIBUTE_${XCODE_PROPERTY}
-	    ${XCODE_VALUE})
-endmacro (set_xcode_property)
+set(CMAKE_BINARY_DIR ${PROJECT_SOURCE_DIR}/build)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 
 file(GLOB SOURCES src/*.cpp)
 
 add_executable(${APP_NAME}
 	${SOURCES})
 	
-set(EXAMPE_TARGET_PATH ${PROJECT_SOURCE_DIR})
-set(EXECUTABLE_OUTPUT_PATH ${EXAMPE_TARGET_PATH})
-	
 set_target_properties(${APP_NAME} PROPERTIES
-	RUNTIME_OUTPUT_DIRECTORY_DEBUG ${EXAMPE_TARGET_PATH}
-	RUNTIME_OUTPUT_DIRECTORY_RELEASE ${EXAMPE_TARGET_PATH}
+	RUNTIME_OUTPUT_DIRECTORY_DEBUG ${EXECUTABLE_OUTPUT_PATH}/debug
+	RUNTIME_OUTPUT_DIRECTORY_RELEASE ${EXECUTABLE_OUTPUT_PATH}/release
 )	
 	
 if( APPLE )
@@ -34,18 +29,14 @@ if( APPLE )
 		set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9")
 	endif()
 endif()
+
+find_library(SGCT_RELEASE_LIBRARY
+	NAMES sgct libsgct libsgct_cpp11
+	REQUIRED)
 	
-if(SGCT_CPP11)	
-	find_library(SGCT_RELEASE_LIBRARY
-		NAMES sgct_cpp11 libsgct_cpp11 REQUIRED)
-	find_library(SGCT_DEBUG_LIBRARY 
-		NAMES sgct_cpp11d libsgct_cpp11d REQUIRED)
-else()
-	find_library(SGCT_RELEASE_LIBRARY
-		NAMES sgct libsgct REQUIRED)
-	find_library(SGCT_DEBUG_LIBRARY 
-		NAMES sgctd libsgctd REQUIRED)
-endif()
+find_library(SGCT_DEBUG_LIBRARY 
+	NAMES sgctd libsgctd libsgct_cpp11d
+	REQUIRED)
 
 if( WIN32 )
 	find_path(SGCT_INCLUDE_DIRECTORY 
@@ -141,27 +132,20 @@ endif()
 
 if( WIN32 )
 	add_definitions(-D__WIN32__)
-	if( MINGW )
-		set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-	endif()
 elseif( APPLE  )
 	add_definitions(-D__APPLE__)
-	if(SGCT_CPP11)
-		set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++ ${CMAKE_CXX_FLAGS}")
-		set_xcode_property(${APP_NAME} CLANG_CXX_LANGUAGE_STANDARD "c++11")
-		set_xcode_property(${APP_NAME} CLANG_CXX_LIBRARY "libc++")
+	if( SGCT_CPP11 )
+    	set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++ ${CMAKE_CXX_FLAGS}")
+		add_definitions(-D__SGCT_CPP11__)
 	else()
 		set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libstdc++ ${CMAKE_CXX_FLAGS}")
-		set_xcode_property(${APP_NAME} CLANG_CXX_LANGUAGE_STANDARD "c++0x")
-		set_xcode_property(${APP_NAME} CLANG_CXX_LIBRARY "libstdc++")
 	endif()
 else()
 	add_definitions(-D__LINUX__)
-	set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 endif()
 	
-if( CMAKE_COMPILER_IS_GNUCXX )
-	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++ -static")
-endif()
+#if( CMAKE_COMPILER_IS_GNUCXX )
+#	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++ -static")
+#endif()
 
 target_link_libraries(${APP_NAME} ${LIBS})
