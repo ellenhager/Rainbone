@@ -11,7 +11,6 @@ void myEncodeFun();
 void myDecodeFun();
 void myCleanUpFun();
 
-size_t myTextureHandle;
 sgct_utils::SGCTBox * myBox = NULL;
 GLint Matrix_Loc = -1;
 
@@ -51,18 +50,17 @@ void myDrawFun()
 	glEnable( GL_DEPTH_TEST );
 	glEnable( GL_CULL_FACE );
 
-	double speed = 25.0;
+	double speed = 2.0;
 
 	//create scene transform (animation)
 	glm::mat4 scene_mat = glm::translate( glm::mat4(1.0f), glm::vec3( 0.0f, 0.0f, -3.0f) );
 	scene_mat = glm::rotate( scene_mat, static_cast<float>( curr_time.getVal() * speed ), glm::vec3(0.0f, -1.0f, 0.0f));
 	scene_mat = glm::rotate( scene_mat, static_cast<float>( curr_time.getVal() * (speed/2.0) ), glm::vec3(1.0f, 0.0f, 0.0f));
 
-	glm::mat4 MVP = gEngine->getActiveModelViewProjectionMatrix() * scene_mat;
+	glm::mat4 MVP = gEngine->getCurrentModelViewProjectionMatrix() * scene_mat;
 
 	glActiveTexture(GL_TEXTURE0);
-	//glBindTexture( GL_TEXTURE_2D, sgct::TextureManager::instance()->getTextureByName("box") );
-	glBindTexture( GL_TEXTURE_2D, sgct::TextureManager::instance()->getTextureByHandle(myTextureHandle) );
+	glBindTexture( GL_TEXTURE_2D, sgct::TextureManager::instance()->getTextureId("box") );
 
 	sgct::ShaderManager::instance()->bindShaderProgram( "xform" );
 
@@ -89,7 +87,7 @@ void myInitOGLFun()
 {
 	sgct::TextureManager::instance()->setAnisotropicFilterSize(8.0f);
 	sgct::TextureManager::instance()->setCompression(sgct::TextureManager::S3TC_DXT);
-	sgct::TextureManager::instance()->loadTexure(myTextureHandle, "box", "box.png", true);
+	sgct::TextureManager::instance()->loadTexure("box", "box.png", true);
 
 	myBox = new sgct_utils::SGCTBox(2.0f, sgct_utils::SGCTBox::Regular);
 	//myBox = new sgct_utils::SGCTBox(2.0f, sgct_utils::SGCTBox::CubeMap);
