@@ -17,16 +17,16 @@ GLint Matrix_Loc = -1;
 //variables to share across cluster
 sgct::SharedDouble curr_time(0.0);
 
-int main( int argc, char* argv[] )
+int main(int argc, char* argv[])
 {
-	gEngine = new sgct::Engine( argc, argv );
+	gEngine = new sgct::Engine(argc, argv);
 
-	gEngine->setInitOGLFunction( myInitOGLFun );
-	gEngine->setDrawFunction( myDrawFun );
-	gEngine->setPreSyncFunction( myPreSyncFun );
-	gEngine->setCleanUpFunction( myCleanUpFun );
+	gEngine->setInitOGLFunction(myInitOGLFun);
+	gEngine->setDrawFunction(myDrawFun);
+	gEngine->setPreSyncFunction(myPreSyncFun);
+	gEngine->setCleanUpFunction(myCleanUpFun);
 
-	if( !gEngine->init( sgct::Engine::OpenGL_3_3_Core_Profile ) )
+	if (!gEngine->init(sgct::Engine::OpenGL_3_3_Core_Profile))
 	{
 		delete gEngine;
 		return EXIT_FAILURE;
