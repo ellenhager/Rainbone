@@ -12,6 +12,8 @@
 
 * Press ``Configure``
 
+* Choose the option ``Unixmakefiles`` in the dropdown menu
+
 * Press the ``SGCT`` arrow and check if ``SGCT_DEBUG_LIBRARY`` is located in ``/usr/local/lib/libsgct_cpp11d.a``, and if ``SGCT_RELEASE_LIBRARY`` is located in ``/usr/local/lib/libsgct_cpp11.a``.  If they are, great! If not, change it to the ones specified.
 
 * Press ``Configure`` again
