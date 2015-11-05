@@ -7,10 +7,10 @@
 *.orig
 
 # Binaries
-bin
+bin/*
 
 # Build
-build
+build/*
 
 # Batfiles
 run.command
