@@ -1,1 +1,0 @@
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/paex_mono_asio_channel_select.dir/paex_mono_asio_channel_select.o  -o paex_mono_asio_channel_select  -lportaudio_static 
