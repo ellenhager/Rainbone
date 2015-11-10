@@ -8,25 +8,11 @@ void decode();
 void keyCallback(int key, int action);
 void cleanUp();
 
-<<<<<<< HEAD
-void myDrawFun();
-void myPreSyncFun();
-void myInitOGLFun();
-void myEncodeFun();
-void myDecodeFun();
-void myCleanUpFun();
-
-sgct_utils::SGCTBox * myBox = NULL;
-GLint Matrix_Loc = -1;
-
-//variables to share across cluster
-=======
 // Pointer to the sgct engine
 sgct::Engine * gEngine;
 // Container for the levels
 std::vector<Level *> mLevels;
 // Variables to share across cluster
->>>>>>> 3D
 sgct::SharedDouble curr_time(0.0);
 // Track which level we want to rotate
 unsigned int mLevelIndex = 0;
@@ -54,28 +40,17 @@ int main(int argc, char* argv[]) {
     // Main loop
     gEngine->render();
 
-<<<<<<< HEAD
-	double speed = 2.0;
-=======
     // Clean up
     delete gEngine;
->>>>>>> 3D
 
     // Exit program
     exit( EXIT_SUCCESS );
 }
 
-<<<<<<< HEAD
-	glm::mat4 MVP = gEngine->getCurrentModelViewProjectionMatrix() * scene_mat;
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture( GL_TEXTURE_2D, sgct::TextureManager::instance()->getTextureId("box") );
-=======
 
 void render() {
 
     std::vector<glm::mat4> sceneMatrices;
->>>>>>> 3D
 
     sceneMatrices.push_back(gEngine->getCurrentModelViewProjectionMatrix());
     sceneMatrices.push_back(gEngine->getCurrentModelViewMatrix());
@@ -93,16 +68,7 @@ void preSync() {
         curr_time.setVal(sgct::Engine::getTime());
 }
 
-
-<<<<<<< HEAD
-void myInitOGLFun()
-{
-	sgct::TextureManager::instance()->setAnisotropicFilterSize(8.0f);
-	sgct::TextureManager::instance()->setCompression(sgct::TextureManager::S3TC_DXT);
-	sgct::TextureManager::instance()->loadTexure("box", "box.png", true);
-=======
 void initialize() {
->>>>>>> 3D
 
     mLevels.push_back(new Level("assets/level1.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
     mLevels.push_back(new Level("assets/level2.obj", glm::vec4(0.2f, 0.8f, 0.2f, 1.0f)));
@@ -129,11 +95,10 @@ void decode() {
 
 
 void keyCallback(int key, int action) {
-    
+
     if( gEngine->isMaster() ) {
 
         switch( key ) {
-        
             case SGCT_KEY_RIGHT:
                 mLevels[mLevelIndex]->incrementAngle(1.0f);
             break;
@@ -160,7 +125,6 @@ void keyCallback(int key, int action) {
                 }
             break;
 
-        
         }
     }
 }
