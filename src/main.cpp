@@ -87,7 +87,7 @@ void myInitOGLFun()
 {
 	sgct::TextureManager::instance()->setAnisotropicFilterSize(8.0f);
 	sgct::TextureManager::instance()->setCompression(sgct::TextureManager::S3TC_DXT);
-	sgct::TextureManager::instance()->loadTexure("box", "box.png", true);
+	sgct::TextureManager::instance()->loadTexure("box", "../assets/box.png", true);
 
 	myBox = new sgct_utils::SGCTBox(2.0f, sgct_utils::SGCTBox::Regular);
 	//myBox = new sgct_utils::SGCTBox(2.0f, sgct_utils::SGCTBox::CubeMap);
@@ -98,8 +98,8 @@ void myInitOGLFun()
 	glFrontFace(GL_CCW); //our polygon winding is counter clockwise
 
 	sgct::ShaderManager::instance()->addShaderProgram( "xform",
-			"shaders/SimpleVertexShader.vertexshader",
-			"shaders/SimpleFragmentShader.fragmentshader" );
+			"../shaders/SimpleVertexShader.vertexshader",
+			"../shaders/SimpleFragmentShader.fragmentshader" );
 
 	sgct::ShaderManager::instance()->bindShaderProgram( "xform" );
 
