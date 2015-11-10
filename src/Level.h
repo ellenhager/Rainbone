@@ -7,6 +7,7 @@
 #define I_NM 3
 
 #include <iostream>
+#include <math.h>
 #include "sgct.h"
 #include "glm/gtc/matrix_inverse.hpp"
 #include <glm/gtc/matrix_transform.hpp>
@@ -23,11 +24,14 @@ public:
     void initialize(glm::vec3);
     void render(std::vector<glm::mat4>, double);
 
+    void incrementAngle(float a) { mAngle += a; };
+
 private:
 
     std::vector<glm::vec3> mVerts;
     std::vector<glm::vec3> mNormals;
 
+    float mAngle;
 
     // Shader data
     GLuint vertexArray;

@@ -10,10 +10,14 @@ Level::Level(const char * objPath, glm::vec4 c) {
     mMaterial.specular      = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     mMaterial.specularity   = 50.0f;
     mMaterial.shinyness     = 0.6f;
+
+    mAngle = 0.0f;
 }
 
 
 Level::~Level() {
+
+    // Clear vectors and deallocate memory
     mVerts.clear();
     mVerts.shrink_to_fit();
 
@@ -89,20 +93,24 @@ void Level::initialize(glm::vec3 lightPosition) {
 
 void Level::render(std::vector<glm::mat4> matrices, double time) {
 
-
+    // Enable backface culling and depth test, we dont want to draw unnecessary stuff
     glEnable( GL_DEPTH_TEST );
     glEnable( GL_CULL_FACE );
 
-    float angle = 27.0f;
-    //create scene transform (animation)
-    glm::mat4 scene_mat = glm::translate( glm::mat4(1.0f), glm::vec3( 0.0f, 0.0f, 0.0f) );
-    //scene_mat = glm::scale( scene_mat, glm::vec3(0.2f, 0.2f, 0.2f) );
-    scene_mat = glm::rotate( scene_mat, angle , glm::vec3(-1.0f, 0.0f, 0.0f));
+    // Angle in radians, glm states that the rotation is using angle in degrees, but it's a lie, use radians instead.
+    float tilt = M_PI * 27.0f / 180.0f;
+    // Create scene transform (animation)
+    glm::mat4 scene_mat = glm::rotate( glm::mat4(1.0f), tilt , glm::vec3(-1.0f, 0.0f, 0.0f));
+    glm::mat4 rot = glm::rotate( glm::mat4(1.0f), static_cast<float>(mAngle * M_PI / 180.0f) , glm::vec3(0.0f, 1.0f, 0.0f));
 
-    matrices[I_MVP] = matrices[I_MVP] * scene_mat;
+    // Apply scene transforms to MVP and MV matrices
+    matrices[I_MVP] = matrices[I_MVP] * scene_mat * rot;
+    matrices[I_MV]  = matrices[I_MV]  * scene_mat;
 
+    // Bind shader program
     sgct::ShaderManager::instance()->bindShaderProgram( "xform" );
 
+    // Set uniform values, so that we have some data to work with in the shaders
     glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, &matrices[I_MVP][0][0]);
     glUniformMatrix4fv(MVLoc, 1, GL_FALSE, &matrices[I_MV][0][0]);
     glUniformMatrix4fv(MVLightLoc, 1, GL_FALSE, &matrices[I_MV_LIGHT][0][0]);
