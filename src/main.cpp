@@ -7,7 +7,7 @@ void encode();
 void decode();
 void keyCallback(int key, int action);
 void cleanUp();
-
+void initAudio();
 // Pointer to the sgct engine
 sgct::Engine * gEngine;
 // Container for the levels
@@ -47,7 +47,9 @@ int main(int argc, char* argv[]) {
     exit( EXIT_SUCCESS );
 }
 
+void initAudio() {
 
+}
 void render() {
 
     std::vector<glm::mat4> sceneMatrices;

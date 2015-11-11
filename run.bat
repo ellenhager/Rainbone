@@ -1,1 +1,1 @@
-bin\Rainbone.exe -config ./config/single.xml
+bin\3D_test.exe -config ./config/single.xml
