@@ -1,0 +1,1 @@
+bin\3D_test.exe -config ./config/single.xml
