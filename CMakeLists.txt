@@ -2,6 +2,7 @@
 # SGCT Project Authors see Authors.txt
 
 cmake_minimum_required(VERSION 2.8)
+
 SET(APP_NAME rainbone)
 
 SET(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "add a postfix, usually d on windows")
@@ -12,10 +13,10 @@ PROJECT(${APP_NAME})
 set(CMAKE_BINARY_DIR ${PROJECT_SOURCE_DIR}/build)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
-file(GLOB SOURCES src/*.cpp)
+file(GLOB SOURCE src/*.cpp)
 
 add_executable(${APP_NAME}
-	${SOURCES})
+	${SOURCE})
 	
 set_target_properties(${APP_NAME} PROPERTIES
 	RUNTIME_OUTPUT_DIRECTORY_DEBUG ${EXECUTABLE_OUTPUT_PATH}/debug
@@ -39,18 +40,18 @@ find_library(SGCT_DEBUG_LIBRARY
 	REQUIRED)
 
 if( WIN32 )
-	find_path(SGCT_INCLUDE_DIRECTORY 
+	find_path(SGCT_INCLUDE_DIRECTORY
 		NAMES sgct
 		PATHS $ENV{SGCT_ROOT_DIR}/include NO_DEFAULT_PATH
 		REQUIRED)
 else()
-	find_path(SGCT_INCLUDE_DIRECTORY 
+	find_path(SGCT_INCLUDE_DIRECTORY
 		NAMES sgct
 		PATH_SUFFIXES sgct
 		PATHS $ENV{SGCT_ROOT_DIR}/include
 		REQUIRED)
 endif()
-	
+
 set(SGCT_LIBS
 	debug ${SGCT_DEBUG_LIBRARY}
 	optimized ${SGCT_RELEASE_LIBRARY}
@@ -104,12 +105,12 @@ endif()
 
 if( MSVC )
 	#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /LTCG")
-	
+
 		if( "${MSVC_VERSION}" LESS 1600 ) #less than visual studio 2010
 		STRING(REPLACE "INCREMENTAL:YES" "INCREMENTAL:NO" replacementFlags
 			${CMAKE_EXE_LINKER_FLAGS_DEBUG})
 		SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "${replacementFlags}" )
-		
+
 		STRING(REPLACE "INCREMENTAL:YES" "INCREMENTAL:NO" replacementFlags
 			${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO})
 		SET(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "${replacementFlags}" )
@@ -117,15 +118,15 @@ if( MSVC )
 		STRING(REPLACE "INCREMENTAL" "INCREMENTAL:NO" replacementFlags
 			${CMAKE_EXE_LINKER_FLAGS_DEBUG})
 		SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "${replacementFlags}" )
-		
+
 		STRING(REPLACE "INCREMENTAL" "INCREMENTAL:NO" replacementFlags
 			${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO})
 		SET(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "${replacementFlags}" )
 	endif()
-	
+
 	#MESSAGE(STATUS "flags: ${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
 endif()
-	
+
 if(MSVC AND NOT "${MSVC_VERSION}" LESS 1400)
 	add_definitions( "/MP" )
 endif()

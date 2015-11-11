@@ -6,6 +6,7 @@
 *.pdb
 *.sdf
 *.opensdf
+.vs
 Debug
 .vs
 rainbone.dir
