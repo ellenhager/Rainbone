@@ -125,9 +125,7 @@ void keyCallback(int key, int action) {
                     else
                         mLevelIndex--;
                 }
-            break;
-
-        
+            break;        
         }
     }
 }
