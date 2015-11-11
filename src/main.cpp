@@ -1,4 +1,5 @@
 #include "Level.h"
+//#include "portaudio.h"
 
 void render();
 void preSync();
@@ -19,6 +20,9 @@ unsigned int mLevelIndex = 0;
 
 
 int main(int argc, char* argv[]) {
+	/*pastream *stream;
+	paerror err;
+	static float data;*/
 
     gEngine = new sgct::Engine(argc, argv);
 
@@ -37,11 +41,62 @@ int main(int argc, char* argv[]) {
     sgct::SharedData::instance()->setEncodeFunction(encode);
     sgct::SharedData::instance()->setDecodeFunction(decode);
 
+	//init audio
+	//err = pa_initialize();
+	//if (err != panoerror) {
+	//	std::cout << pa_geterrortext(err) << std::endl;
+	//	err = pa_terminate();
+	//	if (err != panoerror)
+	//		std::cout << "error message: " << pa_geterrortext(err) << std::endl;
+	//	return err;
+	//}
+
+	///* open an audio i/o stream. */
+	//err = pa_opendefaultstream(&stream,
+	//	1,          /* one input channel */
+	//	1,          /* one output channel */
+	//	pafloat32,  /* 32 bit floating point output */
+	//	44100,
+	//	256,        /* frames per buffer, i.e. the number
+	//				of sample frames that portaudio will
+	//				request from the callback. many apps
+	//				may want to use
+	//				paframesperbufferunspecified, which
+	//				tells portaudio to pick the best,
+	//				possibly changing, buffer size.*/
+	//	patestcallback, /* this is your callback function */
+	//	&data);
+	//if (err != panoerror) {
+	//	pa_terminate();
+	//	std::cout << "error message:" << pa_geterrortext(err) << std::endl;
+	//	return err;
+	//}
+
+	//err = pa_startstream(stream);
+	//if (err != panoerror) {
+	//	pa_terminate();
+	//	std::cout << "error message: " << pa_geterrortext(err) << std::endl;
+	//	return err;
+	//}
+
     // Main loop
     gEngine->render();
 
     // Clean up
     delete gEngine;
+
+	//err = pa_stopstream(stream);
+	//if (err != panoerror) {
+	//	pa_terminate();
+	//	std::cout << "error message: " << pa_geterrortext(err) << std::endl;
+	//	return err;
+	//}
+	//err = pa_closestream(stream);
+	//if (err != panoerror) {
+	//	pa_terminate();
+	//	std::cout << "error message: " << pa_geterrortext(err) << std::endl;
+	//	return err;
+	//}
 
     // Exit program
     exit( EXIT_SUCCESS );
@@ -50,6 +105,21 @@ int main(int argc, char* argv[]) {
 void initAudio() {
 
 }
+
+//static int audioCallback(const void *inputbuffer, void *outputbuffer,
+//	unsigned long framesperbuffer,
+//	const pastreamcallbacktimeinfo* timeinfo,
+//	pastreamcallbackflags statusflags,
+//	void *userdata)
+//{
+//	const float *in = (const float*)inputbuffer;
+//	float *out = (float*)outputbuffer;
+//	for (int i = 0; i<framesperbuffer; i++)
+//	{
+//		*out++ = *in++;
+//	}
+//	return 0;
+//}
 void render() {
 
     std::vector<glm::mat4> sceneMatrices;
