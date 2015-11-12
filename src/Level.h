@@ -22,7 +22,7 @@ public:
     ~Level();
 
     void initialize(glm::vec3);
-    void render(std::vector<glm::mat4>, double);
+    void render(std::vector<glm::mat4>);
 
     void incrementAngle(float a) { mAngle += a; };
 

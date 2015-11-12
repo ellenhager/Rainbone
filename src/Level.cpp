@@ -91,7 +91,7 @@ void Level::initialize(glm::vec3 lightPosition) {
 }
 
 
-void Level::render(std::vector<glm::mat4> matrices, double time) {
+void Level::render(std::vector<glm::mat4> matrices) {
 
     // Enable backface culling and depth test, we dont want to draw unnecessary stuff
     glEnable( GL_DEPTH_TEST );

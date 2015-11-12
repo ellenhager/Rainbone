@@ -1,4 +1,5 @@
 #include "Level.h"
+#include "Character.h"
 
 void render();
 void preSync();
@@ -12,6 +13,8 @@ void cleanUp();
 sgct::Engine * gEngine;
 // Container for the levels
 std::vector<Level *> mLevels;
+// Our cool charcter
+Character * mCharacter;
 // Variables to share across cluster
 sgct::SharedDouble curr_time(0.0);
 // Track which level we want to rotate
@@ -58,7 +61,7 @@ void render() {
     sceneMatrices.push_back(glm::inverseTranspose(glm::mat4(gEngine->getCurrentModelViewMatrix())));
 
     for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
-        (*it)->render(sceneMatrices, static_cast<float>(curr_time.getVal()));
+        (*it)->render(sceneMatrices);
 }
 
 
@@ -75,6 +78,8 @@ void initialize() {
     mLevels.push_back(new Level("assets/level2.obj", glm::vec4(0.2f, 0.8f, 0.2f, 1.0f)));
     mLevels.push_back(new Level("assets/level3.obj", glm::vec4(0.2f, 0.2f, 0.8f, 1.0f)));
     mLevels.push_back(new Level("assets/level4.obj", glm::vec4(0.8f, 0.8f, 0.2f, 1.0f)));
+
+    mCharacter = new Character(glm::vec3(0.0f, 0.0f, -7.0f), "assets/cone.obj", glm::vec4(0.96f, 0.4f, 0.95f, 1.0f));
 
     glm::vec3 lightPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 
