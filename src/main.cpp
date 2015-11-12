@@ -8,6 +8,7 @@ void encode();
 void decode();
 void keyCallback(int key, int action);
 void cleanUp();
+void setLevelAngles(std::vector<float>);
 
 // Pointer to the sgct engine
 sgct::Engine * gEngine;
@@ -19,6 +20,8 @@ Character * mCharacter;
 sgct::SharedDouble curr_time(0.0);
 // Track which level we want to rotate
 unsigned int mLevelIndex = 0;
+
+sgct::SharedVector<float> mSharedLevelAngles;
 
 
 int main(int argc, char* argv[]) {
@@ -67,8 +70,24 @@ void render() {
 
 void preSync() {
 
-    if(gEngine->isMaster())
+
+    if(gEngine->isMaster()) {   // If master, set all variables that needs to be synced
+        
+        // Get the current time, we might want to use this later
         curr_time.setVal(sgct::Engine::getTime());
+
+        // Set the angles for all levels if we are the master
+        std::vector<float> localLevelAngles;
+
+        for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it) {
+            localLevelAngles.push_back((*it)->getAngle());
+        }
+        mSharedLevelAngles.setVal(localLevelAngles);
+
+    } else {    // If slave, just read the variables that we have shared
+        
+        setLevelAngles(mSharedLevelAngles.getVal());
+    }
 }
 
 
@@ -91,12 +110,14 @@ void initialize() {
 void encode() {
 
     sgct::SharedData::instance()->writeDouble(&curr_time);
+    sgct::SharedData::instance()->writeVector(&mSharedLevelAngles);
 }
 
 
 void decode() {
 
     sgct::SharedData::instance()->readDouble(&curr_time);
+    sgct::SharedData::instance()->readVector(&mSharedLevelAngles);
 }
 
 
@@ -139,4 +160,24 @@ void keyCallback(int key, int action) {
 void cleanUp() {
     mLevels.clear();
     mLevels.shrink_to_fit();
+}
+
+
+void setLevelAngles(std::vector<float> angles) {
+
+    // If dimensions doesn't match, something went wrong
+    if(angles.size() != mLevels.size()) {
+        std::cout << "Error when syncing level angles - size must match!" << std::endl;
+        std::cout << "angles.size(): " << angles.size() << std::endl;
+        std::cout << "mLevels.size(): " << mLevels.size() << std::endl;
+        return;
+    }
+
+    unsigned int index = 0;
+
+    for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it) {
+        
+        (*it)->setAngle(angles[index]);
+        index++;
+    }
 }

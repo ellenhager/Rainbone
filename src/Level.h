@@ -19,12 +19,18 @@ class Level {
 public:
 
     Level(const char *, glm::vec4);
+    
     ~Level();
 
     void initialize(glm::vec3);
+    
     void render(std::vector<glm::mat4>);
 
     void incrementAngle(float a) { mAngle += a; };
+
+    float getAngle() { return mAngle; };
+
+    void setAngle(float a) { mAngle = a; };
 
 private:
 
