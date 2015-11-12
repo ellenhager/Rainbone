@@ -35,14 +35,26 @@ find_library(SGCT_RELEASE_LIBRARY
 	NAMES sgct libsgct libsgct_cpp11
 	REQUIRED)
 	
-find_library(SGCT_DEBUG_LIBRARY 
+find_library(SGCT_DEBUG_LIBRARY
 	NAMES sgctd libsgctd libsgct_cpp11d
+	REQUIRED)
+
+find_library(PORTAUDIO_DEBUG_LIBRARY
+	NAMES portaudio_x64
+	REQUIRED)
+
+find_library(PORTAUDIO_RELEASE_LIBRARY
+	NAMES portaudio_x64
 	REQUIRED)
 
 if( WIN32 )
 	find_path(SGCT_INCLUDE_DIRECTORY
 		NAMES sgct
 		PATHS $ENV{SGCT_ROOT_DIR}/include NO_DEFAULT_PATH
+		REQUIRED)
+	find_path(PORTAUDIO_INCLUDE_DIRECTORY
+		NAMES portaudio
+		PATHS $ENV{PORTAUDIO_ROOT_DIR}/include NO_DEFAULT_PATH
 		REQUIRED)
 else()
 	find_path(SGCT_INCLUDE_DIRECTORY
@@ -56,14 +68,19 @@ set(SGCT_LIBS
 	debug ${SGCT_DEBUG_LIBRARY}
 	optimized ${SGCT_RELEASE_LIBRARY}
 )
+set(PORTAUDIO_LIBS
+	debug ${PORTAUDIO_DEBUG_LIBRARY}
+	optimized ${PORTAUDIO_RELEASE_LIBRARY}
+)
 
 find_package(OpenGL REQUIRED)
 
-include_directories(${SGCT_INCLUDE_DIRECTORY})
+include_directories(${SGCT_INCLUDE_DIRECTORY} ${PORTAUDIO_INCLUDE_DIRECTORY})
 
 if( MSVC )
 	set(LIBS
 		${SGCT_LIBS}
+		${PORTAUDIO_LIBS}
 		${OPENGL_LIBRARY}
 		ws2_32
 	)

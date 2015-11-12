@@ -1,5 +1,5 @@
 #include "Level.h"
-//#include "portaudio.h"
+#include "portaudio.h"
 
 void render();
 void preSync();
@@ -20,9 +20,9 @@ unsigned int mLevelIndex = 0;
 
 
 int main(int argc, char* argv[]) {
-	/*pastream *stream;
-	paerror err;
-	static float data;*/
+	//pastream *stream;
+	//paerror err;
+	static float data;
 
     gEngine = new sgct::Engine(argc, argv);
 
@@ -106,8 +106,6 @@ void initAudio() {
 
 }
 
-<<<<<<< HEAD
-=======
 //static int audioCallback(const void *inputbuffer, void *outputbuffer,
 //	unsigned long framesperbuffer,
 //	const pastreamcallbacktimeinfo* timeinfo,
@@ -122,7 +120,6 @@ void initAudio() {
 //	}
 //	return 0;
 //}
->>>>>>> voice
 void render() {
 
     std::vector<glm::mat4> sceneMatrices;
