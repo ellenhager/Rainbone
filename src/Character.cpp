@@ -100,9 +100,9 @@ void Character::render(std::vector<glm::mat4> matrices) {
     glEnable( GL_CULL_FACE );
 
     // Angle in radians, glm states that the rotation is using angle in degrees, but it's a lie, use radians instead.
-    //float tilt = M_PI * 27.0f / 180.0f;
+    float tilt = M_PI * 27.0f / 180.0f;
     // Create scene transform (animation)
-    //glm::mat4 scene_mat = glm::rotate( glm::mat4(1.0f), tilt , glm::vec3(-1.0f, 0.0f, 0.0f));
+    glm::mat4 scene_mat = glm::rotate( glm::mat4(1.0f), tilt , glm::vec3(-1.0f, 0.0f, 0.0f));
     //glm::mat4 rot = glm::rotate( glm::mat4(1.0f), static_cast<float>(mAngle * M_PI / 180.0f) , glm::vec3(0.0f, 1.0f, 0.0f));
     //glm::mat4 scene_mat = glm::rotate(glm::mat4(1.0f), );
 
@@ -148,11 +148,13 @@ void Character::render(std::vector<glm::mat4> matrices) {
 }
 
 
-void Character::convertToSpherical(glm::vec3 position) {
+glm::vec3 Character::convertToSpherical(glm::vec3 position) {
 
     mPosition.x = sqrt((position.x * position.x) + (position.y * position.y) + (position.z * position.z));
-    mPosition.y = acos(z / (mPosition.x));
-    mPosition.z = atan2(y, x);
+    mPosition.y = acos(mPosition.z / (mPosition.x));
+    mPosition.z = atan2(mPosition.x, mPosition.y);
+
+    return glm::vec3(0.0f);
 }
 
 /*glm::vec3 Character::convertToCartesian() {

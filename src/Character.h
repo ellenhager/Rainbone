@@ -1,6 +1,11 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
+#define I_MVP 0
+#define I_MV 1
+#define I_MV_LIGHT 2
+#define I_NM 3
+
 #include <iostream>
 #include <math.h>
 #include <sgct.h>
@@ -22,7 +27,7 @@ public:
 private:
 
     glm::vec3 convertToCartesian();
-    glm::vec3 convertToSpherical();
+    glm::vec3 convertToSpherical(glm::vec3);
 
     //glm::mat4 mTransform;
 
