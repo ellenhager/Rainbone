@@ -62,6 +62,11 @@ else()
 		PATH_SUFFIXES sgct
 		PATHS $ENV{SGCT_ROOT_DIR}/include
 		REQUIRED)
+	find_path(PORTAUDIO_INCLUDE_DIRECTORY
+		NAMES portaudio
+		PATH_SUFFIXES portaudio
+		PATHS $ENV{PORTAUDIO_ROOT_DIR}/include
+		REQUIRED)
 endif()
 
 set(SGCT_LIBS
@@ -97,6 +102,7 @@ elseif( APPLE )
 
 	set(LIBS
 		${SGCT_LIBS}
+		${PORTAUDIO_LIBS}
 		${OPENGL_LIBRARY}
 		${COCOA_LIBRARY}
 		${IOKIT_LIBRARY}
@@ -111,6 +117,7 @@ else() #linux
 
 	set(LIBS
 		${SGCT_LIBS}
+		${PORTAUDIO_LIBS}
 		${OPENGL_LIBRARY}
 		${X11_LIBRARY}
 		${XRANDR_LIBRARY}
