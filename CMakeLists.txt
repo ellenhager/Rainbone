@@ -40,11 +40,11 @@ find_library(SGCT_DEBUG_LIBRARY
 	REQUIRED)
 
 find_library(PORTAUDIO_DEBUG_LIBRARY
-	NAMES portaudio_x64
+	NAMES portaudio libportaudio
 	REQUIRED)
 
 find_library(PORTAUDIO_RELEASE_LIBRARY
-	NAMES portaudio_x64
+	NAMES portaudio libportaudio
 	REQUIRED)
 
 if( WIN32 )
@@ -99,6 +99,17 @@ elseif( APPLE )
 	find_library(COCOA_LIBRARY Cocoa REQUIRED)
 	find_library(IOKIT_LIBRARY IOKit REQUIRED)
 	find_library(COREVIDEO_LIBRARY CoreVideo REQUIRED)
+	find_library(COREAUDIO_LIBRARY CoreAudio REQUIRED)
+	find_library(AUDIOTOOLBOX_LIBRARY AudioToolbox REQUIRED)
+	find_library(AUDIOUNIT_LIBRARY AudioUnit REQUIRED)
+	find_library(CORESERVICES_LIBRARY CoreServices REQUIRED)
+	find_library(CARBON_LIBRARY Carbon REQUIRED)
+
+#AudioToolbox.framework
+#AudioUnit.framework
+#CoreServices.framework
+#Carbon.framework
+
 
 	set(LIBS
 		${SGCT_LIBS}
@@ -107,6 +118,11 @@ elseif( APPLE )
 		${COCOA_LIBRARY}
 		${IOKIT_LIBRARY}
 		${COREVIDEO_LIBRARY}
+		${COREAUDIO_LIBRARY}
+		${AUDIOTOOLBOX_LIBRARY}
+		${AUDIOUNIT_LIBRARY}
+		${CORESERVICES_LIBRARY}
+		${CARBON_LIBRARY}
 	)
 else() #linux
 	find_library(X11_LIBRARY X11 REQUIRED)
