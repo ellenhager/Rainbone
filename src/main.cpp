@@ -5,10 +5,15 @@ void render();
 void preSync();
 void initialize();
 void encode();
-void decode();
+void decode();	
 void keyCallback(int key, int action);
 void cleanUp();
 void initAudio();
+static int audioCallback(const void *inputbuffer, void *outputbuffer,
+	unsigned long framesperbuffer,
+	const PaStreamCallbackTimeInfo* timeinfo,
+	PaStreamCallbackFlags statusflags,
+	void *userdata);
 // Pointer to the sgct engine
 sgct::Engine * gEngine;
 // Container for the levels
@@ -20,8 +25,8 @@ unsigned int mLevelIndex = 0;
 
 
 int main(int argc, char* argv[]) {
-	//pastream *stream;
-	//paerror err;
+	PaStream *stream;
+	PaError err;
 	static float data;
 
     gEngine = new sgct::Engine(argc, argv);
@@ -42,42 +47,43 @@ int main(int argc, char* argv[]) {
     sgct::SharedData::instance()->setDecodeFunction(decode);
 
 	//init audio
-	//err = pa_initialize();
-	//if (err != panoerror) {
-	//	std::cout << pa_geterrortext(err) << std::endl;
-	//	err = pa_terminate();
-	//	if (err != panoerror)
-	//		std::cout << "error message: " << pa_geterrortext(err) << std::endl;
-	//	return err;
-	//}
+	err = Pa_Initialize();
+	if (err != paNoError) {
+		std::cout << Pa_GetErrorText(err) << std::endl;
+		err = Pa_Terminate();
+		if (err != paNoError)
+			std::cout << "error message: " << Pa_GetErrorText(err) << std::endl;
+		return err;
+	}
 
-	///* open an audio i/o stream. */
-	//err = pa_opendefaultstream(&stream,
-	//	1,          /* one input channel */
-	//	1,          /* one output channel */
-	//	pafloat32,  /* 32 bit floating point output */
-	//	44100,
-	//	256,        /* frames per buffer, i.e. the number
-	//				of sample frames that portaudio will
-	//				request from the callback. many apps
-	//				may want to use
-	//				paframesperbufferunspecified, which
-	//				tells portaudio to pick the best,
-	//				possibly changing, buffer size.*/
-	//	patestcallback, /* this is your callback function */
-	//	&data);
-	//if (err != panoerror) {
-	//	pa_terminate();
-	//	std::cout << "error message:" << pa_geterrortext(err) << std::endl;
-	//	return err;
-	//}
+	/* open an audio i/o stream. */
+	err = Pa_OpenDefaultStream(&stream,
+		1,          /* one input channel */
+		1,          /* one output channel */
+		paFloat32,  /* 32 bit floating point output */
+		44100,
+		256,        /* frames per buffer, i.e. the number
+					of sample frames that portaudio will
+					request from the callback. many apps
+					may want to use
+					paframesperbufferunspecified, which
+					tells portaudio to pick the best,
+					possibly changing, buffer size.*/
+		audioCallback, /* this is your callback function */
+		&data);
 
-	//err = pa_startstream(stream);
-	//if (err != panoerror) {
-	//	pa_terminate();
-	//	std::cout << "error message: " << pa_geterrortext(err) << std::endl;
-	//	return err;
-	//}
+	if (err != paNoError) {
+		std::cout << Pa_GetErrorText(err) << std::endl;
+		err = Pa_Terminate();
+		return err;
+	}
+
+	err = Pa_StartStream(stream);
+	if (err != paNoError) {
+		std::cout << Pa_GetErrorText(err) << std::endl;
+		err = Pa_Terminate();
+		return err;
+	}
 
     // Main loop
     gEngine->render();
@@ -85,18 +91,20 @@ int main(int argc, char* argv[]) {
     // Clean up
     delete gEngine;
 
-	//err = pa_stopstream(stream);
-	//if (err != panoerror) {
-	//	pa_terminate();
-	//	std::cout << "error message: " << pa_geterrortext(err) << std::endl;
-	//	return err;
-	//}
-	//err = pa_closestream(stream);
-	//if (err != panoerror) {
-	//	pa_terminate();
-	//	std::cout << "error message: " << pa_geterrortext(err) << std::endl;
-	//	return err;
-	//}
+	// Stop the stream
+	err = Pa_StopStream(stream);
+	if (err != paNoError) {
+		std::cout << Pa_GetErrorText(err) << std::endl;
+		err = Pa_Terminate();
+		return err;
+	}
+	//Close the stream
+	err = Pa_CloseStream(stream);
+	if (err != paNoError) {
+		std::cout << Pa_GetErrorText(err) << std::endl;
+		err = Pa_Terminate();
+		return err;
+	}
 
     // Exit program
     exit( EXIT_SUCCESS );
@@ -104,6 +112,21 @@ int main(int argc, char* argv[]) {
 
 void initAudio() {
 
+}
+
+static int audioCallback(const void *inputbuffer, void *outputbuffer,
+	unsigned long framesperbuffer,
+	const PaStreamCallbackTimeInfo* timeinfo,
+	PaStreamCallbackFlags statusflags,
+	void *userdata) {
+
+	const float *in = (const float*) inputbuffer;
+	float *out = (float*)outputbuffer;
+	for( int i=0; i<framesperbuffer; i++ )
+	{
+		*out++ = *in++;
+	}
+	return 0;
 }
 
 //static int audioCallback(const void *inputbuffer, void *outputbuffer,
