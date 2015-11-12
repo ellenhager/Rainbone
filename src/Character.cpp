@@ -104,7 +104,7 @@ void Character::render(std::vector<glm::mat4> matrices) {
     // Create scene transform (animation)
     //glm::mat4 scene_mat = glm::rotate( glm::mat4(1.0f), tilt , glm::vec3(-1.0f, 0.0f, 0.0f));
     //glm::mat4 rot = glm::rotate( glm::mat4(1.0f), static_cast<float>(mAngle * M_PI / 180.0f) , glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 scene_mat = glm::rotate(glm::mat4(1.0f), );
+    //glm::mat4 scene_mat = glm::rotate(glm::mat4(1.0f), );
 
     // Apply scene transforms to MVP and MV matrices
     matrices[I_MVP] = matrices[I_MVP] * scene_mat;
