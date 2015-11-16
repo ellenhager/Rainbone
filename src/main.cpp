@@ -1,5 +1,6 @@
 #include "Level.h"
 #include "portaudio.h"
+#include "Character.h"
 
 void render();
 void preSync();
@@ -14,14 +15,20 @@ static int audioCallback(const void *inputbuffer, void *outputbuffer,
 	const PaStreamCallbackTimeInfo* timeinfo,
 	PaStreamCallbackFlags statusflags,
 	void *userdata);
+void setLevelAngles(std::vector<float>);
+
 // Pointer to the sgct engine
 sgct::Engine * gEngine;
 // Container for the levels
 std::vector<Level *> mLevels;
+// Our cool charcter
+Character * mCharacter;
 // Variables to share across cluster
 sgct::SharedDouble curr_time(0.0);
 // Track which level we want to rotate
 unsigned int mLevelIndex = 0;
+
+sgct::SharedVector<float> mSharedLevelAngles;
 
 
 int main(int argc, char* argv[]) {
@@ -129,20 +136,6 @@ static int audioCallback(const void *inputbuffer, void *outputbuffer,
 	return 0;
 }
 
-//static int audioCallback(const void *inputbuffer, void *outputbuffer,
-//	unsigned long framesperbuffer,
-//	const pastreamcallbacktimeinfo* timeinfo,
-//	pastreamcallbackflags statusflags,
-//	void *userdata)
-//{
-//	const float *in = (const float*)inputbuffer;
-//	float *out = (float*)outputbuffer;
-//	for (int i = 0; i<framesperbuffer; i++)
-//	{
-//		*out++ = *in++;
-//	}
-//	return 0;
-//}
 void render() {
 
     std::vector<glm::mat4> sceneMatrices;
@@ -153,13 +146,28 @@ void render() {
     sceneMatrices.push_back(glm::inverseTranspose(glm::mat4(gEngine->getCurrentModelViewMatrix())));
 
     for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
-        (*it)->render(sceneMatrices, static_cast<float>(curr_time.getVal()));
+        (*it)->render(sceneMatrices);
 }
 
 void preSync() {
 
-    if(gEngine->isMaster())
+    if(gEngine->isMaster()) {   // If master, set all variables that needs to be synced
+        
+        // Get the current time, we might want to use this later
         curr_time.setVal(sgct::Engine::getTime());
+
+        // Set the angles for all levels if we are the master
+        std::vector<float> localLevelAngles;
+
+        for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it) {
+            localLevelAngles.push_back((*it)->getAngle());
+        }
+        mSharedLevelAngles.setVal(localLevelAngles);
+
+    } else {    // If slave, just read the variables that we have shared
+        
+        setLevelAngles(mSharedLevelAngles.getVal());
+    }
 }
 
 void initialize() {
@@ -168,6 +176,8 @@ void initialize() {
     mLevels.push_back(new Level("../assets/level2.obj", glm::vec4(0.2f, 0.8f, 0.2f, 1.0f)));
     mLevels.push_back(new Level("../assets/level3.obj", glm::vec4(0.2f, 0.2f, 0.8f, 1.0f)));
     mLevels.push_back(new Level("../assets/level4.obj", glm::vec4(0.8f, 0.8f, 0.2f, 1.0f)));
+
+    mCharacter = new Character(glm::vec3(0.0f, 0.0f, -7.0f), "../assets/cone.obj", glm::vec4(0.96f, 0.4f, 0.95f, 1.0f));
 
     glm::vec3 lightPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 
@@ -179,11 +189,13 @@ void initialize() {
 void encode() {
 
     sgct::SharedData::instance()->writeDouble(&curr_time);
+    sgct::SharedData::instance()->writeVector(&mSharedLevelAngles);
 }
 
 void decode() {
 
     sgct::SharedData::instance()->readDouble(&curr_time);
+    sgct::SharedData::instance()->readVector(&mSharedLevelAngles);
 }
 
 
@@ -217,7 +229,6 @@ void keyCallback(int key, int action) {
                         mLevelIndex--;
                 }
             break;
-
         }
     }
 }
@@ -225,4 +236,24 @@ void keyCallback(int key, int action) {
 void cleanUp() {
     mLevels.clear();
     mLevels.shrink_to_fit();
+}
+
+
+void setLevelAngles(std::vector<float> angles) {
+
+    // If dimensions doesn't match, something went wrong
+    if(angles.size() != mLevels.size()) {
+        std::cout << "Error when syncing level angles - size must match!" << std::endl;
+        std::cout << "angles.size(): " << angles.size() << std::endl;
+        std::cout << "mLevels.size(): " << mLevels.size() << std::endl;
+        return;
+    }
+
+    unsigned int index = 0;
+
+    for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it) {
+        
+        (*it)->setAngle(angles[index]);
+        index++;
+    }
 }

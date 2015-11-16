@@ -1,11 +1,13 @@
-#define _USE_MATH_DEFINES
-#include <cmath>
-#include "Level.h"
+#include "Character.h"
 
-Level::Level(const char * objPath, glm::vec4 c) {
 
-    bool res = loadOBJ(objPath, mVerts, mNormals);
+Character::Character(glm::vec3 p, const char *objPath, glm::vec4 c)
+    : mPosition(p) {
 
+    // Load obj file
+    loadOBJ(objPath, mVerts, mNormals);
+
+    // Set material
     mMaterial.color         = c;
     mMaterial.ambient       = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
     mMaterial.diffuse       = glm::vec4(0.8f, 0.8f, 0.8f, 1.0f);
@@ -13,13 +15,11 @@ Level::Level(const char * objPath, glm::vec4 c) {
     mMaterial.specularity   = 50.0f;
     mMaterial.shinyness     = 0.6f;
 
-    mAngle = 0.0f;
 }
 
 
-Level::~Level() {
+Character::~Character() {
 
-    // Clear vectors and deallocate memory
     mVerts.clear();
     mVerts.shrink_to_fit();
 
@@ -28,29 +28,29 @@ Level::~Level() {
 }
 
 
-void Level::initialize(glm::vec3 lightPosition) {
+void Character::initialize(glm::vec3 lightPosition) {
 
     //Set up backface culling
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW); //our polygon winding is counter clockwise
 
-    sgct::ShaderManager::instance()->addShaderProgram( "xform",
-            "../shaders/SimpleVertexShader.vertexshader",
-            "../shaders/SimpleFragmentShader.fragmentshader" );
+    sgct::ShaderManager::instance()->addShaderProgram( "character",
+            "shaders/SimpleVertexShader.vertexshader",
+            "shaders/SimpleFragmentShader.fragmentshader" );
 
-    sgct::ShaderManager::instance()->bindShaderProgram( "xform" );
+    sgct::ShaderManager::instance()->bindShaderProgram( "character" );
 
-    MVPLoc                  = sgct::ShaderManager::instance()->getShaderProgram( "xform").getUniformLocation( "MVP" );
-    MVLoc                   = sgct::ShaderManager::instance()->getShaderProgram( "xform").getUniformLocation( "MV" );
-    MVLightLoc              = sgct::ShaderManager::instance()->getShaderProgram( "xform").getUniformLocation( "MV_Light" );
-    NMLoc                   = sgct::ShaderManager::instance()->getShaderProgram( "xform").getUniformLocation( "NM" );
-    lightPosLoc             = sgct::ShaderManager::instance()->getShaderProgram( "xform").getUniformLocation( "lightPosition" );
-    colorLoc                = sgct::ShaderManager::instance()->getShaderProgram( "xform").getUniformLocation( "color" );
-    lightAmbLoc             = sgct::ShaderManager::instance()->getShaderProgram( "xform").getUniformLocation( "ambientColor" );    
-    lightDifLoc             = sgct::ShaderManager::instance()->getShaderProgram( "xform").getUniformLocation( "diffuseColor" );
-    lightSpeLoc             = sgct::ShaderManager::instance()->getShaderProgram( "xform").getUniformLocation( "specularColor" );
-    specularityLoc          = sgct::ShaderManager::instance()->getShaderProgram( "xform").getUniformLocation( "specularity" );
-    shinynessLoc            = sgct::ShaderManager::instance()->getShaderProgram( "xform").getUniformLocation( "shinyness" );
+    MVPLoc                  = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "MVP" );
+    MVLoc                   = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "MV" );
+    MVLightLoc              = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "MV_Light" );
+    NMLoc                   = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "NM" );
+    lightPosLoc             = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "lightPosition" );
+    colorLoc                = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "color" );
+    lightAmbLoc             = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "ambientColor" );    
+    lightDifLoc             = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "diffuseColor" );
+    lightSpeLoc             = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "specularColor" );
+    specularityLoc          = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "specularity" );
+    shinynessLoc            = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "shinyness" );
 
     sgct::ShaderManager::instance()->unBindShaderProgram();
 
@@ -93,7 +93,7 @@ void Level::initialize(glm::vec3 lightPosition) {
 }
 
 
-void Level::render(std::vector<glm::mat4> matrices) {
+void Character::render(std::vector<glm::mat4> matrices) {
 
     // Enable backface culling and depth test, we dont want to draw unnecessary stuff
     glEnable( GL_DEPTH_TEST );
@@ -103,14 +103,15 @@ void Level::render(std::vector<glm::mat4> matrices) {
     float tilt = M_PI * 27.0f / 180.0f;
     // Create scene transform (animation)
     glm::mat4 scene_mat = glm::rotate( glm::mat4(1.0f), tilt , glm::vec3(-1.0f, 0.0f, 0.0f));
-    glm::mat4 rot = glm::rotate( glm::mat4(1.0f), static_cast<float>(mAngle * M_PI / 180.0f) , glm::vec3(0.0f, 1.0f, 0.0f));
+    //glm::mat4 rot = glm::rotate( glm::mat4(1.0f), static_cast<float>(mAngle * M_PI / 180.0f) , glm::vec3(0.0f, 1.0f, 0.0f));
+    //glm::mat4 scene_mat = glm::rotate(glm::mat4(1.0f), );
 
     // Apply scene transforms to MVP and MV matrices
-    matrices[I_MVP] = matrices[I_MVP] * scene_mat * rot;
+    matrices[I_MVP] = matrices[I_MVP] * scene_mat;
     matrices[I_MV]  = matrices[I_MV]  * scene_mat;
 
     // Bind shader program
-    sgct::ShaderManager::instance()->bindShaderProgram( "xform" );
+    sgct::ShaderManager::instance()->bindShaderProgram( "character" );
 
     // Set uniform values, so that we have some data to work with in the shaders
     glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, &matrices[I_MVP][0][0]);
@@ -145,3 +146,17 @@ void Level::render(std::vector<glm::mat4> matrices) {
     glDisable( GL_CULL_FACE );
     glDisable( GL_DEPTH_TEST );
 }
+
+
+glm::vec3 Character::convertToSpherical(glm::vec3 position) {
+
+    mPosition.x = sqrt((position.x * position.x) + (position.y * position.y) + (position.z * position.z));
+    mPosition.y = acos(mPosition.z / (mPosition.x));
+    mPosition.z = atan2(mPosition.x, mPosition.y);
+
+    return glm::vec3(0.0f);
+}
+
+/*glm::vec3 Character::convertToCartesian() {
+
+}*/

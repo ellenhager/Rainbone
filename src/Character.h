@@ -1,5 +1,5 @@
-#ifndef LEVEL_H
-#define LEVEL_H
+#ifndef CHARACTER_H
+#define CHARACTER_H
 
 #define I_MVP 0
 #define I_MV 1
@@ -8,36 +8,35 @@
 
 #include <iostream>
 #include <math.h>
-#include "sgct.h"
-#include "glm/gtc/matrix_inverse.hpp"
+#include <sgct.h>
+#include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "objloader.hpp"
 
-class Level {
+class Character {
 
 public:
 
-    Level(const char *, glm::vec4);
-    
-    ~Level();
+    Character(glm::vec3, const char *, glm::vec4);
+    ~Character();
 
     void initialize(glm::vec3);
-    
     void render(std::vector<glm::mat4>);
-
-    void incrementAngle(float a) { mAngle += a; };
-
-    float getAngle() { return mAngle; };
-
-    void setAngle(float a) { mAngle = a; };
 
 private:
 
+    glm::vec3 convertToCartesian();
+    glm::vec3 convertToSpherical(glm::vec3);
+
+    //glm::mat4 mTransform;
+
+    // Position is in spherical coordinates, i.e. (radius, theta, phi)
+    glm::vec3 mPosition;
+
+    // Lists containing vertices and normals
     std::vector<glm::vec3> mVerts;
     std::vector<glm::vec3> mNormals;
-
-    float mAngle;
 
     // Shader data
     GLuint vertexArray;
@@ -67,4 +66,4 @@ private:
 
 };
 
-#endif // LEVEL_H
+#endif // CHARACTER_H

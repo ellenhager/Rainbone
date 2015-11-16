@@ -100,7 +100,7 @@ bool loadOBJ(
 	
 	}
 
-	printf("\nOBJ file %s loaded!\n", path);
+	printf("OBJ file %s loaded!\n\n", path);
 
 	return true;
 }
