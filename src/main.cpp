@@ -9,7 +9,6 @@ void encode();
 void decode();	
 void keyCallback(int key, int action);
 void cleanUp();
-void initAudio();
 static int audioCallback(const void *inputbuffer, void *outputbuffer,
 	unsigned long framesperbuffer,
 	const PaStreamCallbackTimeInfo* timeinfo,
@@ -27,6 +26,8 @@ Character * mCharacter;
 sgct::SharedDouble curr_time(0.0);
 // Track which level we want to rotate
 unsigned int mLevelIndex = 0;
+//Audio amplitude
+static float audioAmplitude;
 
 sgct::SharedVector<float> mSharedLevelAngles;
 
@@ -77,7 +78,7 @@ int main(int argc, char* argv[]) {
 					tells portaudio to pick the best,
 					possibly changing, buffer size.*/
 		audioCallback, /* this is your callback function */
-		&data);
+		&audioAmplitude);
 
 	if (err != paNoError) {
 		std::cout << Pa_GetErrorText(err) << std::endl;
@@ -117,22 +118,23 @@ int main(int argc, char* argv[]) {
     exit( EXIT_SUCCESS );
 }
 
-void initAudio() {
-
-}
-
 static int audioCallback(const void *inputbuffer, void *outputbuffer,
 	unsigned long framesperbuffer,
 	const PaStreamCallbackTimeInfo* timeinfo,
 	PaStreamCallbackFlags statusflags,
 	void *userdata) {
 
+	float maxInput = -10.0;
+	static float *data = (float*)userdata;
 	const float *in = (const float*) inputbuffer;
-	float *out = (float*)outputbuffer;
+	(void) outputbuffer; // to avoid "unused variable" warning
 	for( int i=0; i<framesperbuffer; i++ )
 	{
-		*out++ = *in++;
+		if (*in++ > maxInput) {
+			maxInput = *in;
+		}
 	}
+	*data = maxInput;
 	return 0;
 }
 
@@ -150,11 +152,15 @@ void render() {
 }
 
 void preSync() {
-
+    
     if(gEngine->isMaster()) {   // If master, set all variables that needs to be synced
         
         // Get the current time, we might want to use this later
         curr_time.setVal(sgct::Engine::getTime());
+
+        // aduioAmplitude
+        std::cout << "Audio amplitude: " << audioAmplitude << std::endl;
+        mLevels[mLevelIndex]->incrementAngle(audioAmplitude);
 
         // Set the angles for all levels if we are the master
         std::vector<float> localLevelAngles;
@@ -202,7 +208,6 @@ void decode() {
 void keyCallback(int key, int action) {
 
     if( gEngine->isMaster() ) {
-
         switch( key ) {
             case SGCT_KEY_RIGHT:
                 mLevels[mLevelIndex]->incrementAngle(1.0f);
