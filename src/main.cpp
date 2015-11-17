@@ -66,6 +66,8 @@ void preSync() {
         
         // Get the current time, we might want to use this later
         curr_time.setVal(sgct::Engine::getTime());
+
+		rainbone->update();
     }
 }
 

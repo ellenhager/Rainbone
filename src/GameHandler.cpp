@@ -24,10 +24,14 @@ void GameHandler::initialize() {
 }
 
 
+void GameHandler::update() {
+	std::cout << "Audio amplitude: " << mAudioHandler->getAmplitude() << std::endl;
+}
+
+
 void GameHandler::render() {
 
     std::cout << "Rendering GameHandler..." << std::endl;
-	std::cout << "Audio amplitude: " << mAudioHandler->getAmplitude() <<std::endl;
     mScene->render();
 }
 
