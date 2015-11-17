@@ -8,7 +8,7 @@ Character::Character() {
 
 Character::~Character() {
 
-    std::cout << "Destroying Character..." << std::endl;
+    std::cout << "Destroying Character...";
 
     mVertices.clear();
     mVertices.shrink_to_fit();
@@ -18,16 +18,19 @@ Character::~Character() {
 
     mUvs.clear();
     mUvs.shrink_to_fit();
+
+    std::cout << "\tDone!\n";
 }
 
 
-void Character::initialize() {
+void Character::initialize(glm::vec3 lightSourcePosition) {
 
-    std::cout << "Initializing Character..." << std::endl;
+    std::cout << "\nInitializing Character...";
+
+    std::cout << "\tDone!\n";
 }
 
 
-void Character::render() {
+void Character::render(std::vector<glm::mat4> sceneMatrices) {
 
-    std::cout << "Rendering Character..." << std::endl;
 }

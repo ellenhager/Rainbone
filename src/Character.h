@@ -15,9 +15,9 @@ public:
 
     ~Character();
 
-    void initialize();
+    void initialize(glm::vec3);
 
-    void render();
+    void render(std::vector<glm::mat4>);
 
 
 private:

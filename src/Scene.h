@@ -1,7 +1,6 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-
 #include "Level.h"
 #include "Character.h"
 
@@ -15,7 +14,7 @@ public:
 
     void initialize();
 
-    void render();
+    void render(std::vector<glm::mat4>);
 
     void addLevel(Level *l) { mLevels.push_back(l); }
 
@@ -29,7 +28,7 @@ private:
     
     Character * mCharacter;
 
-    glm::vec3 lightSourcePosition;
+    glm::vec3 mLightSourcePosition;
 };
 
 #endif // SCENE_H

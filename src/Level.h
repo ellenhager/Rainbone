@@ -1,6 +1,11 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 
+#define I_MVP 0
+#define I_MV 1
+#define I_MV_LIGHT 2
+#define I_NM 3
+
 #include <vector>
 #include <iostream>
 #include <stdio.h>
@@ -18,9 +23,9 @@ public:
 
     ~Level();
 
-    void initialize();
+    void initialize(glm::vec3);
 
-    void render();
+    void render(std::vector<glm::mat4>);
 
     void addForce(float f) { mForce += f; }
 
@@ -33,6 +38,7 @@ private:
     bool mCurrentLevel = false;
 
     std::vector<glm::vec3> mVertices;
+    
     std::vector<glm::vec3> mNormals;
 
     struct Material {
@@ -43,6 +49,22 @@ private:
         float specularity;
         float shinyness;
     } mMaterial;
+
+    GLuint vertexArray;
+    GLuint vertexBuffer;
+    GLuint normalBuffer;
+
+    GLint MVPLoc;           // MVP matrix
+    GLint MVLoc;            // MV matrix
+    GLint MVLightLoc;       // MVLight matrix
+    GLint NMLoc;            // NM matrix
+    GLint lightPosLoc;      // Light position
+    GLint colorLoc;         // Color
+    GLint lightAmbLoc;      // Ambient light
+    GLint lightDifLoc;      // Diffuse light
+    GLint lightSpeLoc;      // Specular light
+    GLint specularityLoc;   // Specular constant
+    GLint shinynessLoc;     // How much specularity (magnitude)
 
 };
 
