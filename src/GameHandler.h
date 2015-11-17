@@ -26,6 +26,8 @@ private:
 
     Scene * mScene;
 
+    AudioHandler * mAudioHandler;
+
 
 
 };

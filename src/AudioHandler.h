@@ -18,12 +18,20 @@ public:
 
     void closeAudio();
 
-    void audioCallback();
+	float getAmplitude() { return mAmplitude; };
+
+    static int audioCallback(const void *inputbuffer, void *outputbuffer,
+		unsigned long framesperbuffer,
+		const PaStreamCallbackTimeInfo* timeinfo,
+		PaStreamCallbackFlags statusflags,
+		void *userdata);
+
+    void printError(PaError err);
 
 private:
 
     float mAmplitude;
-    //PaStream *mStream;
+    PaStream *mStream;
 };
 
 #endif // AUDIOHANDLER_H
