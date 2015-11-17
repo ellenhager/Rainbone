@@ -1,17 +1,20 @@
 #include "AudioHandler.h"
 
 AudioHandler::AudioHandler() {
-
+	std::cout << "Creating AudioHandler..." << std::endl;
 }
 
 
 AudioHandler::~AudioHandler() {
+	std::cout << "Destroying AudioHandler..." << std::endl;
 	closeAudio();
 	delete mStream;
 }
 
 
 void AudioHandler::initialize() {
+
+	std::cout << "Initializing AudioHandler..." << std::endl;
 	//init audio
 	PaError err = Pa_Initialize();
 	if (err != paNoError)
