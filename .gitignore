@@ -1,7 +1,36 @@
+# Visual Studio
+*.vcxproj
+*.sln
+*.vcxproj.filters
+*.vcxproj.user
+*.pdb
+*.sdf
+*.opensdf
+.vs
+Debug
+.vs
+rainbone.dir
+CmakeFiles
+CMakeCache.txt
+cmake_install.cmake
+x64
+Makefile
+
 # Executables
 *.exe
 *.out
 *.app
+
+# Merge files
+*.orig
+
+# Binaries/Bin folders
+bin/
+build/
+
+# Batfiles
+run.command
+run.bat
 
 # OSX files
 .DS_Store
