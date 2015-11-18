@@ -59,3 +59,14 @@ void Scene::addLevelForce(unsigned int i, float f) {
     
     mLevels[i]->addForce(f);
 }
+
+
+std::vector<float> Scene::getLevelAngles() {
+
+    std::vector<float> angles;
+
+    for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
+        angles.push_back((*it)->getAngle());
+
+    return angles;
+}

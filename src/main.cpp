@@ -13,13 +13,14 @@ void cleanUp();
 // Pointer to the sgct engine
 sgct::Engine * gEngine;
 
-GameHandler *rainbone;
+GameHandler * rainbone;
 // Variables to share across cluster
 sgct::SharedDouble curr_time(0.0);
 // Track which level we want to rotate
 //unsigned int mLevelIndex = 0;
 
-//sgct::SharedVector<float> mSharedLevelAngles;
+// Shared container for angles of each level
+sgct::SharedVector<float> mSharedLevelAngles;
 
 
 int main(int argc, char* argv[]) {
@@ -67,6 +68,19 @@ void preSync() {
         curr_time.setVal(sgct::Engine::getTime());
 
 		rainbone->update();
+
+        std::vector<float> masterAngles;
+
+        masterAngles = rainbone->getLevelAngles();        
+
+        mSharedLevelAngles.setVal(masterAngles);
+
+        //for(std::vector<float>::iterator it = mSharedLevelAngles.getVal().begin(); it != mSharedLevelAngles.getVal().end(); ++it)
+          //  std::cout << "angle: " << (*it) << std::endl;
+
+    } else {
+
+        //rainbone->setLevelAngles(mSharedLevelAngles.getVal());
     }
 }
 

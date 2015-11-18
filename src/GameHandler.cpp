@@ -36,7 +36,7 @@ void GameHandler::initialize() {
 
 void GameHandler::update() {
 	
-    std::cout << "Audio amplitude: " << mAudioHandler->getAmplitude() << std::endl;
+    //std::cout << "Audio amplitude: " << mAudioHandler->getAmplitude() << std::endl;
 }
 
 
@@ -55,5 +55,52 @@ void GameHandler::render() {
 
 void GameHandler::keyCallback(int key, int action) {
 
-    // Do keyboard stuff here if you want
+    if(mEngine->isMaster()) {
+
+        switch(key) {
+
+            case SGCT_KEY_RIGHT:
+                mScene->getLevel(mCurrentLevel)->incrementAngle(1.0f);
+            break;
+
+            case SGCT_KEY_LEFT:
+                mScene->getLevel(mCurrentLevel)->incrementAngle(-1.0f);
+            break;
+
+            case SGCT_KEY_UP:
+                if(action == SGCT_PRESS) {
+                    if(mCurrentLevel == mScene->getNumberOfLevels() - 1)
+                        mCurrentLevel = 0;
+                    else
+                        mCurrentLevel++;
+                }
+            break;
+
+            case SGCT_KEY_DOWN:
+                if(action == SGCT_PRESS) {
+                    if(mCurrentLevel == 0)
+                        mCurrentLevel = mScene->getNumberOfLevels() - 1;
+                    else
+                        mCurrentLevel--;
+                }
+            break;
+        }
+    }
+}
+
+
+void GameHandler::setLevelAngles(std::vector<float> syncronizedAngles) {
+
+    // In the first sync interation this case will happen because slave gets called before master
+    if(syncronizedAngles.size() != mScene->getNumberOfLevels()) {
+        std::cout << "Error when syncing level angles - size must match!" << std::endl;
+        std::cout << "angles.size(): " << syncronizedAngles.size() << std::endl;
+        std::cout << "mLevels.size(): " << mScene->getNumberOfLevels() << std::endl;
+        return;
+    }
+
+    for(unsigned int i = 0; i < mScene->getNumberOfLevels(); i++) {
+        mScene->getLevel(i)->setAngle(syncronizedAngles[i]);
+        //std::cout << "angle: " <<  syncronizedAngles[i] << std::endl;
+    }
 }

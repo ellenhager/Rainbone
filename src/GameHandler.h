@@ -20,9 +20,15 @@ public:
 
     void keyCallback(int, int);
 
-    //std::vector<float> getLevelAngles() { scene->getLevelAngles(); }
+    std::vector<float> getLevelAngles() { return mScene->getLevelAngles(); }
+
+    void setLevelAngles(std::vector<float>);
+
+    //void setLevelAngle(unsigned int i) { mScene->getLevel(i)->setLevelAngle() }
 
 private:
+
+    unsigned int mCurrentLevel = 0;
 
     sgct::Engine * mEngine;
 
