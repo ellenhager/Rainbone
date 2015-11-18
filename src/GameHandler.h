@@ -26,6 +26,8 @@ public:
 
     //void setLevelAngle(unsigned int i) { mScene->getLevel(i)->setLevelAngle() }
 
+    void rotateByVoice();
+
 private:
 
     unsigned int mCurrentLevel = 0;

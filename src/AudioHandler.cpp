@@ -84,20 +84,3 @@ int AudioHandler::audioCallback(const void *inputbuffer, void *outputbuffer,
 	*data = maxInput;
 	return 0;
 }
-
-float AudioHandler::incrementAngle() {
-	float audioAmplitude = mAmplitude*100;
-	float incrementAngle = 0.0f;
-
-    if(audioAmplitude <= 10.0f) {
-        incrementAngle = -1.0f;
-    } else if(audioAmplitude > 10.0f && audioAmplitude < 30.0f) {
-        incrementAngle = 0.0f;
-    } else {
-        incrementAngle = 1.0f;
-    }
-
-    std::cout << "Audio amplitude: " << audioAmplitude << std::endl;
-
-    return incrementAngle;
-}

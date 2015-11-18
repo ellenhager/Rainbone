@@ -35,8 +35,7 @@ void GameHandler::initialize() {
 
 
 void GameHandler::update() {
-    float voiceIncrement = mAudioHandler->incrementAngle();
-    mScene->getLevel(mCurrentLevel)->incrementAngle(voiceIncrement);
+    rotateByVoice();
 }
 
 
@@ -103,4 +102,17 @@ void GameHandler::setLevelAngles(std::vector<float> syncronizedAngles) {
         mScene->getLevel(i)->setAngle(syncronizedAngles[i]);
         //std::cout << "angle: " <<  syncronizedAngles[i] << std::endl;
     }
+}
+
+void GameHandler::rotateByVoice() {
+    float audioAmplitude = mAudioHandler->getAmplitude()*100;
+
+    if(audioAmplitude <= 10.0f) {
+        mScene->getLevel(mCurrentLevel)->incrementAngle(-1.0f);
+    } else if(audioAmplitude > 10.0f && audioAmplitude < 30.0f) {
+        mScene->getLevel(mCurrentLevel)->incrementAngle(0.0f);
+    } else {
+        mScene->getLevel(mCurrentLevel)->incrementAngle(1.0f);
+    }
+    std::cout << "Audio amplitude: " << audioAmplitude << std::endl;
 }
