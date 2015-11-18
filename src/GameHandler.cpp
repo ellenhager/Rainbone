@@ -35,8 +35,16 @@ void GameHandler::initialize() {
 
 
 void GameHandler::update() {
-	
-    //std::cout << "Audio amplitude: " << mAudioHandler->getAmplitude() << std::endl;
+    float audioAmplitude = mAudioHandler->getAmplitude()*100;
+
+    if(audioAmplitude <= 10.0f) {
+        mScene->getLevel(mCurrentLevel)->incrementAngle(-1.0f);
+    } else if(audioAmplitude > 10.0f && audioAmplitude < 30.0f) {
+        mScene->getLevel(mCurrentLevel)->incrementAngle(0.0f);
+    } else {
+        mScene->getLevel(mCurrentLevel)->incrementAngle(1.0f);
+    }
+    std::cout << "Audio amplitude: " << audioAmplitude << std::endl;
 }
 
 
