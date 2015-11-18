@@ -2,38 +2,56 @@
 
 Scene::Scene() {
 
-    std::cout << "Creating Scene..." << std::endl;
+    std::cout << "\nCreating Scene...\n";
     
-    addLevel(new Level("../assets/simple.obj", glm::vec4(1.0f)));
+    mLightSourcePosition = glm::vec3(0.0f, 0.0f, 0.0f);
+
+    addLevel(new Level("../assets/level1.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+    addLevel(new Level("../assets/level2.obj", glm::vec4(0.2f, 0.8f, 0.2f, 1.0f)));
+    addLevel(new Level("../assets/level3.obj", glm::vec4(0.2f, 0.2f, 0.8f, 1.0f)));
+    addLevel(new Level("../assets/level4.obj", glm::vec4(0.8f, 0.8f, 0.2f, 1.0f)));
 
     mCharacter = new Character();
+
+    std::cout << "\nScene created!\n";
 }
     
 
 Scene::~Scene() {
 
-    std::cout << "Destroying Scene..." << std::endl;
+    std::cout << "Destroying Scene...\n";
+
+    for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
+        delete (*it);
+
+    mLevels.clear();
+    mLevels.shrink_to_fit();
+
+    delete mCharacter;
+
+    std::cout << "Scene destroyed!\n";
 }
 
 
 void Scene::initialize() {
 
-    std::cout << "Initializing Scene..." << std::endl;
+    std::cout << "\nInitializing Scene...\n";
 
     for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
-        (*it)->initialize();
+        (*it)->initialize(mLightSourcePosition);
 
-    mCharacter->initialize();
+    mCharacter->initialize(mLightSourcePosition);
+
+    std::cout << "\nScene initialized!\n";
 }
 
     
-void Scene::render() {
+void Scene::render(std::vector<glm::mat4> sceneMatrices) {
 
-    std::cout << "Rendering Scene..." << std::endl;
     for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
-        (*it)->render();
+        (*it)->render(sceneMatrices);
 
-    mCharacter->render();
+    mCharacter->render(sceneMatrices);
 }
 
 

@@ -55,7 +55,6 @@ int main(int argc, char* argv[]) {
 
 void render() {
 
-    std::cout << "\nrendera då!!!\n" << std::endl;
     rainbone->render();
 }
 

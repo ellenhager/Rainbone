@@ -1,14 +1,16 @@
 #include "AudioHandler.h"
 
 AudioHandler::AudioHandler() {
+	
 	std::cout << "Creating AudioHandler..." << std::endl;
 }
 
 
 AudioHandler::~AudioHandler() {
+	
 	std::cout << "Destroying AudioHandler..." << std::endl;
 	closeAudio();
-	delete mStream;
+	delete mStream; // This might result in memory leaks. Deleting pointer to void.
 }
 
 
@@ -56,6 +58,7 @@ void AudioHandler::closeAudio() {
 }
 
 void AudioHandler::printError(PaError err) {
+	
 	std::cout << "error message: " << Pa_GetErrorText(err) << std::endl;
 	err = Pa_Terminate();
 	if (err != paNoError)
