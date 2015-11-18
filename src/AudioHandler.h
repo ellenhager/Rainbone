@@ -28,6 +28,8 @@ public:
 
     void printError(PaError err);
 
+    float incrementAngle();
+
 private:
 
     float mAmplitude;

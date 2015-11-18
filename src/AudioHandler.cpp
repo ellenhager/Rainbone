@@ -1,13 +1,13 @@
 #include "AudioHandler.h"
 
 AudioHandler::AudioHandler() {
-	
+
 	std::cout << "Creating AudioHandler..." << std::endl;
 }
 
 
 AudioHandler::~AudioHandler() {
-	
+
 	std::cout << "Destroying AudioHandler..." << std::endl;
 	closeAudio();
 	//delete mStream; // This might result in memory leaks. Deleting pointer to void.
@@ -37,11 +37,11 @@ void AudioHandler::initialize() {
 		audioCallback, /* this is your callback function */
 		&mAmplitude);
 
-	if (err != paNoError) 
+	if (err != paNoError)
 		printError(err);
 
 	err = Pa_StartStream(mStream);
-	if (err != paNoError) 
+	if (err != paNoError)
 		printError(err);
 }
 
@@ -53,12 +53,12 @@ void AudioHandler::closeAudio() {
 		printError(err);
 	//Close the stream
 	err = Pa_CloseStream(mStream);
-	if (err != paNoError) 
+	if (err != paNoError)
 		printError(err);
 }
 
 void AudioHandler::printError(PaError err) {
-	
+
 	std::cout << "error message: " << Pa_GetErrorText(err) << std::endl;
 	err = Pa_Terminate();
 	if (err != paNoError)
@@ -83,4 +83,21 @@ int AudioHandler::audioCallback(const void *inputbuffer, void *outputbuffer,
 	}
 	*data = maxInput;
 	return 0;
+}
+
+float AudioHandler::incrementAngle() {
+	float audioAmplitude = mAmplitude*100;
+	float incrementAngle = 0.0f;
+
+    if(audioAmplitude <= 10.0f) {
+        incrementAngle = -1.0f;
+    } else if(audioAmplitude > 10.0f && audioAmplitude < 30.0f) {
+        incrementAngle = 0.0f;
+    } else {
+        incrementAngle = 1.0f;
+    }
+
+    std::cout << "Audio amplitude: " << audioAmplitude << std::endl;
+
+    return incrementAngle;
 }
