@@ -9,12 +9,14 @@ class GameHandler {
 public:
 
     GameHandler(sgct::Engine *);
-    
+
     ~GameHandler();
 
     void initialize();
-    
+
     void render();
+
+    void update();
 
     void keyCallback(int, int);
 
@@ -25,6 +27,8 @@ private:
     sgct::Engine * mEngine;
 
     Scene * mScene;
+
+    AudioHandler * mAudioHandler;
 
 
 

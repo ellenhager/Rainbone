@@ -5,6 +5,9 @@ GameHandler::GameHandler(sgct::Engine *e)
 
     std::cout << "\nCreating GameHandler...\n" << std::endl;
     mScene = new Scene();
+
+	mAudioHandler = new AudioHandler();
+
     std::cout << "\nGameHandler created!\n";
 }
 
@@ -25,7 +28,15 @@ void GameHandler::initialize() {
 
     mScene->initialize();
 
+	mAudioHandler->initialize();
+
     std::cout << "\nGameHandler initialized!\n";
+}
+
+
+void GameHandler::update() {
+	
+    std::cout << "Audio amplitude: " << mAudioHandler->getAmplitude() << std::endl;
 }
 
 
