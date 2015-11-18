@@ -24,8 +24,6 @@ public:
 
     void setLevelAngles(std::vector<float>);
 
-    //void setLevelAngle(unsigned int i) { mScene->getLevel(i)->setLevelAngle() }
-
 private:
 
     unsigned int mCurrentLevel = 0;

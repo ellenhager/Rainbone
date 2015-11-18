@@ -94,13 +94,11 @@ void GameHandler::setLevelAngles(std::vector<float> syncronizedAngles) {
     // In the first sync interation this case will happen because slave gets called before master
     if(syncronizedAngles.size() != mScene->getNumberOfLevels()) {
         std::cout << "Error when syncing level angles - size must match!" << std::endl;
-        std::cout << "angles.size(): " << syncronizedAngles.size() << std::endl;
+        std::cout << "syncronizedAngles.size(): " << syncronizedAngles.size() << std::endl;
         std::cout << "mLevels.size(): " << mScene->getNumberOfLevels() << std::endl;
         return;
     }
 
-    for(unsigned int i = 0; i < mScene->getNumberOfLevels(); i++) {
+    for(unsigned int i = 0; i < mScene->getNumberOfLevels(); i++)
         mScene->getLevel(i)->setAngle(syncronizedAngles[i]);
-        //std::cout << "angle: " <<  syncronizedAngles[i] << std::endl;
-    }
 }
