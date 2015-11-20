@@ -10,7 +10,7 @@ AudioHandler::~AudioHandler() {
 	
 	std::cout << "Destroying AudioHandler..." << std::endl;
 	closeAudio();
-	delete mStream; // This might result in memory leaks. Deleting pointer to void.
+	//delete mStream; // This might result in memory leaks. Deleting pointer to void.
 }
 
 

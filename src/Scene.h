@@ -22,6 +22,12 @@ public:
 
     std::vector<float> getLevelAngles();
 
+    std::vector<Level *> getLevels() { return mLevels; }
+
+    Level *getLevel(unsigned int i) { return mLevels[i]; }
+
+    int getNumberOfLevels() { return mLevels.size(); }
+
 private:
 
     std::vector<Level *> mLevels;

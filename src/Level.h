@@ -30,9 +30,15 @@ public:
 
     void addForce(float f) { mForce += f; }
 
+    float getAngle() { return mAngle; }
+
+    void setAngle(float a) { mAngle = a; }
+
+    void incrementAngle(float a) { mAngle += a; }
+
 private:
 
-    float mAngle;
+    float mAngle = 0.0f;
 
     float mForce;
 
