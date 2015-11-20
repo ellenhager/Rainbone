@@ -2,23 +2,20 @@
 
 void render();
 void preSync();
+void postSync();
 void initialize();
 void encode();
 void decode();  
 void keyCallback(int key, int action);
 void cleanUp();
 
-//void setLevelAngles(std::vector<float>);
 
 // Pointer to the sgct engine
 sgct::Engine * gEngine;
-
+// Pointer to the GameHandler
 GameHandler * rainbone;
 // Variables to share across cluster
 sgct::SharedDouble curr_time(0.0);
-// Track which level we want to rotate
-//unsigned int mLevelIndex = 0;
-
 // Shared container for angles of each level
 sgct::SharedVector<float> mSharedLevelAngles;
 
@@ -30,6 +27,7 @@ int main(int argc, char* argv[]) {
     gEngine->setInitOGLFunction(initialize);
     gEngine->setDrawFunction(render);
     gEngine->setPreSyncFunction(preSync);
+	gEngine->setPostSyncPreDrawFunction(postSync);
     gEngine->setKeyboardCallbackFunction(keyCallback);
     gEngine->setCleanUpFunction(cleanUp);
 
@@ -41,7 +39,6 @@ int main(int argc, char* argv[]) {
 
     sgct::SharedData::instance()->setEncodeFunction(encode);
     sgct::SharedData::instance()->setDecodeFunction(decode);
-
 
     // Main loop
     gEngine->render();
@@ -67,23 +64,20 @@ void preSync() {
         // Get the current time, we might want to use this later
         curr_time.setVal(sgct::Engine::getTime());
 
+        // Update game state
 		rainbone->update();
 
-        std::vector<float> masterAngles;
-
-        masterAngles = rainbone->getLevelAngles();        
-
-        mSharedLevelAngles.setVal(masterAngles);
-
-        //for(std::vector<float>::iterator it = mSharedLevelAngles.getVal().begin(); it != mSharedLevelAngles.getVal().end(); ++it)
-          //  std::cout << "angle: " << (*it) << std::endl;
-
-    } else {
-
-        //rainbone->setLevelAngles(mSharedLevelAngles.getVal());
+        // Get shared angles for the master node
+        mSharedLevelAngles.setVal(rainbone->getLevelAngles());
     }
 }
 
+void postSync() {
+	if (!gEngine->isMaster()) {
+		// Sync all angles across the slaves
+		rainbone->setLevelAngles(mSharedLevelAngles.getVal());
+	}
+}
 
 void initialize() {
 
@@ -96,12 +90,14 @@ void initialize() {
 void encode() {
 
     sgct::SharedData::instance()->writeDouble(&curr_time);
+    sgct::SharedData::instance()->writeVector(&mSharedLevelAngles);
 }
 
 
 void decode() {
 
     sgct::SharedData::instance()->readDouble(&curr_time);
+    sgct::SharedData::instance()->readVector(&mSharedLevelAngles);
 }
 
 
@@ -115,23 +111,3 @@ void cleanUp() {
     
     delete rainbone;
 }
-
-
-/*void setLevelAngles(std::vector<float> angles) {
-
-    // If dimensions doesn't match, something went wrong
-    if(angles.size() != mLevels.size()) {
-        std::cout << "Error when syncing level angles - size must match!" << std::endl;
-        std::cout << "angles.size(): " << angles.size() << std::endl;
-        std::cout << "mLevels.size(): " << mLevels.size() << std::endl;
-        return;
-    }
-
-    unsigned int index = 0;
-
-    for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it) {
-        
-        (*it)->setAngle(angles[index]);
-        index++;
-    }
-}*/
