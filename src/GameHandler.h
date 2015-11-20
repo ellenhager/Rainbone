@@ -16,7 +16,7 @@ public:
 
     void render();
 
-    void update();
+    void update(float dt);
 
     void keyCallback(int, int);
 
@@ -36,8 +36,9 @@ private:
 
     AudioHandler * mAudioHandler;
 
+    float mAudioGravityRatio;
 
-
+    float mAudioMultiplier;
 };
 
 #endif // GAMEHANDLER_H

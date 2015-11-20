@@ -18,6 +18,8 @@ public:
 
     void closeAudio();
 
+	float getNormalizedAmplitude();
+
 	float getAmplitude() { return mAmplitude; };
 
     static int audioCallback(const void *inputbuffer, void *outputbuffer,
@@ -30,7 +32,8 @@ public:
 
 private:
 
-    float mAmplitude;
+    float mAmplitude = 0;
+    float mMaxAmplitude;
     PaStream *mStream;
 };
 

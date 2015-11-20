@@ -4,9 +4,17 @@ GameHandler::GameHandler(sgct::Engine *e)
     : mEngine(e) {
 
     std::cout << "\nCreating GameHandler...\n" << std::endl;
-    mScene = new Scene();
 
 	mAudioHandler = new AudioHandler();
+
+	// 1 => gravitational force is just as high as Audio Force
+	// 0.1 => gravitational force is 10% if audio force
+	mAudioGravityRatio = 0.1;
+
+	// The higher this multiplier, the faster the levels will move
+	mAudioMultiplier = 1000;
+
+	mScene = new Scene();
 
     std::cout << "\nGameHandler created!\n";
 }
@@ -34,8 +42,17 @@ void GameHandler::initialize() {
 }
 
 
-void GameHandler::update() {
-    rotateByVoice();
+void GameHandler::update(float dt) {
+
+	// can be switched to un-normalized amplitude function
+	float audioForce = mAudioHandler->getNormalizedAmplitude() * mAudioMultiplier;
+
+	// the gravitational force will be the gravitational ratio times maximum audio amplitude.
+	float gravitationalForce = mAudioMultiplier * mAudioGravityRatio;
+
+	mScene->getLevel(mCurrentLevel)->applyForce(audioForce, gravitationalForce, dt);
+
+	std::cout << "Audio amplitude: " << audioForce << std::endl;
 }
 
 
@@ -100,17 +117,4 @@ void GameHandler::setLevelAngles(std::vector<float> syncronizedAngles) {
 
     for(unsigned int i = 0; i < mScene->getNumberOfLevels(); i++)
         mScene->getLevel(i)->setAngle(syncronizedAngles[i]);
-}
-
-void GameHandler::rotateByVoice() {
-    float audioAmplitude = mAudioHandler->getAmplitude()*100;
-
-    if(audioAmplitude <= 10.0f) {
-        mScene->getLevel(mCurrentLevel)->incrementAngle(-1.0f);
-    } else if(audioAmplitude > 10.0f && audioAmplitude < 30.0f) {
-        mScene->getLevel(mCurrentLevel)->incrementAngle(0.0f);
-    } else {
-        mScene->getLevel(mCurrentLevel)->incrementAngle(1.0f);
-    }
-    std::cout << "Audio amplitude: " << audioAmplitude << std::endl;
 }

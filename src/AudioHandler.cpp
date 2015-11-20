@@ -3,6 +3,8 @@
 AudioHandler::AudioHandler() {
 
 	std::cout << "Creating AudioHandler..." << std::endl;
+	mMaxAmplitude = 2;
+	mAmplitude = 0;
 }
 
 
@@ -45,6 +47,12 @@ void AudioHandler::initialize() {
 		printError(err);
 }
 
+float AudioHandler::getNormalizedAmplitude() {
+	if (mAmplitude > mMaxAmplitude)
+		mAmplitude = mMaxAmplitude;
+	return mAmplitude / mMaxAmplitude;
+}
+
 
 void AudioHandler::closeAudio() {
 	// Stop the stream
@@ -81,6 +89,7 @@ int AudioHandler::audioCallback(const void *inputbuffer, void *outputbuffer,
 			maxInput = *in;
 		}
 	}
+
 	*data = maxInput;
 	return 0;
 }

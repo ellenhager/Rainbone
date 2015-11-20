@@ -13,7 +13,6 @@ public:
     ~Scene();
 
     void initialize();
-
     void render(std::vector<glm::mat4>);
 
     void addLevel(Level *l) { mLevels.push_back(l); }
