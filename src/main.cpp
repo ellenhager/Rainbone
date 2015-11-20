@@ -2,6 +2,7 @@
 
 void render();
 void preSync();
+void postSync();
 void initialize();
 void encode();
 void decode();  
@@ -26,6 +27,7 @@ int main(int argc, char* argv[]) {
     gEngine->setInitOGLFunction(initialize);
     gEngine->setDrawFunction(render);
     gEngine->setPreSyncFunction(preSync);
+	gEngine->setPostSyncPreDrawFunction(postSync);
     gEngine->setKeyboardCallbackFunction(keyCallback);
     gEngine->setCleanUpFunction(cleanUp);
 
@@ -67,14 +69,15 @@ void preSync() {
 
         // Get shared angles for the master node
         mSharedLevelAngles.setVal(rainbone->getLevelAngles());
-
-    } else {
-
-        // Sync all angles across the slaves
-        rainbone->setLevelAngles(mSharedLevelAngles.getVal());
     }
 }
 
+void postSync() {
+	if (!gEngine->isMaster()) {
+		// Sync all angles across the slaves
+		rainbone->setLevelAngles(mSharedLevelAngles.getVal());
+	}
+}
 
 void initialize() {
 
