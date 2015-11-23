@@ -54,7 +54,7 @@ void Level::initialize(glm::vec3 lightSourcePosition) {
     NMLoc                   = sgct::ShaderManager::instance()->getShaderProgram( "level").getUniformLocation( "NM" );
     lightPosLoc             = sgct::ShaderManager::instance()->getShaderProgram( "level").getUniformLocation( "lightPosition" );
     colorLoc                = sgct::ShaderManager::instance()->getShaderProgram( "level").getUniformLocation( "color" );
-    lightAmbLoc             = sgct::ShaderManager::instance()->getShaderProgram( "level").getUniformLocation( "ambientColor" );    
+    lightAmbLoc             = sgct::ShaderManager::instance()->getShaderProgram( "level").getUniformLocation( "ambientColor" );
     lightDifLoc             = sgct::ShaderManager::instance()->getShaderProgram( "level").getUniformLocation( "diffuseColor" );
     lightSpeLoc             = sgct::ShaderManager::instance()->getShaderProgram( "level").getUniformLocation( "specularColor" );
     specularityLoc          = sgct::ShaderManager::instance()->getShaderProgram( "level").getUniformLocation( "specularity" );
@@ -104,24 +104,39 @@ void Level::initialize(glm::vec3 lightSourcePosition) {
 
 
 void Level::applyForce(float force, float gravitationalForce, float dt) {
-	// audio acceleraion - gravity
+
+    // calculate gravitational force
+    if (mAngle < 0.0f) { // for having a pendulum, where 0.0f is the pivot point
+        gravitationalForce = -gravitationalForce;
+    } else if (mAngle > 360.0f) { // make it harder to rotate after a 360, to stop the heavy rotating
+        gravitationalForce *= 2.0f;
+    }
+
+    // audio acceleraion - gravity
 	float netForce = force - gravitationalForce;
 	mAcceleration = netForce / mMass;
-	// calculate velocity
+
+    // calculate velocity
 	mVelocity += mAcceleration * dt;
-	// calculate angle position (but only apply if the new position is between 0-360 degrees)
+
+    if (mVelocity > 100.0f) { // cap velocity
+        mVelocity = 100.0f;
+    }
+
+	// calculate angle position
 	float tempAngle = mAngle + mVelocity * dt;
-	if (tempAngle < 0.0f || tempAngle > 360.0f) {
-		mVelocity = 0.0f;
-	} else {
-		mAngle = tempAngle;
+
+    //lower velocity in the pivot point
+    if ((tempAngle < 0.0f && mAngle > 0.0f) || (tempAngle > 0.0f && mAngle < 0.0f)) {
+		mVelocity *= 0.6f;
 	}
-	std::cout << "tempAngle: " << tempAngle << std::endl;
+
+	mAngle = tempAngle;
 }
 
 
 void Level::render(std::vector<glm::mat4> sceneMatrices) {
-	
+
      // Enable backface culling and depth test, we dont want to draw unnecessary stuff
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
