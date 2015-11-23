@@ -116,7 +116,6 @@ void Level::applyForce(float force, float gravitationalForce, float dt) {
 	} else {
 		mAngle = tempAngle;
 	}
-	std::cout << "tempAngle: " << tempAngle << std::endl;
 }
 
 

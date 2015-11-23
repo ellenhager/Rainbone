@@ -51,8 +51,6 @@ void GameHandler::update(float dt) {
 	float gravitationalForce = mAudioMultiplier * mAudioGravityRatio;
 
 	mScene->getLevel(mCurrentLevel)->applyForce(audioForce, gravitationalForce, dt);
-
-	std::cout << "Audio amplitude: " << audioForce << std::endl;
 }
 
 
