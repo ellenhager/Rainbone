@@ -3,6 +3,10 @@
 Level::Level(const char * objPath, glm::vec4 c) {
 
     std::cout << "Creating Level..." << std::endl;
+	mForce = 0;
+	mAcceleration = 0;
+	mVelocity = 0;
+	mMass = 1; //kg
 
     loadOBJ(objPath, mVertices, mNormals);
 
@@ -99,8 +103,24 @@ void Level::initialize(glm::vec3 lightSourcePosition) {
 }
 
 
-void Level::render(std::vector<glm::mat4> sceneMatrices) {
+void Level::applyForce(float force, float gravitationalForce, float dt) {
+	// audio acceleraion - gravity
+	float netForce = force - gravitationalForce;
+	mAcceleration = netForce / mMass;
+	// calculate velocity
+	mVelocity += mAcceleration * dt;
+	// calculate angle position (but only apply if the new position is between 0-360 degrees)
+	float tempAngle = mAngle + mVelocity * dt;
+	if (tempAngle < 0.0f || tempAngle > 360.0f) {
+		mVelocity = 0.0f;
+	} else {
+		mAngle = tempAngle;
+	}
+}
 
+
+void Level::render(std::vector<glm::mat4> sceneMatrices) {
+	
      // Enable backface culling and depth test, we dont want to draw unnecessary stuff
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);

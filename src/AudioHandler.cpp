@@ -1,13 +1,15 @@
 #include "AudioHandler.h"
 
 AudioHandler::AudioHandler() {
-	
+
 	std::cout << "Creating AudioHandler..." << std::endl;
+	mMaxAmplitude = 2;
+	mAmplitude = 0;
 }
 
 
 AudioHandler::~AudioHandler() {
-	
+
 	std::cout << "Destroying AudioHandler..." << std::endl;
 	closeAudio();
 	//delete mStream; // This might result in memory leaks. Deleting pointer to void.
@@ -37,12 +39,18 @@ void AudioHandler::initialize() {
 		audioCallback, /* this is your callback function */
 		&mAmplitude);
 
-	if (err != paNoError) 
+	if (err != paNoError)
 		printError(err);
 
 	err = Pa_StartStream(mStream);
-	if (err != paNoError) 
+	if (err != paNoError)
 		printError(err);
+}
+
+float AudioHandler::getNormalizedAmplitude() {
+	if (mAmplitude > mMaxAmplitude)
+		mAmplitude = mMaxAmplitude;
+	return mAmplitude / mMaxAmplitude;
 }
 
 
@@ -53,12 +61,12 @@ void AudioHandler::closeAudio() {
 		printError(err);
 	//Close the stream
 	err = Pa_CloseStream(mStream);
-	if (err != paNoError) 
+	if (err != paNoError)
 		printError(err);
 }
 
 void AudioHandler::printError(PaError err) {
-	
+
 	std::cout << "error message: " << Pa_GetErrorText(err) << std::endl;
 	err = Pa_Terminate();
 	if (err != paNoError)
@@ -81,6 +89,7 @@ int AudioHandler::audioCallback(const void *inputbuffer, void *outputbuffer,
 			maxInput = *in;
 		}
 	}
+
 	*data = maxInput;
 	return 0;
 }

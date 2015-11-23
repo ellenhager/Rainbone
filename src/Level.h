@@ -28,7 +28,7 @@ public:
 
     void render(std::vector<glm::mat4>);
 
-    void addForce(float f) { mForce += f; }
+    void applyForce(float audioForce, float gravitationalForce, float dt);
 
     float getAngle() { return mAngle; }
 
@@ -38,14 +38,18 @@ public:
 
 private:
 
-    float mAngle = 0.0f;
+    float mAngle = 70.0f;
 
+    // for motion
     float mForce;
+    float mMass;
+    float mAcceleration;
+    float mVelocity;
 
     bool mCurrentLevel = false;
 
     std::vector<glm::vec3> mVertices;
-    
+
     std::vector<glm::vec3> mNormals;
 
     struct Material {

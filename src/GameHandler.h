@@ -16,13 +16,15 @@ public:
 
     void render();
 
-    void update();
+    void update(float dt);
 
     void keyCallback(int, int);
 
     std::vector<float> getLevelAngles() { return mScene->getLevelAngles(); }
 
     void setLevelAngles(std::vector<float>);
+
+    void rotateByVoice();
 
 private:
 
@@ -34,8 +36,9 @@ private:
 
     AudioHandler * mAudioHandler;
 
+    float mAudioGravityRatio;
 
-
+    float mAudioMultiplier;
 };
 
 #endif // GAMEHANDLER_H

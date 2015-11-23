@@ -4,9 +4,17 @@ GameHandler::GameHandler(sgct::Engine *e)
     : mEngine(e) {
 
     std::cout << "\nCreating GameHandler...\n" << std::endl;
-    mScene = new Scene();
 
 	mAudioHandler = new AudioHandler();
+
+	// 1 => gravitational force is just as high as Audio Force
+	// 0.1 => gravitational force is 10% if audio force
+	mAudioGravityRatio = 0.1;
+
+	// The higher this multiplier, the faster the levels will move
+	mAudioMultiplier = 1000;
+
+	mScene = new Scene();
 
     std::cout << "\nGameHandler created!\n";
 }
@@ -34,9 +42,15 @@ void GameHandler::initialize() {
 }
 
 
-void GameHandler::update() {
-	
-    //std::cout << "Audio amplitude: " << mAudioHandler->getAmplitude() << std::endl;
+void GameHandler::update(float dt) {
+
+	// can be switched to un-normalized amplitude function
+	float audioForce = mAudioHandler->getNormalizedAmplitude() * mAudioMultiplier;
+
+	// the gravitational force will be the gravitational ratio times maximum audio amplitude.
+	float gravitationalForce = mAudioMultiplier * mAudioGravityRatio;
+
+	mScene->getLevel(mCurrentLevel)->applyForce(audioForce, gravitationalForce, dt);
 }
 
 

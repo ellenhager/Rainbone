@@ -55,10 +55,10 @@ void Scene::render(std::vector<glm::mat4> sceneMatrices) {
 }
 
 
-void Scene::addLevelForce(unsigned int i, float f) {
-    
-    mLevels[i]->addForce(f);
-}
+//void Scene::addLevelForce(unsigned int i, float f) {
+//    
+//    mLevels[i]->addForce(f);
+//}
 
 
 std::vector<float> Scene::getLevelAngles() {
