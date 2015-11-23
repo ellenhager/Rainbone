@@ -15,6 +15,7 @@
 
 #include "sgct.h"
 #include "objloader.hpp"
+#include "time.h"
 
 class Level {
 
