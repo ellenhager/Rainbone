@@ -1,7 +1,7 @@
 #include "GameHandler.h"
 
-GameHandler::GameHandler(sgct::Engine *e)
-    : mEngine(e) {
+GameHandler::GameHandler(sgct::Engine *e, unsigned int n)
+    : mEngine(e), mNumberOfLevels(n) {
 
     std::cout << "\nCreating GameHandler...\n" << std::endl;
 
@@ -14,7 +14,7 @@ GameHandler::GameHandler(sgct::Engine *e)
 	// The higher this multiplier, the faster the levels will move
 	mAudioMultiplier = 1000;
 
-	mScene = new Scene();
+	mScene = new Scene(mNumberOfLevels);
 
     std::cout << "\nGameHandler created!\n";
 }
@@ -51,6 +51,14 @@ void GameHandler::update(float dt) {
 	float gravitationalForce = mAudioMultiplier * mAudioGravityRatio;
 
 	mScene->getLevel(mCurrentLevel)->applyForce(audioForce, gravitationalForce, dt);
+
+    // Make the completed levels follow the leader
+    for(unsigned int i = 0; i < mCurrentLevel; i++)
+        mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
+
+    resolveLevelProgression();
+
+    mScene->update(dt);
 }
 
 
@@ -115,4 +123,23 @@ void GameHandler::setLevelAngles(std::vector<float> syncronizedAngles) {
 
     for(unsigned int i = 0; i < mScene->getNumberOfLevels(); i++)
         mScene->getLevel(i)->setAngle(syncronizedAngles[i]);
+}
+
+
+void GameHandler::resolveLevelProgression() {
+
+    if(mCurrentLevel < mNumberOfLevels - 1) {
+
+        Level * currentLevel = mScene->getLevel(mCurrentLevel);
+        Level * nextLevel = mScene->getLevel(mCurrentLevel + 1);
+
+        if((currentLevel->getAngle() > nextLevel->getAngle() - mAngleCompletionSpan &&
+            currentLevel->getAngle() < nextLevel->getAngle() + mAngleCompletionSpan) && 
+            (currentLevel->getVelocity() < mMaximumCompletionVelocity && currentLevel->getVelocity() > -mMaximumCompletionVelocity)) {
+        
+            currentLevel->setLevelComplete();
+
+            mCurrentLevel++;
+        }
+    }
 }
