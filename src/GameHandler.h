@@ -8,7 +8,7 @@ class GameHandler {
 
 public:
 
-    GameHandler(sgct::Engine *);
+    GameHandler(sgct::Engine *, unsigned int);
 
     ~GameHandler();
 
@@ -28,6 +28,8 @@ public:
 
 private:
 
+    void resolveLevelProgression();
+
     unsigned int mCurrentLevel = 0;
 
     sgct::Engine * mEngine;
@@ -39,6 +41,12 @@ private:
     float mAudioGravityRatio;
 
     float mAudioMultiplier;
+
+    const float mAngleCompletionSpan = 5.0f;
+
+    const float mMaximumCompletionVelocity = 60.0f;
+
+    float mNumberOfLevels;
 };
 
 #endif // GAMEHANDLER_H

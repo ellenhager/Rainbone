@@ -19,6 +19,8 @@ sgct::SharedDouble curr_time(0.0);
 // Shared container for angles of each level
 sgct::SharedVector<float> mSharedLevelAngles;
 
+unsigned int numLevels = 7;
+
 
 int main(int argc, char* argv[]) {
 
@@ -74,6 +76,7 @@ void preSync() {
 }
 
 void postSync() {
+
 	if (!gEngine->isMaster()) {
 		// Sync all angles across the slaves
 		rainbone->setLevelAngles(mSharedLevelAngles.getVal());
@@ -82,7 +85,7 @@ void postSync() {
 
 void initialize() {
 
-    rainbone = new GameHandler(gEngine);
+    rainbone = new GameHandler(gEngine, numLevels);
 
     rainbone->initialize();
 }

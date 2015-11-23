@@ -28,25 +28,42 @@ public:
 
     void render(std::vector<glm::mat4>);
 
+    void update(float dt);
+
     void applyForce(float audioForce, float gravitationalForce, float dt);
 
     float getAngle() { return mAngle; }
 
+    float getVelocity() { return mVelocity; }
+
     void setAngle(float a) { mAngle = a; }
+
+    void setLevelComplete() { mLevelComplete = true; }
 
     void incrementAngle(float a) { mAngle += a; }
 
 private:
 
-    float mAngle = 70.0f;
+    float randomizeAngle(float, float);
+
+    void interpolateColor();
+
+    float mAngle = 0.0f;
+
+    float mInterpolationTimer = 0.0f;
+    
+    const float maxInterpolationTime = 1.0f;
 
     // for motion
     float mForce;
+    
     float mMass;
+    
     float mAcceleration;
+    
     float mVelocity;
 
-    bool mCurrentLevel = false;
+    bool mLevelComplete = false;
 
     std::vector<glm::vec3> mVertices;
 
@@ -54,6 +71,8 @@ private:
 
     struct Material {
         glm::vec4 color;
+        glm::vec4 greyScale;
+        glm::vec4 currentColor;
         glm::vec4 ambient;
         glm::vec4 diffuse;
         glm::vec4 specular;

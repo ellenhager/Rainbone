@@ -10,12 +10,24 @@ Level::Level(const char * objPath, glm::vec4 c) {
 
     loadOBJ(objPath, mVertices, mNormals);
 
+    float greyScaleColor = (c.x + c.y + c.z) / 3.0f;
+
     mMaterial.color         = c;
+    mMaterial.greyScale     = glm::vec4(greyScaleColor, greyScaleColor, greyScaleColor, 1.0f);
+    mMaterial.currentColor  = glm::vec4(greyScaleColor, greyScaleColor, greyScaleColor, 1.0f);
     mMaterial.ambient       = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
     mMaterial.diffuse       = glm::vec4(0.8f, 0.8f, 0.8f, 1.0f);
     mMaterial.specular      = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     mMaterial.specularity   = 50.0f;
     mMaterial.shinyness     = 0.6f;
+
+
+    float aMin = -90.0f, aMax = 90.0f;
+    //std::cout << "\nrandom angle: " << randomizeAngle(aMin, aMax) << std::endl;
+    mAngle = randomizeAngle(aMin, aMax) + (aMin / 2.0f);
+
+    if(mAngle < 0.0f)
+        mAngle = 360.0f + mAngle;
 }
 
 
@@ -36,6 +48,8 @@ Level::~Level() {
 void Level::initialize(glm::vec3 lightSourcePosition) {
 
     std::cout << "\nInitializing Level...";
+
+    srand(time(NULL));
 
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
@@ -129,7 +143,7 @@ void Level::render(std::vector<glm::mat4> sceneMatrices) {
     float tilt = M_PI * 27.0f / 180.0f;
     // Create scene transform (animation)
     glm::mat4 levelTransform = glm::rotate( glm::mat4(1.0f), tilt , glm::vec3(-1.0f, 0.0f, 0.0f));
-    glm::mat4 levelRotation = glm::rotate( glm::mat4(1.0f), static_cast<float>(mAngle * M_PI / 180.0f) , glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 levelRotation  = glm::rotate( glm::mat4(1.0f), static_cast<float>(mAngle * M_PI / 180.0f) , glm::vec3(0.0f, 1.0f, 0.0f));
 
     // Apply scene transforms to MVP and MV matrices
     sceneMatrices[I_MVP] = sceneMatrices[I_MVP] * levelTransform * levelRotation;
@@ -143,7 +157,7 @@ void Level::render(std::vector<glm::mat4> sceneMatrices) {
     glUniformMatrix4fv(MVLoc, 1, GL_FALSE, &sceneMatrices[I_MV][0][0]);
     glUniformMatrix4fv(MVLightLoc, 1, GL_FALSE, &sceneMatrices[I_MV_LIGHT][0][0]);
     glUniformMatrix4fv(NMLoc, 1, GL_FALSE, &sceneMatrices[I_NM][0][0]);
-    glUniform4f(colorLoc, mMaterial.color[0], mMaterial.color[1], mMaterial.color[2], mMaterial.color[3]);
+    glUniform4f(colorLoc, mMaterial.currentColor[0], mMaterial.currentColor[1], mMaterial.currentColor[2], mMaterial.currentColor[3]);
     glUniform4f(lightAmbLoc, mMaterial.ambient[0], mMaterial.ambient[1], mMaterial.ambient[2], mMaterial.ambient[3]);
     glUniform4f(lightDifLoc, mMaterial.diffuse[0], mMaterial.diffuse[1], mMaterial.diffuse[2], mMaterial.diffuse[3]);
     glUniform4f(lightSpeLoc, mMaterial.specular[0], mMaterial.specular[1], mMaterial.specular[2], mMaterial.specular[3]);
@@ -171,3 +185,34 @@ void Level::render(std::vector<glm::mat4> sceneMatrices) {
     glDisable( GL_CULL_FACE );
     glDisable( GL_DEPTH_TEST );
 }
+
+
+void Level::update(float dt) {
+
+    if(mLevelComplete && mInterpolationTimer < maxInterpolationTime) {
+        
+        mInterpolationTimer += dt;
+
+        interpolateColor();
+    }
+}
+
+
+float Level::randomizeAngle(float a, float b) {
+
+    float randomNumber = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+    return a + (randomNumber * (b - a));
+}
+
+
+void Level::interpolateColor() {
+
+    float r = mMaterial.color.x - mMaterial.greyScale.x;
+    float g = mMaterial.color.y - mMaterial.greyScale.y;
+    float b = mMaterial.color.z - mMaterial.greyScale.z;
+
+    mMaterial.currentColor.x = mMaterial.greyScale.x + r * (mInterpolationTimer / maxInterpolationTime);
+    mMaterial.currentColor.y = mMaterial.greyScale.y + g * (mInterpolationTimer / maxInterpolationTime);
+    mMaterial.currentColor.z = mMaterial.greyScale.z + b * (mInterpolationTimer / maxInterpolationTime);
+}
+
