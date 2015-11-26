@@ -62,8 +62,6 @@ void GameHandler::update(float dt) {
 
     resolveLevelProgression();
 
-    std::cout << "angle: " << mScene->getLevel(0)->getAngle() << std::endl;
-
     mScene->update(dt);
 }
 
