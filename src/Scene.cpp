@@ -1,15 +1,25 @@
 #include "Scene.h"
 
-Scene::Scene() {
+Scene::Scene(unsigned int n) {
 
     std::cout << "\nCreating Scene...\n";
     
     mLightSourcePosition = glm::vec3(0.0f, 0.0f, 0.0f);
 
-    addLevel(new Level("../assets/level1.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+    if(n > 7) {
+        std::cout << "\nYou tried to create more levels than possible, 7 is the maximum amount!\n";
+        std::cout << "\n\nUsing 7 levels instead!\n\n";
+        n = 7;
+    }
+
+    for(unsigned int i = 1; i <= n; i++) {
+        addLevel(new Level(("../assets/_level" + std::to_string(i) + ".obj").c_str(), sColorScale[i-1]));        
+    }
+
+/*    addLevel(new Level("../assets/level1.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
     addLevel(new Level("../assets/level2.obj", glm::vec4(0.2f, 0.8f, 0.2f, 1.0f)));
     addLevel(new Level("../assets/level3.obj", glm::vec4(0.2f, 0.2f, 0.8f, 1.0f)));
-    addLevel(new Level("../assets/level4.obj", glm::vec4(0.8f, 0.8f, 0.2f, 1.0f)));
+    addLevel(new Level("../assets/level4.obj", glm::vec4(0.8f, 0.8f, 0.2f, 1.0f)));*/
 
     mCharacter = new Character();
 
@@ -55,10 +65,11 @@ void Scene::render(std::vector<glm::mat4> sceneMatrices) {
 }
 
 
-//void Scene::addLevelForce(unsigned int i, float f) {
-//    
-//    mLevels[i]->addForce(f);
-//}
+void Scene::update(float dt) {
+
+    for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
+        (*it)->update(dt);
+}
 
 
 std::vector<float> Scene::getLevelAngles() {
