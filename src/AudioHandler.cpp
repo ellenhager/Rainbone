@@ -49,7 +49,7 @@ void AudioHandler::initialize() {
 
 float AudioHandler::getNormalizedAmplitude() {
 	if (mAmplitude > mMaxAmplitude)
-		mAmplitude = mMaxAmplitude;
+		mMaxAmplitude = mAmplitude;
 	return mAmplitude / mMaxAmplitude;
 }
 
