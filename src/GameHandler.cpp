@@ -36,6 +36,10 @@ void GameHandler::initialize() {
 
     mScene->initialize();
 
+    Level * firstLevel = mScene->getLevel(0);
+
+    firstLevel->setCurrentLevel();
+
 	mAudioHandler->initialize();
 
     std::cout << "\nGameHandler initialized!\n";
@@ -57,6 +61,8 @@ void GameHandler::update(float dt) {
         mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
 
     resolveLevelProgression();
+
+    std::cout << "angle: " << mScene->getLevel(0)->getAngle() << std::endl;
 
     mScene->update(dt);
 }
@@ -137,7 +143,7 @@ void GameHandler::resolveLevelProgression() {
             currentLevel->getAngle() < nextLevel->getAngle() + mAngleCompletionSpan) && 
             (currentLevel->getVelocity() < mMaximumCompletionVelocity && currentLevel->getVelocity() > -mMaximumCompletionVelocity)) {
         
-            currentLevel->setLevelComplete();
+            nextLevel->setCurrentLevel();
 
             mCurrentLevel++;
         }

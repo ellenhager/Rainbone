@@ -38,7 +38,7 @@ public:
 
     void setAngle(float a) { mAngle = a; }
 
-    void setLevelComplete() { mLevelComplete = true; }
+    void setCurrentLevel() { mCurrentLevel = true; }
 
     void incrementAngle(float a) { mAngle += a; }
 
@@ -63,7 +63,7 @@ private:
     
     float mVelocity;
 
-    bool mLevelComplete = false;
+    bool mCurrentLevel = false;
 
     std::vector<glm::vec3> mVertices;
 
