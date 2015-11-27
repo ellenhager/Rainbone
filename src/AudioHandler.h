@@ -22,6 +22,8 @@ public:
 
 	float getAmplitude() { return mAmplitude; };
 
+    void updateMaxAmplitude(float f) { if(mMaxAmplitude > 1.0f) mMaxAmplitude += f; }
+
     static int audioCallback(const void *inputbuffer, void *outputbuffer,
 		unsigned long framesperbuffer,
 		const PaStreamCallbackTimeInfo* timeinfo,

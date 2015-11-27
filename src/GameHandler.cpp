@@ -36,6 +36,10 @@ void GameHandler::initialize() {
 
     mScene->initialize();
 
+    Level * firstLevel = mScene->getLevel(0);
+
+    firstLevel->setCurrentLevel();
+
 	mAudioHandler->initialize();
 
     std::cout << "\nGameHandler initialized!\n";
@@ -91,19 +95,13 @@ void GameHandler::keyCallback(int key, int action) {
 
             case SGCT_KEY_UP:
                 if(action == SGCT_PRESS) {
-                    if(mCurrentLevel == mScene->getNumberOfLevels() - 1)
-                        mCurrentLevel = 0;
-                    else
-                        mCurrentLevel++;
+                    mAudioHandler->updateMaxAmplitude(0.2f);
                 }
             break;
 
             case SGCT_KEY_DOWN:
                 if(action == SGCT_PRESS) {
-                    if(mCurrentLevel == 0)
-                        mCurrentLevel = mScene->getNumberOfLevels() - 1;
-                    else
-                        mCurrentLevel--;
+                    mAudioHandler->updateMaxAmplitude(-0.2f);
                 }
             break;
         }
@@ -137,7 +135,7 @@ void GameHandler::resolveLevelProgression() {
             currentLevel->getAngle() < nextLevel->getAngle() + mAngleCompletionSpan) && 
             (currentLevel->getVelocity() < mMaximumCompletionVelocity && currentLevel->getVelocity() > -mMaximumCompletionVelocity)) {
         
-            currentLevel->setLevelComplete();
+            nextLevel->setCurrentLevel();
 
             mCurrentLevel++;
         }
