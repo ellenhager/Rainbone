@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "portaudio.h"
+#include <SFML/Audio.hpp>
 
 class AudioHandler {
 
