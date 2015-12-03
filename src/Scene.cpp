@@ -22,6 +22,7 @@ Scene::Scene(unsigned int n) {
     addLevel(new Level("../assets/level4.obj", glm::vec4(0.8f, 0.8f, 0.2f, 1.0f)));*/
 
     mCharacter = new Character();
+	mSkySphere = new SkySphere();
 
     std::cout << "\nScene created!\n";
 }
@@ -52,6 +53,8 @@ void Scene::initialize() {
 
     mCharacter->initialize(mLightSourcePosition);
 
+	mSkySphere->initialize();
+
     std::cout << "\nScene initialized!\n";
 }
 
@@ -62,6 +65,7 @@ void Scene::render(std::vector<glm::mat4> sceneMatrices) {
         (*it)->render(sceneMatrices);
 
     mCharacter->render(sceneMatrices);
+	mSkySphere->render(sceneMatrices);
 }
 
 
@@ -69,6 +73,8 @@ void Scene::update(float dt) {
 
     for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
         (*it)->update(dt);
+
+	mSkySphere->update(dt);
 }
 
 
