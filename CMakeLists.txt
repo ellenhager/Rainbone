@@ -17,12 +17,12 @@ file(GLOB SOURCE src/*.cpp)
 
 add_executable(${APP_NAME}
     ${SOURCE})
-    
+
 set_target_properties(${APP_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY_DEBUG ${EXECUTABLE_OUTPUT_PATH}/debug
     RUNTIME_OUTPUT_DIRECTORY_RELEASE ${EXECUTABLE_OUTPUT_PATH}/release
-)   
-    
+)
+
 if( APPLE )
     option(SGCT_CPP11 "Use libc++ instead of libstdc++" ON)
     set(CMAKE_OSX_ARCHITECTURES "x86_64")
@@ -34,7 +34,7 @@ endif()
 find_library(SGCT_RELEASE_LIBRARY
     NAMES sgct libsgct libsgct_cpp11
     REQUIRED)
-    
+
 find_library(SGCT_DEBUG_LIBRARY
     NAMES sgctd libsgctd libsgct_cpp11d
     REQUIRED)
@@ -47,6 +47,22 @@ find_library(PORTAUDIO_RELEASE_LIBRARY
     NAMES portaudio libportaudio
     REQUIRED)
 
+find_library(SFML_SYSTEM_DEBUG_LIBRARY
+    NAMES sfml-system-d libsfml-system
+    REQUIRED)
+
+find_library(SFML_SYSTEM_RELEASE_LIBRARY
+    NAMES sfml-system libsfml-system
+    REQUIRED)
+
+find_library(SFML_AUDIO_DEBUG_LIBRARY
+    NAMES sfml-audio-d libsfml-audio
+    REQUIRED)
+
+find_library(SFML_AUDIO_RELEASE_LIBRARY
+    NAMES sfml-audio libsfml-audio
+    REQUIRED)
+
 if( WIN32 )
     find_path(SGCT_INCLUDE_DIRECTORY
         NAMES sgct
@@ -55,6 +71,10 @@ if( WIN32 )
     find_path(PORTAUDIO_INCLUDE_DIRECTORY
         NAMES portaudio
         PATHS $ENV{PORTAUDIO_ROOT_DIR}/include NO_DEFAULT_PATH
+        REQUIRED)
+    find_path(SFML_INCLUDE_DIRECTORY
+        NAMES SFML
+        PATHS $ENV{SFTML_ROOT_DIR}/include NO_DEFAULT_PATH
         REQUIRED)
 else()
     find_path(SGCT_INCLUDE_DIRECTORY
@@ -67,6 +87,11 @@ else()
         PATH_SUFFIXES portaudio
         PATHS $ENV{PORTAUDIO_ROOT_DIR}/include
         REQUIRED)
+    find_path(SFML_INCLUDE_DIRECTORY
+        NAMES SFML
+        PATH_SUFFIXES SFML
+        PATHS $ENV{SFML_ROOT_DIR}/include
+        REQUIRED)
 endif()
 
 set(SGCT_LIBS
@@ -77,21 +102,36 @@ set(PORTAUDIO_LIBS
     debug ${PORTAUDIO_DEBUG_LIBRARY}
     optimized ${PORTAUDIO_RELEASE_LIBRARY}
 )
+set(SFML_SYSTEM_LIBS
+    debug ${SFML_SYSTEM_DEBUG_LIBRARY}
+    optimized ${SFML_SYSTEM_RELEASE_LIBRARY}
+)
+set(SFML_AUDIO_LIBS
+    debug ${SFML_AUDIO_DEBUG_LIBRARY}
+    optimized ${SFML_AUDIO_RELEASE_LIBRARY}
+)
 
 find_package(OpenGL REQUIRED)
 
-include_directories(${SGCT_INCLUDE_DIRECTORY} ${PORTAUDIO_INCLUDE_DIRECTORY})
+include_directories(${SGCT_INCLUDE_DIRECTORY} ${PORTAUDIO_INCLUDE_DIRECTORY}
+${SFML_SYSTEM_INCLUDE_DIRECTORY}
+${SFML_AUDIO_INCLUDE_DIRECTORY})
 
 if( MSVC )
     set(LIBS
         ${SGCT_LIBS}
         ${PORTAUDIO_LIBS}
+        ${SFML_SYSTEM_LIBS}
+        ${SFML_AUDIO_LIBS}
         ${OPENGL_LIBRARY}
         ws2_32
     )
 elseif( WIN32 ) #MINGW or similar
     set(LIBS
         ${SGCT_LIBS}
+        ${PORTAUDIO_LIBS}
+        ${SFML_SYSTEM_LIBS}
+        ${SFML_AUDIO_LIBS}
         ${OPENGL_LIBRARY}
         ws2_32
     )
@@ -110,10 +150,11 @@ elseif( APPLE )
 #CoreServices.framework
 #Carbon.framework
 
-
     set(LIBS
         ${SGCT_LIBS}
         ${PORTAUDIO_LIBS}
+        ${SFML_SYSTEM_LIBS}
+        ${SFML_AUDIO_LIBS}
         ${OPENGL_LIBRARY}
         ${COCOA_LIBRARY}
         ${IOKIT_LIBRARY}
@@ -134,6 +175,8 @@ else() #linux
     set(LIBS
         ${SGCT_LIBS}
         ${PORTAUDIO_LIBS}
+        ${SFML_SYSTEM_LIBS}
+        ${SFML_AUDIO_LIBS}
         ${OPENGL_LIBRARY}
         ${X11_LIBRARY}
         ${XRANDR_LIBRARY}
@@ -184,7 +227,7 @@ elseif( APPLE  )
 else()
     add_definitions(-D__LINUX__)
 endif()
-    
+
 #if( CMAKE_COMPILER_IS_GNUCXX )
 #   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++ -static")
 #endif()

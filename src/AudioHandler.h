@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "portaudio.h"
+#include <SFML/Audio.hpp>
 
 class AudioHandler {
 
@@ -32,11 +33,14 @@ public:
 
     void printError(PaError err);
 
+    void stop() { mMusic.stop(); }
+
 private:
 
     float mAmplitude = 0;
     float mMaxAmplitude;
     PaStream *mStream;
+    sf::Music mMusic;
 };
 
 #endif // AUDIOHANDLER_H

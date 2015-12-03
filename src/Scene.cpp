@@ -13,7 +13,7 @@ Scene::Scene(unsigned int n) {
     }
 
     for(unsigned int i = 1; i <= n; i++) {
-        addLevel(new Level(("../assets/_level" + std::to_string(i) + ".obj").c_str(), sColorScale[i-1]));        
+        addLevel(new Level(("../assets/objs/_level" + std::to_string(i) + ".obj").c_str(), sColorScale[i-1]));        
     }
 
 /*    addLevel(new Level("../assets/level1.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));

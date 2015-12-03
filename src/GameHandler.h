@@ -26,6 +26,8 @@ public:
 
     void rotateByVoice();
 
+    AudioHandler* getAudiohandler() { return mAudioHandler; }
+
 private:
 
     void resolveLevelProgression();
