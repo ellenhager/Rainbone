@@ -46,15 +46,13 @@ void AudioHandler::initialize() {
 	if (err != paNoError)
 		printError(err);
 
-	//play music using SFML
-	sf::Music music;
+	// Play music using SFML
+	if(!mMusic.openFromFile("../assets/soundfiles/soundtrack.ogg")) {
+        std::cout << "ERROR WHEN LOADING AUDIO FILE!!!" << std::endl;
+        return;
+    }
 
-	if(!music.openFromFile("../assets/soundtrack.ogg")) {
-		std::cout << "Could not play soundtrack" << std::endl;
-	} else if(music.openFromFile("../assets/soundtrack.ogg")) {
-		std::cout << "Playing soundtrack" << std::endl;
-		music.play();
-	}
+    mMusic.play();
 }
 
 float AudioHandler::getNormalizedAmplitude() {
