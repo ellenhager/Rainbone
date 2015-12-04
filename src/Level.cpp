@@ -3,10 +3,10 @@
 Level::Level(const char * objPath, glm::vec4 c) {
 
     std::cout << "Creating Level..." << std::endl;
-	mForce = 0;
-	mAcceleration = 0;
-	mVelocity = 0;
-	mMass = 1; //kg
+	mForce = 0.0f;
+	mAcceleration = 0.0f;
+	mVelocity = 0.0f;
+	mMass = 1.0f; //kg
 
     loadOBJ(objPath, mVertices, mNormals);
 
@@ -14,7 +14,7 @@ Level::Level(const char * objPath, glm::vec4 c) {
 
     mMaterial.color         = c;
     mMaterial.greyScale     = glm::vec4(greyScaleColor, greyScaleColor, greyScaleColor, 1.0f);
-    mMaterial.currentColor  = glm::vec4(greyScaleColor, greyScaleColor, greyScaleColor, 1.0f);
+    mMaterial.currentColor  = c;
     mMaterial.ambient       = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
     mMaterial.diffuse       = glm::vec4(0.8f, 0.8f, 0.8f, 1.0f);
     mMaterial.specular      = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -24,7 +24,7 @@ Level::Level(const char * objPath, glm::vec4 c) {
 
     float aMin = 0.0f, aMax = 270.0f;
     //std::cout << "\nrandom angle: " << randomizeAngle(aMin, aMax) << std::endl;
-    mAngle = randomizeAngle(aMin, aMax) + (aMin / 2.0f) - 135.0f;
+	mAngle = 0.0f; // randomizeAngle(aMin, aMax) + (aMin / 2.0f) - 135.0f;
 
     if(mAngle < 0.0f)
         mAngle = 360.0f + mAngle;
@@ -124,7 +124,7 @@ void Level::initialize(glm::vec3 lightSourcePosition) {
 void Level::applyForce(float force, float gravitationalForce, float dt) {
 
     // calculate gravitational force
-    if (mAngle < 0.0f) { // for having a pendulum, where 0.0f is the pivot point
+    if (mAngle < mGravityAngle) { // for having a pendulum, where 0.0f is the pivot point
         gravitationalForce = -gravitationalForce;
     } else if (mAngle > 360.0f) { // make it harder to rotate after a 360, to stop the heavy rotating
         gravitationalForce *= 2.0f;
@@ -145,7 +145,7 @@ void Level::applyForce(float force, float gravitationalForce, float dt) {
 	float tempAngle = mAngle + mVelocity * dt;
 
     //lower velocity in the pivot point
-    if ((tempAngle < 0.0f && mAngle > 0.0f)||(tempAngle > 0.0f && mAngle < 0.0f)) {
+    if ((tempAngle < mGravityAngle && mAngle > mGravityAngle) || (tempAngle > mGravityAngle && mAngle < mGravityAngle)) {
 		mVelocity *= 0.6f;
 	}
 
@@ -228,13 +228,18 @@ float Level::randomizeAngle(float a, float b) {
 }
 
 
+void Level::setRandomAngle() {
+	mGravityAngle = randomizeAngle(0.0f, 270.0f);
+}
+
+
 void Level::interpolateColor() {
 
     float r = mMaterial.color.x - mMaterial.greyScale.x;
     float g = mMaterial.color.y - mMaterial.greyScale.y;
     float b = mMaterial.color.z - mMaterial.greyScale.z;
 
-    mMaterial.currentColor.x = mMaterial.greyScale.x + r * (mInterpolationTimer / maxInterpolationTime);
-    mMaterial.currentColor.y = mMaterial.greyScale.y + g * (mInterpolationTimer / maxInterpolationTime);
-    mMaterial.currentColor.z = mMaterial.greyScale.z + b * (mInterpolationTimer / maxInterpolationTime);
+    mMaterial.currentColor.x = mMaterial.greyScale.x + r * ( mInterpolationTimer / maxInterpolationTime );
+    mMaterial.currentColor.y = mMaterial.greyScale.y + g * ( mInterpolationTimer / maxInterpolationTime );
+    mMaterial.currentColor.z = mMaterial.greyScale.z + b * ( mInterpolationTimer / maxInterpolationTime );
 }

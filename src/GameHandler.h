@@ -24,11 +24,17 @@ public:
 
     void setLevelAngles(std::vector<float>);
 
-    void rotateByVoice();
-
     AudioHandler* getAudiohandler() { return mAudioHandler; }
 
 private:
+
+	enum GameState { INTRO, STARTING, GAME, END};
+
+	GameState mState;
+
+	float mStartingTimer = 0.0f;
+
+	const float maxStartingTime = 8.0f;
 
     void resolveLevelProgression();
 

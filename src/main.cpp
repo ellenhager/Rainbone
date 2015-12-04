@@ -62,11 +62,11 @@ void render() {
 void preSync() {
     
     if(gEngine->isMaster()) {   // If master, set all variables that needs to be synced
-        
-		float dt = sgct::Engine::getTime() - curr_time.getVal();
+
+		//float dt = sgct::Engine::getTime() - curr_time.getVal();
+		float dt = 1.0f / 60.0f;
         // Get the current time, we might want to use this later
         curr_time.setVal(sgct::Engine::getTime());
-		
         // Update game state
 		rainbone->update(dt);
 

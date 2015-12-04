@@ -20,7 +20,7 @@ public:
 
     void addLevel(Level *l) { mLevels.push_back(l); }
 
-    void addLevelForce(unsigned int, float);
+	void randomizeStartingPositions();
 
     std::vector<float> getLevelAngles();
 

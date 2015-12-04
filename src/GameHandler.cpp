@@ -16,6 +16,8 @@ GameHandler::GameHandler(sgct::Engine *e, unsigned int n)
 
 	mScene = new Scene(mNumberOfLevels);
 
+	mState = INTRO;
+
     std::cout << "\nGameHandler created!\n";
 }
 
@@ -48,19 +50,34 @@ void GameHandler::initialize() {
 
 void GameHandler::update(float dt) {
 
-	// can be switched to un-normalized amplitude function
-	float audioForce = mAudioHandler->getNormalizedAmplitude() * mAudioMultiplier;
-
 	// the gravitational force will be the gravitational ratio times maximum audio amplitude.
 	float gravitationalForce = mAudioMultiplier * mAudioGravityRatio;
 
-	mScene->getLevel(mCurrentLevel)->applyForce(audioForce, gravitationalForce, dt);
+	if (mState == GAME || mState == INTRO) {
+		// can be switched to un-normalized amplitude function
+		float audioForce = mAudioHandler->getNormalizedAmplitude() * mAudioMultiplier;
 
-    // Make the completed levels follow the leader
-    for(unsigned int i = 0; i < mCurrentLevel; i++)
-        mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
+		mScene->getLevel(mCurrentLevel)->applyForce(audioForce, gravitationalForce, dt);
 
-    resolveLevelProgression();
+		// Make the completed levels follow the leader
+		for (unsigned int i = 0; i < mCurrentLevel; i++)
+			mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
+
+		resolveLevelProgression();
+	} else if (mState == STARTING) {
+		for(unsigned int i = 0; i < mNumberOfLevels; i++)
+			mScene->getLevel(i)->applyForce(0.0f, gravitationalForce, dt);
+
+		if (mStartingTimer < maxStartingTime) {
+			mStartingTimer += dt;
+			mScene->getLevel(int(mStartingTimer))->
+
+		} else {
+			mState = GAME;
+		}
+	}
+
+
 
     mScene->update(dt);
 }
@@ -104,6 +121,13 @@ void GameHandler::keyCallback(int key, int action) {
                     mAudioHandler->updateMaxAmplitude(-0.2f);
                 }
             break;
+
+			case SGCT_KEY_S:
+				if (action == SGCT_PRESS) {
+					mState = STARTING;
+					mScene->randomizeStartingPositions();
+				}
+				break;
         }
     }
 }

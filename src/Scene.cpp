@@ -16,11 +16,6 @@ Scene::Scene(unsigned int n) {
         addLevel(new Level(("../assets/objs/_level" + std::to_string(i) + ".obj").c_str(), sColorScale[i-1]));        
     }
 
-/*    addLevel(new Level("../assets/level1.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
-    addLevel(new Level("../assets/level2.obj", glm::vec4(0.2f, 0.8f, 0.2f, 1.0f)));
-    addLevel(new Level("../assets/level3.obj", glm::vec4(0.2f, 0.2f, 0.8f, 1.0f)));
-    addLevel(new Level("../assets/level4.obj", glm::vec4(0.8f, 0.8f, 0.2f, 1.0f)));*/
-
     mCharacter = new Character();
 
     std::cout << "\nScene created!\n";
@@ -69,6 +64,13 @@ void Scene::update(float dt) {
 
     for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
         (*it)->update(dt);
+}
+
+
+void Scene::randomizeStartingPositions() {
+
+	for (std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
+		(*it)->setRandomAngle();
 }
 
 

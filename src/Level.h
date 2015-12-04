@@ -39,6 +39,8 @@ public:
 
     void setAngle(float a) { mAngle = a; }
 
+	void setRandomAngle();
+
     void setCurrentLevel() { mCurrentLevel = true; }
 
     void incrementAngle(float a) { mAngle += a; }
@@ -65,6 +67,8 @@ private:
     float mVelocity;
 
     bool mCurrentLevel = false;
+
+	float mGravityAngle = 0.0;
 
     std::vector<glm::vec3> mVertices;
 
