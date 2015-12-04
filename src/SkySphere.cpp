@@ -1,9 +1,9 @@
 #include "SkySphere.h"
 
-SkySphere::SkySphere() {
+SkySphere::SkySphere(float radius) {
 
 	std::cout << "Creating SkySphere..." << std::endl;
-	mSphere = new sgct_utils::SGCTSphere(30.0f, 50.0f);
+	mSphere = new sgct_utils::SGCTSphere(radius, 50.0f);
 }
 
 

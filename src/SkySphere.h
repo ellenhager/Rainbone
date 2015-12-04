@@ -17,7 +17,7 @@ class SkySphere {
 
 public:
 
-	SkySphere();
+	SkySphere(float radius);
 
 	~SkySphere();
 

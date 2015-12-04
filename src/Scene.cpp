@@ -22,7 +22,7 @@ Scene::Scene(unsigned int n) {
     addLevel(new Level("../assets/level4.obj", glm::vec4(0.8f, 0.8f, 0.2f, 1.0f)));*/
 
     mCharacter = new Character();
-	mSkySphere = new SkySphere();
+	mSkySphere = new SkySphere(35);
 
     std::cout << "\nScene created!\n";
 }
