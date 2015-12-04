@@ -60,6 +60,12 @@ void GameHandler::update(float dt) {
     for(unsigned int i = 0; i < mCurrentLevel; i++)
         mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
 
+	// if next level is not the last level...
+	if (mCurrentLevel + 1 < mNumberOfLevels) {
+		// update the next levels color based on angular distance from current level.
+		mScene->getLevel(mCurrentLevel + 1)->updateColor( mScene->getLevelAngle(mCurrentLevel) );
+	}
+
     resolveLevelProgression();
 
     mScene->update(dt);

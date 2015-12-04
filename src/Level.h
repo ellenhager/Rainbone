@@ -31,6 +31,8 @@ public:
 
     void update(float dt);
 
+	void updateColor(float previousAngle);
+
     void applyForce(float audioForce, float gravitationalForce, float dt);
 
     float getAngle() { return mAngle; }
@@ -52,6 +54,8 @@ private:
     float mAngle = 0.0f;
 
     float mInterpolationTimer = 0.0f;
+
+	float mInterpolationAngle = 30.0f;
     
     const float maxInterpolationTime = 1.0f;
 
