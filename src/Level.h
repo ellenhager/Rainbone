@@ -55,7 +55,7 @@ private:
 
     float mInterpolationTimer = 0.0f;
 
-	float mInterpolationAngle = 30.0f;
+	float mInterpolationAngle = 60.0f;
 
     const float maxInterpolationTime = 1.0f;
 
