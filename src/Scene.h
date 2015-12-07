@@ -24,6 +24,8 @@ public:
 
     std::vector<float> getLevelAngles();
 
+    std::vector<glm::vec4> getLevelColors();
+
     float getLevelAngle(unsigned int i) { return mLevels[i]->getAngle(); }
 
     std::vector<Level *> getLevels() { return mLevels; }
@@ -31,6 +33,8 @@ public:
     Level *getLevel(unsigned int i) { return mLevels[i]; }
 
     int getNumberOfLevels() { return mLevels.size(); }
+
+    Character *getCharacter() { return mCharacter; }
 
     void setLevelAngle(unsigned int i, float a) { mLevels[i]->setAngle(a); }
 
