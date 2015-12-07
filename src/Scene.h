@@ -3,6 +3,7 @@
 
 #include "Level.h"
 #include "Character.h"
+#include "SkySphere.h"
 
 class Scene {
 
@@ -39,6 +40,7 @@ private:
     std::vector<Level *> mLevels;
     
     Character * mCharacter;
+	SkySphere * mSkySphere;
 
     glm::vec3 mLightSourcePosition;
 
