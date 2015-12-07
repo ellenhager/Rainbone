@@ -8,7 +8,7 @@ Level::Level(const char * objPath, glm::vec4 c) {
 	mVelocity = 0;
 	mMass = 1; //kg
 
-    loadOBJ(objPath, mVertices, mNormals);
+    loadObj(objPath, mVertices, mNormals);
 
     float greyScaleColor = (c.x + c.y + c.z) / 3.0f;
 
@@ -28,10 +28,6 @@ Level::Level(const char * objPath, glm::vec4 c) {
 
     if(mAngle < 0.0f)
         mAngle = 360.0f + mAngle;
-
-    /*if(mAngle < 5.0f || mAngle > -5.0f) {
-        mAngle += 15.0f;
-    }*/
 }
 
 
@@ -54,9 +50,6 @@ void Level::initialize(glm::vec3 lightSourcePosition) {
     std::cout << "\nInitializing Level...";
 
     srand(time(NULL));
-
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
 
     if(!sgct::ShaderManager::instance()->shaderProgramExists("level")) {
         sgct::ShaderManager::instance()->addShaderProgram( "level",
@@ -159,7 +152,7 @@ void Level::applyForce(float force, float gravitationalForce, float dt) {
 
 void Level::render(std::vector<glm::mat4> sceneMatrices) {
 
-     // Enable backface culling and depth test, we dont want to draw unnecessary stuff
+    // Enable backface culling and depth test, we dont want to draw unnecessary stuff
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
@@ -171,7 +164,7 @@ void Level::render(std::vector<glm::mat4> sceneMatrices) {
 
     // Apply scene transforms to MVP and MV matrices
     sceneMatrices[I_MVP] = sceneMatrices[I_MVP] * levelTransform * levelRotation;
-    sceneMatrices[I_MV]  = sceneMatrices[I_MV]  * levelTransform;
+    sceneMatrices[I_MV]  = sceneMatrices[I_MV] * levelTransform;
 
     // Bind shader program
     sgct::ShaderManager::instance()->bindShaderProgram( "level" );
@@ -242,7 +235,7 @@ void Level::interpolateColor() {
 void Level::updateColor(float previousAngle) {
 
 	//take the angular difference from previous level
-	float angleDiff = abs(mAngle - previousAngle);
+	float angleDiff = std::abs(mAngle - previousAngle);
 
 	// if the difference is within interpolation area
 	if (angleDiff < mInterpolationAngle) {
