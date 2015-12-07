@@ -23,8 +23,7 @@ Level::Level(const char * objPath, glm::vec4 c) {
 
 
     float aMin = 0.0f, aMax = 270.0f;
-    //std::cout << "\nrandom angle: " << randomizeAngle(aMin, aMax) << std::endl;
-	mAngle = 0.0f; // randomizeAngle(aMin, aMax) + (aMin / 2.0f) - 135.0f;
+	mAngle = 0.0f;
 
     if(mAngle < 0.0f)
         mAngle = 360.0f + mAngle;
@@ -212,7 +211,7 @@ void Level::render(std::vector<glm::mat4> sceneMatrices) {
 
 void Level::update(float dt) {
 
-    if(mInterpolationTimer < maxInterpolationTime + 0.016) {
+    if(mInterpolationTimer <= maxInterpolationTime) {
 
         mInterpolationTimer += dt;
 
@@ -228,8 +227,8 @@ float Level::randomizeAngle(float a, float b) {
 }
 
 
-void Level::setRandomAngle() {
-	mGravityAngle = randomizeAngle(0.0f, 270.0f);
+void Level::setStartingAngle(float angle) {
+	mGravityAngle = angle;
 }
 
 void Level::saturate(bool s) {

@@ -44,15 +44,15 @@ public:
 
     void setAngle(float a) { mAngle = a; }
 
-	void setRandomAngle();
+	void setStartingAngle(float a);
 
     void setCurrentLevel() { mCurrentLevel = true; }
 
     void incrementAngle(float a) { mAngle += a; }
 
-private:
+	float randomizeAngle(float, float);
 
-    float randomizeAngle(float, float);
+private:
 
     void interpolateColor();
 

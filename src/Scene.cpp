@@ -76,17 +76,18 @@ void Scene::update(float dt) {
 void Scene::randomizeStartingPositions() {
 
 	for (std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it) {
-		if(it != mLevels.begin())
-			(*it)->setRandomAngle();
+		if (it != mLevels.begin()){
+			float angle = (*it)->randomizeAngle(20.0f, 270.0f);
+			(*it)->setStartingAngle(angle);
+		}
 	}
 		
 }
 
 void Scene::resetStartingPositions() {
 	for (std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
-		(*it);
+		(*it)->setStartingAngle(0.0f);
 }
-
 
 std::vector<float> Scene::getLevelAngles() {
 

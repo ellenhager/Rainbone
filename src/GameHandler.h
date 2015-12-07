@@ -18,6 +18,14 @@ public:
 
     void update(float dt);
 
+	void updateIntro(float dt);
+
+	void updateStarting(float dt);
+
+	void updateGame(float dt);
+
+	void updateEnd(float dt);
+
     void keyCallback(int, int);
 
     std::vector<float> getLevelAngles() { return mScene->getLevelAngles(); }
