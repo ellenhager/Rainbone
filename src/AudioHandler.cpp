@@ -61,6 +61,15 @@ float AudioHandler::getNormalizedAmplitude() {
 	return mAmplitude / mMaxAmplitude;
 }
 
+void AudioHandler::playAudio() {
+		// Play music using SFML
+	if(!mMusic.openFromFile("../assets/soundfiles/alarm.ogg")) {
+        std::cout << "ERROR WHEN LOADING AUDIO FILE!!!" << std::endl;
+        return;
+    }
+
+    mMusic.play();
+}
 
 void AudioHandler::closeAudio() {
 	// Stop the stream

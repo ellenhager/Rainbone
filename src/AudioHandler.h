@@ -17,6 +17,8 @@ public:
 
     void initialize();
 
+    void playAudio();
+
     void closeAudio();
 
 	float getNormalizedAmplitude();

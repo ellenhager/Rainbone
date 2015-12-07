@@ -110,6 +110,10 @@ void GameHandler::keyCallback(int key, int action) {
                     mAudioHandler->updateMaxAmplitude(-0.2f);
                 }
             break;
+
+            case SGCT_KEY_2:
+                mAudioHandler->playAudio();
+            break;
         }
     }
 }
