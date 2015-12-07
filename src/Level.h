@@ -56,16 +56,16 @@ private:
     float mInterpolationTimer = 0.0f;
 
 	float mInterpolationAngle = 30.0f;
-    
+
     const float maxInterpolationTime = 1.0f;
 
     // for motion
     float mForce;
-    
+
     float mMass;
-    
+
     float mAcceleration;
-    
+
     float mVelocity;
 
     bool mCurrentLevel = false;

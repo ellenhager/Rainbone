@@ -213,7 +213,7 @@ void Level::render(std::vector<glm::mat4> sceneMatrices) {
 void Level::update(float dt) {
 
     if(mCurrentLevel && mInterpolationTimer < maxInterpolationTime) {
-        
+
         mInterpolationTimer += dt;
 
         interpolateColor();
@@ -250,7 +250,8 @@ void Level::updateColor(float previousAngle) {
 		float r = mMaterial.color.x - mMaterial.greyScale.x;
 		float g = mMaterial.color.y - mMaterial.greyScale.y;
 		float b = mMaterial.color.z - mMaterial.greyScale.z;
-		// update currentColor based on the difference. Multiply with 0.5 to not interpolate all the way.
+
+        // update currentColor based on the difference. Multiply with 0.5 to not interpolate all the way.
 		mMaterial.currentColor.x = mMaterial.greyScale.x + r * (1 - angleDiff / mInterpolationAngle) * 0.5;
 		mMaterial.currentColor.y = mMaterial.greyScale.y + g * (1 - angleDiff / mInterpolationAngle) * 0.5;
 		mMaterial.currentColor.z = mMaterial.greyScale.z + b * (1 - angleDiff / mInterpolationAngle) * 0.5;
