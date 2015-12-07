@@ -36,6 +36,8 @@ private:
 
     void resolveLevelProgression();
 
+    void startCountDown();
+
     unsigned int mCurrentLevel = 0;
 
     sgct::Engine * mEngine;

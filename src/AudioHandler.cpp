@@ -46,13 +46,28 @@ void AudioHandler::initialize() {
 	if (err != paNoError)
 		printError(err);
 
+	mMusics[BGMUSIC] = std::make_pair(new sf::Music, new Timer(-0.5f, 1.0f, 1.0f, 0.0f));
+
 	// Play music using SFML
-	if(!mMusic.openFromFile("../assets/soundfiles/soundtrack.ogg")) {
+	if(!mMusics[BGMUSIC].first->openFromFile("../assets/soundfiles/soundtrack.ogg")) {
         std::cout << "ERROR WHEN LOADING AUDIO FILE!!!" << std::endl;
         return;
     }
 
-    mMusic.play();
+    mMusics[BGMUSIC].first->play();
+}
+
+void AudioHandler::updateSoundTimers(float dt) {
+
+	for(std::map<SoundFile, std::pair<sf::Music*, Timer*> >::iterator it = mMusics.begin(); it != mMusics.end(); ++it) {
+		if((*it).second.second->isActive())
+			(*it).second.second->update(dt);
+	}
+
+	for(std::map<SoundFile, std::pair<sf::Sound*, Timer*> >::iterator it = mSounds.begin(); it != mSounds.end(); ++it) {
+		if((*it).second.second->isActive())
+			(*it).second.second->update(dt);
+	}
 }
 
 float AudioHandler::getNormalizedAmplitude() {
@@ -60,7 +75,6 @@ float AudioHandler::getNormalizedAmplitude() {
 		mMaxAmplitude = mAmplitude;
 	return mAmplitude / mMaxAmplitude;
 }
-
 
 void AudioHandler::closeAudio() {
 	// Stop the stream
@@ -100,4 +114,20 @@ int AudioHandler::audioCallback(const void *inputbuffer, void *outputbuffer,
 
 	*data = maxInput;
 	return 0;
+}
+
+void AudioHandler::stopAllSounds() {
+
+	for(std::map<SoundFile, std::pair<sf::Music*, Timer*> >::iterator it = mMusics.begin(); it != mMusics.end(); ++it)
+		(*it).second.first->stop();
+
+	for(std::map<SoundFile, std::pair<sf::Sound*, Timer*> >::iterator it = mSounds.begin(); it != mSounds.end(); ++it)
+		(*it).second.first->stop();
+}
+
+void AudioHandler::fadeSoundDown(SoundFile soundFile) {
+
+	float currentVolume = mMusics[soundFile].first->getVolume();
+	float currentTime = mMusics[soundFile].second->getCurrentTime();
+	mMusics[soundFile].first->setVolume(currentVolume * currentTime);
 }
