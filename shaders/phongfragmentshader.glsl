@@ -10,19 +10,19 @@ uniform float shinyness;
 
 in vec3 normal;
 in vec3 v;
-in vec3 light_direction;
+in vec3 lightDirection;
 
 out vec4 frag_color;
 
 vec4 calcShading( vec3 N, vec3 L ) {
     //Ambient contribution
-    vec4 Iamb = ambientColor;
+    vec4 intensityAmbient = ambientColor;
 
     //Diffuse contribution
-    vec4 Idiff = diffuseColor * max(dot(N,L), 0.0);
-    Idiff = clamp(Idiff, 0.0, 1.0);
+    vec4 intensityDiffuse = diffuseColor * max(dot(N,L), 0.0);
+    intensityDiffuse = clamp(intensityDiffuse, 0.0, 1.0);
 
-    return Iamb + Idiff;
+    return intensityAmbient + intensityDiffuse;
 }
 
 vec4 calcSpecularShading( vec3 N, vec3 L ) {
@@ -34,26 +34,26 @@ vec4 calcSpecularShading( vec3 N, vec3 L ) {
     float spec = dot(R, v_dir);
     spec = (spec > 0.0) ? (1.0 * pow(spec, specularity)) : 0.0;
 
-    vec4 Ispec = specularColor * spec;
+    vec4 intensitySpecular = specularColor * spec;
     
-    Ispec = clamp(Ispec, 0.0, 1.0);
+    intensitySpecular = clamp(intensitySpecular, 0.0, 1.0);
 
-    return Ispec;
+    return intensitySpecular;
 }
 
 void main() {
 
     v;
-    light_direction;
+    lightDirection;
 
     frag_color = color;
 
     frag_color.rgb *= calcShading(
         normalize(vec3(NM * vec4(normal, 1.0))),
-        light_direction).rgb * 1.0;
+        lightDirection).rgb * 1.0;
     
     frag_color.rgb += calcSpecularShading(
         normalize(vec3(NM * vec4(normal, 1.0))),
-        light_direction).rgb * shinyness;
+        lightDirection).rgb * shinyness;
 
 }

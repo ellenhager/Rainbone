@@ -12,7 +12,7 @@ uniform vec4 lightPosition;
 
 out vec3 normal;
 out vec3 v;
-out vec3 light_direction;
+out vec3 lightDirection;
 out vec2 UV;
 
 void main() {
@@ -25,7 +25,7 @@ void main() {
 
     vec3 l = vec3(MV * lightPosition);
 
-    light_direction = normalize(l - v);
+    lightDirection = normalize(l - v);
 
     UV = textureCoordinates;
 }

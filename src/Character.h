@@ -16,7 +16,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "sgct.h"
-#include "objloader.hpp"
+#include "Objloader.hpp"
 
 class Character {
 

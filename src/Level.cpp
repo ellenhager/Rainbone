@@ -8,7 +8,7 @@ Level::Level(const char * objPath, glm::vec4 c) {
 	mVelocity = 0;
 	mMass = 1; //kg
 
-    loadOBJ(objPath, mVertices, mNormals);
+    loadObj(objPath, mVertices, mNormals);
 
     float greyScaleColor = (c.x + c.y + c.z) / 3.0f;
 

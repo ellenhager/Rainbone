@@ -5,7 +5,7 @@ Character::Character(const char * objPath, std::string tn)
 
     std::cout << "Creating Character..." << std::endl;
 
-    loadOBJ(objPath, mVertices, mUvs, mNormals);
+    loadObj(objPath, mVertices, mUvs, mNormals);
 
     mMaterial.color         = glm::vec4(0.3f, 0.7f, 0.7f, 1.0f);
     mMaterial.ambient       = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
