@@ -36,7 +36,7 @@ private:
 
 	const float maxStartingTime = 8.0f;
 
-	int levelInitializationIndex = 0;
+	int levelInitializationIndex = -1;
 
     void resolveLevelProgression();
 

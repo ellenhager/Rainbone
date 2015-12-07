@@ -212,11 +212,11 @@ void Level::render(std::vector<glm::mat4> sceneMatrices) {
 
 void Level::update(float dt) {
 
-    if(mCurrentLevel && mInterpolationTimer < maxInterpolationTime) {
-        
+    if(mInterpolationTimer < maxInterpolationTime + 0.016) {
+
         mInterpolationTimer += dt;
 
-        interpolateColor();
+		interpolateColor();
     }
 }
 
@@ -232,14 +232,51 @@ void Level::setRandomAngle() {
 	mGravityAngle = randomizeAngle(0.0f, 270.0f);
 }
 
+void Level::saturate(bool s) {
+	mIsSaturated = s;
+	mInterpolationTimer = 0.0f;
+}
+
 
 void Level::interpolateColor() {
 
-    float r = mMaterial.color.x - mMaterial.greyScale.x;
-    float g = mMaterial.color.y - mMaterial.greyScale.y;
-    float b = mMaterial.color.z - mMaterial.greyScale.z;
 
-    mMaterial.currentColor.x = mMaterial.greyScale.x + r * ( mInterpolationTimer / maxInterpolationTime );
-    mMaterial.currentColor.y = mMaterial.greyScale.y + g * ( mInterpolationTimer / maxInterpolationTime );
-    mMaterial.currentColor.z = mMaterial.greyScale.z + b * ( mInterpolationTimer / maxInterpolationTime );
+	float r = mMaterial.color.x - mMaterial.greyScale.x;
+	float g = mMaterial.color.y - mMaterial.greyScale.y;
+	float b = mMaterial.color.z - mMaterial.greyScale.z;
+
+	if (mIsSaturated) {
+		mMaterial.currentColor.x = std::min(mMaterial.greyScale.x + r * (mInterpolationTimer / maxInterpolationTime), mMaterial.color.x);
+		mMaterial.currentColor.y = std::min(mMaterial.greyScale.y + g * (mInterpolationTimer / maxInterpolationTime), mMaterial.color.y);
+		mMaterial.currentColor.z = std::min(mMaterial.greyScale.z + b * (mInterpolationTimer / maxInterpolationTime), mMaterial.color.z);
+	}
+	else {
+		mMaterial.currentColor.x = std::max(mMaterial.color.x - r * (mInterpolationTimer / maxInterpolationTime), mMaterial.greyScale.x);
+		mMaterial.currentColor.y = std::max(mMaterial.color.y - g * (mInterpolationTimer / maxInterpolationTime), mMaterial.greyScale.y);
+		mMaterial.currentColor.z = std::max(mMaterial.color.z - b * (mInterpolationTimer / maxInterpolationTime), mMaterial.greyScale.z);
+	}
+}
+
+void Level::updateColor(float previousAngle) {
+
+	//take the angular difference from previous level
+	float angleDiff = abs(mAngle - previousAngle);
+
+	// if the difference is within interpolation area
+	if (angleDiff < mInterpolationAngle) {
+
+		float r = mMaterial.color.x - mMaterial.greyScale.x;
+		float g = mMaterial.color.y - mMaterial.greyScale.y;
+		float b = mMaterial.color.z - mMaterial.greyScale.z;
+
+        // update currentColor based on the difference. Multiply with 0.5 to not interpolate all the way.
+		mMaterial.currentColor.x = mMaterial.greyScale.x + r * (1 - angleDiff / mInterpolationAngle) * 0.5;
+		mMaterial.currentColor.y = mMaterial.greyScale.y + g * (1 - angleDiff / mInterpolationAngle) * 0.5;
+		mMaterial.currentColor.z = mMaterial.greyScale.z + b * (1 - angleDiff / mInterpolationAngle) * 0.5;
+	}
+	else {
+		mMaterial.currentColor.x = mMaterial.greyScale.x;
+		mMaterial.currentColor.y = mMaterial.greyScale.y;
+		mMaterial.currentColor.z = mMaterial.greyScale.z;
+	}
 }

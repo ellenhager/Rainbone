@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <algorithm>
 
 #include "sgct.h"
 #include "objloader.hpp"
@@ -30,6 +31,10 @@ public:
     void render(std::vector<glm::mat4>);
 
     void update(float dt);
+
+	void saturate(bool);
+
+	void updateColor(float previousAngle);
 
     void applyForce(float audioForce, float gravitationalForce, float dt);
 
@@ -53,17 +58,21 @@ private:
 
     float mAngle = 0.0f;
 
+	bool mIsSaturated = true;
+
     float mInterpolationTimer = 0.0f;
-    
+
+	float mInterpolationAngle = 60.0f;
+
     const float maxInterpolationTime = 1.0f;
 
     // for motion
     float mForce;
-    
+
     float mMass;
-    
+
     float mAcceleration;
-    
+
     float mVelocity;
 
     bool mCurrentLevel = false;

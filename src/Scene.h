@@ -3,6 +3,7 @@
 
 #include "Level.h"
 #include "Character.h"
+#include "SkySphere.h"
 
 class Scene {
 
@@ -21,6 +22,7 @@ public:
     void addLevel(Level *l) { mLevels.push_back(l); }
 
 	void randomizeStartingPositions();
+	void resetStartingPositions();
 
     std::vector<float> getLevelAngles();
 
@@ -39,6 +41,7 @@ private:
     std::vector<Level *> mLevels;
     
     Character * mCharacter;
+	SkySphere * mSkySphere;
 
     glm::vec3 mLightSourcePosition;
 

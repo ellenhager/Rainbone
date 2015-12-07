@@ -64,8 +64,14 @@ void GameHandler::update(float dt) {
 			mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
 
 		//only resolve level progression when in game state
-		if(mState == GAME)
+		if (mState == GAME) {
+			// if next level is not the last level...
+			if (mCurrentLevel + 1 < mNumberOfLevels) {
+				// update the next levels color based on angular distance from current level.
+				mScene->getLevel(mCurrentLevel + 1)->updateColor(mScene->getLevelAngle(mCurrentLevel));
+			}
 			resolveLevelProgression();
+		}
 
 	} else if (mState == STARTING) {
 		// Make all levels pull towards their randomized gravitaional point
@@ -75,16 +81,19 @@ void GameHandler::update(float dt) {
 		// as long as within starting time
 		if (mStartingTimer < maxStartingTime) {
 			mStartingTimer += dt;
-			// if the level with index 
-			if (levelInitializationIndex != int(mStartingTimer)) {
+			// initialize the levels based on time (cast timer to integer and use as index for level)
+			if (levelInitializationIndex != int(mStartingTimer) && levelInitializationIndex < mNumberOfLevels-1) {
 				levelInitializationIndex = int(mStartingTimer);
-				mScene->getLevel(levelInitializationIndex); // make sound
+				mScene->getLevel(levelInitializationIndex)->saturate(false);
 			}
 		} else {
-			// When maxStartingTime has passed, swithc to GAME state.
+			// When maxStartingTime has passed, switch to GAME state.
 			mState = GAME;
+			mScene->getLevel(mCurrentLevel)->saturate(true);
+			mScene->resetStartingPositions();
 		}
 	}
+
     mScene->update(dt);
 }
 
