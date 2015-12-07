@@ -32,6 +32,8 @@ public:
 
     void update(float dt);
 
+	void updateColor(float previousAngle);
+
     void applyForce(float audioForce, float gravitationalForce, float dt);
 
     float getAngle() { return mAngle; }
@@ -57,16 +59,18 @@ private:
     float mAngle = 0.0f;
 
     float mInterpolationTimer = 0.0f;
-    
+
+	float mInterpolationAngle = 60.0f;
+
     const float maxInterpolationTime = 1.0f;
 
     // for motion
     float mForce;
-    
+
     float mMass;
-    
+
     float mAcceleration;
-    
+
     float mVelocity;
 
     bool mCurrentLevel = false;

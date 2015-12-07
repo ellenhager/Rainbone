@@ -210,7 +210,7 @@ void Level::render(std::vector<glm::mat4> sceneMatrices) {
 void Level::update(float dt) {
 
     if(mCurrentLevel && mInterpolationTimer < maxInterpolationTime) {
-        
+
         mInterpolationTimer += dt;
 
         interpolateColor();
@@ -227,11 +227,36 @@ float Level::randomizeAngle(float a, float b) {
 
 void Level::interpolateColor() {
 
-    float r = mMaterial.color.x - mMaterial.greyScale.x;
-    float g = mMaterial.color.y - mMaterial.greyScale.y;
-    float b = mMaterial.color.z - mMaterial.greyScale.z;
+    float r = mMaterial.color.x - mMaterial.currentColor.x;
+    float g = mMaterial.color.y - mMaterial.currentColor.y;
+    float b = mMaterial.color.z - mMaterial.currentColor.z;
 
-    mMaterial.currentColor.x = mMaterial.greyScale.x + r * (mInterpolationTimer / maxInterpolationTime);
-    mMaterial.currentColor.y = mMaterial.greyScale.y + g * (mInterpolationTimer / maxInterpolationTime);
-    mMaterial.currentColor.z = mMaterial.greyScale.z + b * (mInterpolationTimer / maxInterpolationTime);
+    mMaterial.currentColor.x = mMaterial.currentColor.x + r * (mInterpolationTimer / maxInterpolationTime);
+    mMaterial.currentColor.y = mMaterial.currentColor.y + g * (mInterpolationTimer / maxInterpolationTime);
+    mMaterial.currentColor.z = mMaterial.currentColor.z + b * (mInterpolationTimer / maxInterpolationTime);
+}
+
+void Level::updateColor(float previousAngle) {
+
+	//take the angular difference from previous level
+	float angleDiff = abs(mAngle - previousAngle);
+
+	// if the difference is within interpolation area
+	if (angleDiff < mInterpolationAngle) {
+
+		float r = mMaterial.color.x - mMaterial.greyScale.x;
+		float g = mMaterial.color.y - mMaterial.greyScale.y;
+		float b = mMaterial.color.z - mMaterial.greyScale.z;
+
+        // update currentColor based on the difference. Multiply with 0.5 to not interpolate all the way.
+		mMaterial.currentColor.x = mMaterial.greyScale.x + r * (1 - angleDiff / mInterpolationAngle) * 0.5;
+		mMaterial.currentColor.y = mMaterial.greyScale.y + g * (1 - angleDiff / mInterpolationAngle) * 0.5;
+		mMaterial.currentColor.z = mMaterial.greyScale.z + b * (1 - angleDiff / mInterpolationAngle) * 0.5;
+	}
+	else {
+		mMaterial.currentColor.x = mMaterial.greyScale.x;
+		mMaterial.currentColor.y = mMaterial.greyScale.y;
+		mMaterial.currentColor.z = mMaterial.greyScale.z;
+	}
+
 }
