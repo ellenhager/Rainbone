@@ -1,5 +1,15 @@
 # Rainbone
 
+### Play guide
+
+#### Buttons
+
+To change radius (in/out): q, e
+
+To change theta: w, s
+
+To change phi: a, d
+
 ### How to build and compile on OS X El Capitan
 
 * Open cmake GUI
