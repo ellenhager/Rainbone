@@ -165,21 +165,47 @@ void GameHandler::keyCallback(int key, int action) {
             case SGCT_KEY_UP:
                 if(action == SGCT_PRESS) {
                     mAudioHandler->updateMaxAmplitude(0.2f);
+                    std::cout << "Max amplitude: " << mAudioHandler->getMaxAmplitude() << std::endl;
                 }
             break;
 
             case SGCT_KEY_DOWN:
                 if(action == SGCT_PRESS) {
                     mAudioHandler->updateMaxAmplitude(-0.2f);
+                    std::cout << "Max amplitude: " << mAudioHandler->getMaxAmplitude() << std::endl;
                 }
             break;
 
-			case SGCT_KEY_S:
+			case SGCT_KEY_P:
 				if (action == SGCT_PRESS) {
 					mState = STARTING;
 					mScene->randomizeStartingPositions();
 				}
 				break;
+
+            case SGCT_KEY_W:
+                mScene->getCharacter()->incrementTheta(2.0f);
+            break;
+
+            case SGCT_KEY_S:
+                mScene->getCharacter()->incrementTheta(-2.0f);
+            break;
+
+            case SGCT_KEY_A:
+                mScene->getCharacter()->incrementPhi(2.0f);
+            break;
+
+            case SGCT_KEY_D:
+                mScene->getCharacter()->incrementPhi(-2.0f);
+            break;
+
+            case SGCT_KEY_E:
+                mScene->getCharacter()->incrementRadius(0.2f);
+            break;
+
+            case SGCT_KEY_Q:
+                mScene->getCharacter()->incrementRadius(-0.2f);
+            break;
         }
     }
 }
@@ -197,6 +223,21 @@ void GameHandler::setLevelAngles(std::vector<float> syncronizedAngles) {
 
     for(unsigned int i = 0; i < mScene->getNumberOfLevels(); i++)
         mScene->getLevel(i)->setAngle(syncronizedAngles[i]);
+}
+
+
+void GameHandler::setLevelColors(std::vector<glm::vec4> syncronizedColors) {
+
+    // In the first sync interation this case will happen because slave gets called before master
+    if(syncronizedColors.size() != mScene->getNumberOfLevels()) {
+        std::cout << "Error when syncing level angles - size must match!" << std::endl;
+        std::cout << "syncronizedAngles.size(): " << syncronizedColors.size() << std::endl;
+        std::cout << "mLevels.size(): " << mScene->getNumberOfLevels() << std::endl;
+        return;
+    }
+
+    for(unsigned int i = 0; i < mScene->getNumberOfLevels(); i++)
+        mScene->getLevel(i)->setColor(syncronizedColors[i]);
 }
 
 

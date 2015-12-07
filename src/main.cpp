@@ -18,6 +18,8 @@ GameHandler * rainbone;
 sgct::SharedDouble curr_time(0.0);
 // Shared container for angles of each level
 sgct::SharedVector<float> mSharedLevelAngles;
+// Shared container for colors of each level
+sgct::SharedVector<glm::vec4> mSharedLevelColors;
 
 unsigned int numLevels = 7;
 
@@ -72,6 +74,8 @@ void preSync() {
 
         // Get shared angles for the master node
         mSharedLevelAngles.setVal(rainbone->getLevelAngles());
+
+        mSharedLevelColors.setVal(rainbone->getLevelColors());
     }
 }
 
@@ -80,6 +84,8 @@ void postSync() {
 	if (!gEngine->isMaster()) {
 		// Sync all angles across the slaves
 		rainbone->setLevelAngles(mSharedLevelAngles.getVal());
+
+        rainbone->setLevelColors(mSharedLevelColors.getVal());
 	}
 }
 
@@ -95,6 +101,7 @@ void encode() {
 
     sgct::SharedData::instance()->writeDouble(&curr_time);
     sgct::SharedData::instance()->writeVector(&mSharedLevelAngles);
+    sgct::SharedData::instance()->writeVector(&mSharedLevelColors);
 }
 
 
@@ -102,6 +109,7 @@ void decode() {
 
     sgct::SharedData::instance()->readDouble(&curr_time);
     sgct::SharedData::instance()->readVector(&mSharedLevelAngles);
+    sgct::SharedData::instance()->readVector(&mSharedLevelColors);
 }
 
 

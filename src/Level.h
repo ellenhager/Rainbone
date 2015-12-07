@@ -6,6 +6,7 @@
 #define I_MV_LIGHT 2
 #define I_NM 3
 #define _USE_MATH_DEFINES
+
 #include <cmath>
 #include <vector>
 #include <iostream>
@@ -15,7 +16,7 @@
 #include <algorithm>
 
 #include "sgct.h"
-#include "objloader.hpp"
+#include "Objloader.hpp"
 #include "time.h"
 
 class Level {
@@ -42,11 +43,15 @@ public:
 
     float getVelocity() { return mVelocity; }
 
+    glm::vec4 getColor() { return mMaterial.currentColor; }
+
     void setAngle(float a) { mAngle = a; }
 
 	void setStartingAngle(float a);
 
     void setCurrentLevel() { mCurrentLevel = true; }
+
+    void setColor(glm::vec4 c) { mMaterial.currentColor = c; } 
 
     void incrementAngle(float a) { mAngle += a; }
 

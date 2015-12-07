@@ -16,8 +16,9 @@ Scene::Scene(unsigned int n) {
         addLevel(new Level(("../assets/objs/_level" + std::to_string(i) + ".obj").c_str(), sColorScale[i-1]));        
     }
 
-    mCharacter = new Character();
-	mSkySphere = new SkySphere(35);
+    mCharacter = new Character("../assets/objs/char_tmp.obj", "../assets/textures/debug_texture.png");
+	
+    mSkySphere = new SkySphere(35);
 
     std::cout << "\nScene created!\n";
 }
@@ -42,6 +43,9 @@ Scene::~Scene() {
 void Scene::initialize() {
 
     std::cout << "\nInitializing Scene...\n";
+
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
 
     for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
         (*it)->initialize(mLightSourcePosition);
@@ -97,4 +101,15 @@ std::vector<float> Scene::getLevelAngles() {
         angles.push_back((*it)->getAngle());
 
     return angles;
+}
+
+
+std::vector<glm::vec4> Scene::getLevelColors() {
+
+    std::vector<glm::vec4> colors;
+
+    for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
+        colors.push_back((*it)->getColor());
+
+    return colors;
 }

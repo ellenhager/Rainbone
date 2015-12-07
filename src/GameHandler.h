@@ -30,7 +30,11 @@ public:
 
     std::vector<float> getLevelAngles() { return mScene->getLevelAngles(); }
 
+    std::vector<glm::vec4> getLevelColors() { return mScene->getLevelColors(); }
+
     void setLevelAngles(std::vector<float>);
+
+    void setLevelColors(std::vector<glm::vec4>);
 
     AudioHandler* getAudiohandler() { return mAudioHandler; }
 
