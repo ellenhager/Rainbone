@@ -63,16 +63,25 @@ void GameHandler::update(float dt) {
 		for (unsigned int i = 0; i < mCurrentLevel; i++)
 			mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
 
-		resolveLevelProgression();
+		//only resolve level progression when in game state
+		if(mState == GAME)
+			resolveLevelProgression();
+
 	} else if (mState == STARTING) {
+		// Make all levels pull towards their randomized gravitaional point
 		for(unsigned int i = 0; i < mNumberOfLevels; i++)
 			mScene->getLevel(i)->applyForce(0.0f, gravitationalForce, dt);
 
+		// as long as within starting time
 		if (mStartingTimer < maxStartingTime) {
 			mStartingTimer += dt;
-			mScene->getLevel(int(mStartingTimer))->
-
+			// if the level with index 
+			if (levelIndexInitialization != int(mStartingTimer)) {
+				levelIndexInitialization = int(mStartingTimer);
+				mScene->getLevel(levelIndexInitialization); // make sound
+			}
 		} else {
+			// When maxStartingTime has passed, swithc to GAME state.
 			mState = GAME;
 		}
 	}
