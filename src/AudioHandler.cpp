@@ -46,13 +46,15 @@ void AudioHandler::initialize() {
 	if (err != paNoError)
 		printError(err);
 
+	mMusics["background"] = sf::Music;
+
 	// Play music using SFML
-	if(!mMusic.openFromFile("../assets/soundfiles/soundtrack.ogg")) {
+	if(!mMusics["background"].openFromFile("../assets/soundfiles/soundtrack.ogg")) {
         std::cout << "ERROR WHEN LOADING AUDIO FILE!!!" << std::endl;
         return;
     }
 
-    mMusic.play();
+    mMusics["background"].play();
 }
 
 float AudioHandler::getNormalizedAmplitude() {

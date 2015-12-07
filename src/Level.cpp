@@ -28,10 +28,6 @@ Level::Level(const char * objPath, glm::vec4 c) {
 
     if(mAngle < 0.0f)
         mAngle = 360.0f + mAngle;
-
-    /*if(mAngle < 5.0f || mAngle > -5.0f) {
-        mAngle += 15.0f;
-    }*/
 }
 
 
@@ -239,7 +235,7 @@ void Level::interpolateColor() {
 void Level::updateColor(float previousAngle) {
 
 	//take the angular difference from previous level
-	float angleDiff = abs(mAngle - previousAngle);
+	float angleDiff = std::abs(mAngle - previousAngle);
 
 	// if the difference is within interpolation area
 	if (angleDiff < mInterpolationAngle) {

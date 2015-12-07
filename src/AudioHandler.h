@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <string>
+#include <map>
 
 #include "portaudio.h"
 #include <SFML/Audio.hpp>
@@ -35,14 +37,19 @@ public:
 
     void printError(PaError err);
 
-    void stop() { mMusic.stop(); }
+    void stop() { mMusics["background"].stop(); }
 
 private:
 
     float mAmplitude = 0;
+    
     float mMaxAmplitude;
+    
     PaStream *mStream;
-    sf::Music mMusic;
+    
+    std::map<std::string, sf::Music> mMusics;   // Container for music type sounds, (streams from disc)
+    
+    std::map<std::string, sf::Sound> mSounds;   // Container for sound type sounds, (loads straight into RAM)
 };
 
 #endif // AUDIOHANDLER_H

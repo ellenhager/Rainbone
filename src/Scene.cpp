@@ -17,9 +17,8 @@ Scene::Scene(unsigned int n) {
     }
 
     mCharacter = new Character("../assets/objs/char_tmp.obj", "../assets/textures/debug_texture.png");
-
-    mCharacter = new Character();
-	mSkySphere = new SkySphere(35);
+	
+    mSkySphere = new SkySphere(35);
 
     std::cout << "\nScene created!\n";
 }
