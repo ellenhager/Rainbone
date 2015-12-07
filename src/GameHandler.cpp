@@ -92,11 +92,11 @@ void GameHandler::keyCallback(int key, int action) {
         switch(key) {
 
             case SGCT_KEY_RIGHT:
-                mScene->getLevel(mCurrentLevel)->incrementAngle(1.0f);
+                mScene->getLevel(mCurrentLevel)->applyForce(2.0 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
             break;
 
             case SGCT_KEY_LEFT:
-                mScene->getLevel(mCurrentLevel)->incrementAngle(-1.0f);
+                mScene->getLevel(mCurrentLevel)->applyForce(-2.0 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
             break;
 
             case SGCT_KEY_UP:
@@ -111,8 +111,17 @@ void GameHandler::keyCallback(int key, int action) {
                 }
             break;
 
+            // Play audio
             case SGCT_KEY_2:
                 mAudioHandler->playAudio();
+            break;
+
+            // Play audio and add force
+            case SGCT_KEY_B:
+                if(action == SGCT_PRESS) {
+                    mAudioHandler->playAudio();
+                }
+                mScene->getLevel(mCurrentLevel)->applyForce(1.2 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
             break;
         }
     }
