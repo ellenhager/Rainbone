@@ -76,18 +76,15 @@ void GameHandler::update(float dt) {
 		if (mStartingTimer < maxStartingTime) {
 			mStartingTimer += dt;
 			// if the level with index 
-			if (levelIndexInitialization != int(mStartingTimer)) {
-				levelIndexInitialization = int(mStartingTimer);
-				mScene->getLevel(levelIndexInitialization); // make sound
+			if (levelInitializationIndex != int(mStartingTimer)) {
+				levelInitializationIndex = int(mStartingTimer);
+				mScene->getLevel(levelInitializationIndex); // make sound
 			}
 		} else {
 			// When maxStartingTime has passed, swithc to GAME state.
 			mState = GAME;
 		}
 	}
-
-
-
     mScene->update(dt);
 }
 
