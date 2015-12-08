@@ -45,9 +45,11 @@ void AudioHandler::initialize() {
 	err = Pa_StartStream(mStream);
 	if (err != paNoError)
 		printError(err);
+}
 
+void AudioHandler::initializeMusic(std::string file) {
 	// Play music using SFML
-	if(!mMusic.openFromFile("../assets/soundfiles/soundtrack.ogg")) {
+	if(!mMusic.openFromFile("../assets/soundfiles/" + file)) {
         std::cout << "ERROR WHEN LOADING AUDIO FILE!!!" << std::endl;
         return;
     }
@@ -55,8 +57,8 @@ void AudioHandler::initialize() {
     mMusic.play();
 }
 
-void AudioHandler::initializeSound(std::string filename) {
-	if(!mBuffer.loadFromFile("../assets/soundfiles/" + filename + ".wav")) {
+void AudioHandler::initializeSound(std::string file) {
+	if(!mBuffer.loadFromFile("../assets/soundfiles/" + file)) {
 		std::cout << "ERROR WHEN LOADING CUSTOM SOUND FILE!!!" << std::endl;
     return;
 	}

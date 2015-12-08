@@ -5,7 +5,7 @@ void preSync();
 void postSync();
 void initialize();
 void encode();
-void decode();  
+void decode();
 void keyCallback(int key, int action);
 void cleanUp();
 
@@ -21,7 +21,7 @@ sgct::SharedVector<float> mSharedLevelAngles;
 // Shared container for colors of each level
 sgct::SharedVector<glm::vec4> mSharedLevelColors;
 
-unsigned int numLevels = 7;
+unsigned int numLevels = 4;
 
 
 int main(int argc, char* argv[]) {
@@ -62,7 +62,7 @@ void render() {
 
 
 void preSync() {
-    
+
     if(gEngine->isMaster()) {   // If master, set all variables that needs to be synced
 
 		//float dt = sgct::Engine::getTime() - curr_time.getVal();

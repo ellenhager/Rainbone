@@ -43,6 +43,7 @@ void GameHandler::initialize() {
     firstLevel->setCurrentLevel();
 
 	mAudioHandler->initialize();
+    mAudioHandler->initializeMusic("soundtrack.ogg");
 
     std::cout << "\nGameHandler initialized!\n";
 }
@@ -99,7 +100,7 @@ void GameHandler::updateStarting(float dt) {
 		if (levelInitializationIndex != int(mStartingTimer) && levelInitializationIndex < mNumberOfLevels - 1) {
 			levelInitializationIndex = int(mStartingTimer);
 			mScene->getLevel(levelInitializationIndex)->saturate(false);
-            mAudioHandler->initializeSound("lock-level-evil-short");
+            mAudioHandler->initializeSound("lock-level-evil-short.wav");
 		}
 	}
 	else {
@@ -107,6 +108,7 @@ void GameHandler::updateStarting(float dt) {
 		// play cat sound! (the first level will switch to red)
 		mState = GAME;
 		mScene->getLevel(mCurrentLevel)->saturate(true);
+        mAudioHandler->initializeSound("cat-meow2.wav");
 		mScene->resetStartingPositions();
 	}
 }
@@ -129,11 +131,12 @@ void GameHandler::updateGame(float dt) {
 		// update the next levels color based on angular distance from current level.
 		mScene->getLevel(mCurrentLevel + 1)->updateColor(mScene->getLevelAngle(mCurrentLevel));
 	}
+
 	resolveLevelProgression();
 }
 
 void GameHandler::updateEnd(float dt) {
-	// TODO
+    //TODO
 }
 
 void GameHandler::render() {
@@ -179,10 +182,12 @@ void GameHandler::keyCallback(int key, int action) {
 
 			case SGCT_KEY_P:
 				if (action == SGCT_PRESS) {
+
 					mState = STARTING;
+                    mAudioHandler->initializeMusic("evil-intro.wav");
 					mScene->randomizeStartingPositions();
 				}
-				break;
+			break;
 
             case SGCT_KEY_W:
                 mScene->getCharacter()->incrementTheta(2.0f);
@@ -206,6 +211,10 @@ void GameHandler::keyCallback(int key, int action) {
 
             case SGCT_KEY_Q:
                 mScene->getCharacter()->incrementRadius(-0.2f);
+            break;
+
+            case SGCT_KEY_SPACE:
+                mState = END;
             break;
         }
     }
@@ -257,6 +266,14 @@ void GameHandler::resolveLevelProgression() {
 			nextLevel->saturate(true);
 
             mCurrentLevel++;
+
+            //if we are at the last level, we should end the game
+            if(mCurrentLevel == mNumberOfLevels - 1) {
+                mAudioHandler->initializeSound("win.wav");
+                mState = END;
+            } else {
+                mAudioHandler->initializeSound("lock-level-success.wav");
+            }
         }
     }
 }

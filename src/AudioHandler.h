@@ -39,6 +39,8 @@ public:
 
     void initializeSound(std::string);
 
+    void initializeMusic(std::string);
+
 private:
 
     float mAmplitude = 0;
