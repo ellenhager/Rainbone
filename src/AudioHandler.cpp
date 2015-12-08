@@ -55,6 +55,16 @@ void AudioHandler::initialize() {
     mMusic.play();
 }
 
+void AudioHandler::initializeSound(std::string filename) {
+	if(!mBuffer.loadFromFile("../assets/soundfiles/" + filename + ".wav")) {
+		std::cout << "ERROR WHEN LOADING CUSTOM SOUND FILE!!!" << std::endl;
+    return;
+	}
+
+	mSound.setBuffer(mBuffer);
+	mSound.play();
+}
+
 float AudioHandler::getNormalizedAmplitude() {
 	if (mAmplitude > mMaxAmplitude)
 		mMaxAmplitude = mAmplitude;

@@ -37,12 +37,16 @@ public:
 
     void stop() { mMusic.stop(); }
 
+    void initializeSound(std::string);
+
 private:
 
     float mAmplitude = 0;
     float mMaxAmplitude;
     PaStream *mStream;
     sf::Music mMusic;
+    sf::SoundBuffer mBuffer;
+    sf::Sound mSound;
 };
 
 #endif // AUDIOHANDLER_H

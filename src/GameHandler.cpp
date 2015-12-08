@@ -74,7 +74,7 @@ void GameHandler::updateIntro(float dt) {
 
 	// can be switched to un-normalized amplitude function
 	float audioForce = mAudioHandler->getNormalizedAmplitude() * mAudioMultiplier;
-	
+
 	// apply force to all levels
 	for (unsigned int i = 0; i < mNumberOfLevels; i++)
 		mScene->getLevel(i)->applyForce(audioForce, gravitationalForce, dt);
@@ -99,6 +99,7 @@ void GameHandler::updateStarting(float dt) {
 		if (levelInitializationIndex != int(mStartingTimer) && levelInitializationIndex < mNumberOfLevels - 1) {
 			levelInitializationIndex = int(mStartingTimer);
 			mScene->getLevel(levelInitializationIndex)->saturate(false);
+            mAudioHandler->initializeSound("lock-level-evil-short");
 		}
 	}
 	else {
@@ -249,9 +250,9 @@ void GameHandler::resolveLevelProgression() {
         Level * nextLevel = mScene->getLevel(mCurrentLevel + 1);
 
         if((currentLevel->getAngle() > nextLevel->getAngle() - mAngleCompletionSpan &&
-            currentLevel->getAngle() < nextLevel->getAngle() + mAngleCompletionSpan) && 
+            currentLevel->getAngle() < nextLevel->getAngle() + mAngleCompletionSpan) &&
             (currentLevel->getVelocity() < mMaximumCompletionVelocity && currentLevel->getVelocity() > -mMaximumCompletionVelocity)) {
-        
+
             nextLevel->setCurrentLevel();
 			nextLevel->saturate(true);
 
