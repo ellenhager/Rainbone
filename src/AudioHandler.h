@@ -3,9 +3,14 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <string>
+#include <map>
+#include <utility>
 
+#include "SFML/Audio.hpp"
 #include "portaudio.h"
-#include <SFML/Audio.hpp>
+#include "Utils.h"
+#include "Timer.h"
 
 class AudioHandler {
 
@@ -17,6 +22,8 @@ public:
 
     void initialize();
 
+    void updateSound(float);
+
     void playAudio();
 
     void closeAudio();
@@ -26,6 +33,12 @@ public:
 	float getAmplitude() { return mAmplitude; };
 
     float getMaxAmplitude() { return mMaxAmplitude; };
+
+    sf::Music* getMusicObject(SoundFile m) { return mMusics[m].first; }
+
+    Timer* getMusicTimer(SoundFile m) { return mMusics[m].second; }
+
+    std::pair<sf::Music*, Timer*> getMusicPair(SoundFile m) { return mMusics[m]; }
 
     void updateMaxAmplitude(float f) { if(mMaxAmplitude > 1.0f) mMaxAmplitude += f; }
 
@@ -37,14 +50,23 @@ public:
 
     void printError(PaError err);
 
-    void stop() { mMusic.stop(); }
+    void stop(SoundFile m) { mMusics[m].first->stop(); }
+
+    void stopAllSounds();
+
+    void fadeSound(SoundFile);
 
 private:
 
     float mAmplitude = 0;
+    
     float mMaxAmplitude;
+    
     PaStream *mStream;
-    sf::Music mMusic;
+
+    std::map<SoundFile, std::pair<sf::Music*, Timer*> > mMusics;                // Music files
+
+    std::map<SoundFile, std::pair<sf::Sound*, Timer*> > mSounds;                // Sound files
 };
 
 #endif // AUDIOHANDLER_H

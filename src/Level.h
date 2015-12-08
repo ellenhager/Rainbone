@@ -1,10 +1,6 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 
-#define I_MVP 0
-#define I_MV 1
-#define I_MV_LIGHT 2
-#define I_NM 3
 #define _USE_MATH_DEFINES
 
 #include <cmath>
@@ -17,6 +13,7 @@
 #include "sgct.h"
 #include "Objloader.hpp"
 #include "time.h"
+#include "Utils.h"
 
 class Level {
 

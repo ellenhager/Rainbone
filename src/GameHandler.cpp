@@ -68,6 +68,11 @@ void GameHandler::update(float dt) {
 
     resolveLevelProgression();
 
+    mAudioHandler->updateSound(dt);
+
+    if(mCountDown)
+        runCountDown();
+
     mScene->update(dt);
 }
 
@@ -91,6 +96,29 @@ void GameHandler::keyCallback(int key, int action) {
 
         switch(key) {
 
+            /* --- Game progresseion controls --- */
+
+            // Start countdown
+            case SGCT_KEY_1:
+                mCountDown = true;
+            break;
+            
+            // Play audio
+            case SGCT_KEY_2:
+                mAudioHandler->playAudio();
+            break;
+
+            /* --- Help the users --- */
+
+            // Play audio and add force, to give the users a hint how to play
+            case SGCT_KEY_B:
+                if(action == SGCT_PRESS) {
+                    mAudioHandler->playAudio();
+                }
+                mScene->getLevel(mCurrentLevel)->applyForce(1.2 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
+            break;
+
+            // Manual level steering, if the users suck
             case SGCT_KEY_RIGHT:
                 mScene->getLevel(mCurrentLevel)->applyForce(2.0 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
             break;
@@ -99,6 +127,7 @@ void GameHandler::keyCallback(int key, int action) {
                 mScene->getLevel(mCurrentLevel)->applyForce(-2.0 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
             break;
 
+            // Change max amplitude, to customize how loud the input need to be
             case SGCT_KEY_UP:
                 if(action == SGCT_PRESS) {
                     mAudioHandler->updateMaxAmplitude(0.2f);
@@ -113,19 +142,9 @@ void GameHandler::keyCallback(int key, int action) {
                 }
             break;
 
-            // Play audio
-            case SGCT_KEY_2:
-                mAudioHandler->playAudio();
-            break;
+            /* --- Charachter interaction --- */
 
-            // Play audio and add force
-            case SGCT_KEY_B:
-                if(action == SGCT_PRESS) {
-                    mAudioHandler->playAudio();
-                }
-                mScene->getLevel(mCurrentLevel)->applyForce(1.2 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
-            break;
-
+            // Controls for steering the character object
             case SGCT_KEY_W:
                 mScene->getCharacter()->incrementTheta(2.0f);
             break;
@@ -149,6 +168,7 @@ void GameHandler::keyCallback(int key, int action) {
             case SGCT_KEY_Q:
                 mScene->getCharacter()->incrementRadius(-0.2f);
             break;
+
         }
     }
 }
@@ -200,4 +220,18 @@ void GameHandler::resolveLevelProgression() {
             mCurrentLevel++;
         }
     }
+}
+
+
+void GameHandler::runCountDown() {
+
+    //std::cout << "Volume: " << mAudioHandler->getMusicObject(BGMUSIC)->getVolume() << std::endl;
+
+    mAudioHandler->getMusicTimer(BGMUSIC)->start();
+
+    if(mAudioHandler->getMusicTimer(BGMUSIC)->isComplete())
+        mScene->shallRenderLetter(FIVE, true);
+
+    //if(!mAudioHandler->getMusicTimer(BGMUSIC)->isComplete())
+        //mAudioHandler->fadeSound(BGMUSIC);
 }
