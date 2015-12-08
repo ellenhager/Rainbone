@@ -17,6 +17,7 @@ GameHandler::GameHandler(sgct::Engine *e, unsigned int n)
 	mScene = new Scene(mNumberOfLevels);
 
 	mState = INTRO;
+    mAudioHandler->playMusic("western-themetune.wav", true);
 
     std::cout << "\nGameHandler created!\n";
 }
@@ -42,8 +43,7 @@ void GameHandler::initialize() {
 
     firstLevel->setCurrentLevel();
 
-	mAudioHandler->initialize();
-    mAudioHandler->initializeMusic("soundtrack.ogg");
+    mAudioHandler->initialize();
 
     std::cout << "\nGameHandler initialized!\n";
 }
@@ -100,7 +100,7 @@ void GameHandler::updateStarting(float dt) {
 		if (levelInitializationIndex != int(mStartingTimer) && levelInitializationIndex < mNumberOfLevels - 1) {
 			levelInitializationIndex = int(mStartingTimer);
 			mScene->getLevel(levelInitializationIndex)->saturate(false);
-            mAudioHandler->initializeSound("lock-level-evil-short.wav");
+            mAudioHandler->playSound("lock-level-evil-short.wav");
 		}
 	}
 	else {
@@ -108,7 +108,7 @@ void GameHandler::updateStarting(float dt) {
 		// play cat sound! (the first level will switch to red)
 		mState = GAME;
 		mScene->getLevel(mCurrentLevel)->saturate(true);
-        mAudioHandler->initializeSound("cat-meow2.wav");
+        mAudioHandler->playSound("cat-meow2.wav");
 		mScene->resetStartingPositions();
 	}
 }
@@ -184,7 +184,7 @@ void GameHandler::keyCallback(int key, int action) {
 				if (action == SGCT_PRESS) {
 
 					mState = STARTING;
-                    mAudioHandler->initializeMusic("evil-intro.wav");
+                    mAudioHandler->playMusic("evil-intro.wav", false);
 					mScene->randomizeStartingPositions();
 				}
 			break;
@@ -269,10 +269,10 @@ void GameHandler::resolveLevelProgression() {
 
             //if we are at the last level, we should end the game
             if(mCurrentLevel == mNumberOfLevels - 1) {
-                mAudioHandler->initializeSound("win.wav");
+                mAudioHandler->playSound("win.wav");
                 mState = END;
             } else {
-                mAudioHandler->initializeSound("lock-level-success.wav");
+                mAudioHandler->playSound("lock-level-success.wav");
             }
         }
     }

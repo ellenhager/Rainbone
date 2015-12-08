@@ -47,7 +47,7 @@ void AudioHandler::initialize() {
 		printError(err);
 }
 
-void AudioHandler::initializeMusic(std::string file) {
+void AudioHandler::playMusic(std::string file, bool loop) {
 	// Play music using SFML
 	if(!mMusic.openFromFile("../assets/soundfiles/" + file)) {
         std::cout << "ERROR WHEN LOADING AUDIO FILE!!!" << std::endl;
@@ -55,9 +55,15 @@ void AudioHandler::initializeMusic(std::string file) {
     }
 
     mMusic.play();
+
+    if(loop) {
+    	mMusic.setLoop(true);
+    } else {
+    	mMusic.setLoop(false);
+    }
 }
 
-void AudioHandler::initializeSound(std::string file) {
+void AudioHandler::playSound(std::string file) {
 	if(!mBuffer.loadFromFile("../assets/soundfiles/" + file)) {
 		std::cout << "ERROR WHEN LOADING CUSTOM SOUND FILE!!!" << std::endl;
     return;

@@ -37,9 +37,9 @@ public:
 
     void stop() { mMusic.stop(); }
 
-    void initializeSound(std::string);
+    void playMusic(std::string, bool);
 
-    void initializeMusic(std::string);
+    void playSound(std::string);
 
 private:
 
