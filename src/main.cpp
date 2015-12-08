@@ -21,7 +21,7 @@ sgct::SharedVector<float> mSharedLevelAngles;
 // Shared container for colors of each level
 sgct::SharedVector<glm::vec4> mSharedLevelColors;
 
-unsigned int numLevels = 4;
+unsigned int numLevels = 7;
 
 
 int main(int argc, char* argv[]) {
