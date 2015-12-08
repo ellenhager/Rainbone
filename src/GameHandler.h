@@ -3,6 +3,7 @@
 
 #include "Scene.h"
 #include "AudioHandler.h"
+#include "SoundHandler.h"
 
 class GameHandler {
 
@@ -36,7 +37,9 @@ public:
 
     void setLevelColors(std::vector<glm::vec4>);
 
-    AudioHandler* getAudiohandler() { return mAudioHandler; }
+    AudioHandler* getAudioHandler() { return mAudioHandler; }
+
+    SoundHandler* getSoundHandler() { return mSoundHandler; }
 
 private:
 
@@ -63,6 +66,8 @@ private:
     float mAudioGravityRatio;
 
     float mAudioMultiplier;
+
+    SoundHandler * mSoundHandler;
 
     const float mAngleCompletionSpan = 5.0f;
 
