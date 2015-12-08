@@ -36,7 +36,7 @@ private:
 
     void resolveLevelProgression();
 
-    void startCountDown();
+    void runCountDown();
 
     unsigned int mCurrentLevel = 0;
 
@@ -55,6 +55,8 @@ private:
     const float mMaximumCompletionVelocity = 60.0f;
 
     float mNumberOfLevels;
+
+    bool mCountDown = false;
 };
 
 #endif // GAMEHANDLER_H

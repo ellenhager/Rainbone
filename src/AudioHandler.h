@@ -22,7 +22,7 @@ public:
 
     void initialize();
 
-    void updateSoundTimers(float);
+    void updateSound(float);
 
     void closeAudio();
 
@@ -52,7 +52,7 @@ public:
 
     void stopAllSounds();
 
-    void fadeSoundDown(SoundFile);
+    void fadeSound(SoundFile);
 
 private:
 

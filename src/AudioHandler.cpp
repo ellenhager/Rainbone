@@ -57,11 +57,13 @@ void AudioHandler::initialize() {
     mMusics[BGMUSIC].first->play();
 }
 
-void AudioHandler::updateSoundTimers(float dt) {
+void AudioHandler::updateSound(float dt) {
 
 	for(std::map<SoundFile, std::pair<sf::Music*, Timer*> >::iterator it = mMusics.begin(); it != mMusics.end(); ++it) {
-		if((*it).second.second->isActive())
+		if((*it).second.second->isActive()) {
 			(*it).second.second->update(dt);
+			fadeSound((*it).first);
+		}
 	}
 
 	for(std::map<SoundFile, std::pair<sf::Sound*, Timer*> >::iterator it = mSounds.begin(); it != mSounds.end(); ++it) {
@@ -125,9 +127,13 @@ void AudioHandler::stopAllSounds() {
 		(*it).second.first->stop();
 }
 
-void AudioHandler::fadeSoundDown(SoundFile soundFile) {
+void AudioHandler::fadeSound(SoundFile soundFile) {
 
 	float currentVolume = mMusics[soundFile].first->getVolume();
 	float currentTime = mMusics[soundFile].second->getCurrentTime();
-	mMusics[soundFile].first->setVolume(currentVolume * currentTime);
+	if(currentTime < 0.0f) {
+		currentTime = 0.0f;
+	}
+	mMusics[soundFile].first->setVolume(100.0f * currentTime);
+	//std::cout << "\nVolume: " << mMusics[soundFile].first->getVolume() << std::endl;
 }

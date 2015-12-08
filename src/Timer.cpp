@@ -5,13 +5,20 @@ Timer::Timer(float s, float ct, float st, float tt)
 
 void Timer::update(float dt) {
 
-	if(mSpeed >= 0.0f && mCurrentTime < mTargetTime)
+	if(mSpeed >= 0.0f && mCurrentTime < mTargetTime){
 		mCurrentTime += dt * mSpeed;
-	else if (mSpeed <= 0.0f && mCurrentTime > mTargetTime)
+		//std::cout << "INCREMENT!" << std::endl;
+	}
+	else if (mSpeed <= 0.0f && mCurrentTime > mTargetTime){
 		mCurrentTime += dt * mSpeed;
-	else {
+		//std::cout << "INCREMENT!" << std::endl;
+	} else if(mIsComplete == true && mIsActive == false) {
+		return;
+	} else {
 		reset();
 		mIsComplete = true;
+		mIsActive = false;
+		//std::cout << "COMPLETE!" << std::endl;
 	}
 }
 
