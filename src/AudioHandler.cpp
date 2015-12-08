@@ -78,17 +78,27 @@ float AudioHandler::getNormalizedAmplitude() {
 	return mAmplitude / mMaxAmplitude;
 }
 
-void AudioHandler::playAudio() {
-	// Play music using SFML
-	mMusics[BGMUSIC] = std::make_pair(new sf::Music, new Timer(-0.5f, 1.0f, 1.0f, 0.0f));
+void AudioHandler::playSound(SoundFile m) {
+	// Play sound using SFML
+	mMusics[m] = std::make_pair(new sf::Music, new Timer(-0.5f, 1.0f, 5.0f, 0.0f));
 
-	// Play music using SFML
-	if(!mMusics[BGMUSIC].first->openFromFile("../assets/soundfiles/cat-meow3.wav")) {
-        std::cout << "ERROR WHEN LOADING AUDIO FILE!!!" << std::endl;
-        return;
-    }
+	if(m == MEOWAAHH) {
+		// Play music using SFML
+		if(!mMusics[m].first->openFromFile("../assets/soundfiles/cat-agressive.wav")) {
+	        std::cout << "ERROR WHEN LOADING AUDIO FILE!!!" << std::endl;
+	        return;
+	    }
+	}
 
-    mMusics[BGMUSIC].first->play();
+	if(m == MEOWHELP) {
+		// Play music using SFML
+		if(!mMusics[m].first->openFromFile("../assets/soundfiles/cat-meow3.wav")) {
+	        std::cout << "ERROR WHEN LOADING AUDIO FILE!!!" << std::endl;
+	        return;
+	    }
+	}
+
+    mMusics[m].first->play();
 }
 
 void AudioHandler::closeAudio() {

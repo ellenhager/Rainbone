@@ -103,19 +103,21 @@ void GameHandler::keyCallback(int key, int action) {
                 mCountDown = true;
             break;
             
-            // Play audio
+            // Play sound
             case SGCT_KEY_2:
-                mAudioHandler->playAudio();
+                if(action == SGCT_PRESS) {
+                    mAudioHandler->playSound(MEOWAAHH);
+                }
             break;
 
             /* --- Help the users --- */
 
-            // Play audio and add force, to give the users a hint how to play
+            // Play sound and add force, to give the users a hint how to play
             case SGCT_KEY_B:
                 if(action == SGCT_PRESS) {
-                    mAudioHandler->playAudio();
+                    mAudioHandler->playSound(MEOWHELP);
                 }
-                mScene->getLevel(mCurrentLevel)->applyForce(1.2 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
+                mScene->getLevel(mCurrentLevel)->applyForce(2.5 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
             break;
 
             // Manual level steering, if the users suck

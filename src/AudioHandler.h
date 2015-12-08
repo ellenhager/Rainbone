@@ -24,7 +24,7 @@ public:
 
     void updateSound(float);
 
-    void playAudio();
+    void playSound(SoundFile m);
 
     void closeAudio();
 
