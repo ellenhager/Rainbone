@@ -10,7 +10,7 @@ class Scene {
 public:
 
     Scene(unsigned int);
-    
+
     ~Scene();
 
     void initialize();
@@ -40,10 +40,12 @@ public:
 
     void setLevelAngle(unsigned int i, float a) { mLevels[i]->setAngle(a); }
 
+    void toggleBackground();
+
 private:
 
     std::vector<Level *> mLevels;
-    
+
     Character * mCharacter;
 	SkySphere * mSkySphere;
 

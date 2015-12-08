@@ -186,6 +186,7 @@ void GameHandler::keyCallback(int key, int action) {
 
 					mState = STARTING;
                     mSoundHandler->playMusic("evil-intro.wav", false);
+                    //mScene->toggleBackground();
 					mScene->randomizeStartingPositions();
 				}
 			break;

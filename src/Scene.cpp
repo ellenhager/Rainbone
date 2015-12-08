@@ -3,7 +3,7 @@
 Scene::Scene(unsigned int n) {
 
     std::cout << "\nCreating Scene...\n";
-    
+
     mLightSourcePosition = glm::vec3(0.0f, 0.0f, 0.0f);
 
     if(n > 7) {
@@ -13,16 +13,16 @@ Scene::Scene(unsigned int n) {
     }
 
     for(unsigned int i = 1; i <= n; i++) {
-        addLevel(new Level(("../assets/objs/_level" + std::to_string(i) + ".obj").c_str(), sColorScale[i-1]));        
+        addLevel(new Level(("../assets/objs/_level" + std::to_string(i) + ".obj").c_str(), sColorScale[i-1]));
     }
 
     mCharacter = new Character("../assets/objs/char_tmp.obj", "../assets/textures/debug_texture.png");
-	
+
     mSkySphere = new SkySphere(35);
 
     std::cout << "\nScene created!\n";
 }
-    
+
 
 Scene::~Scene() {
 
@@ -57,7 +57,7 @@ void Scene::initialize() {
     std::cout << "\nScene initialized!\n";
 }
 
-    
+
 void Scene::render(std::vector<glm::mat4> sceneMatrices) {
 
     for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
@@ -85,7 +85,7 @@ void Scene::randomizeStartingPositions() {
 			(*it)->setStartingAngle(angle);
 		}
 	}
-		
+
 }
 
 void Scene::resetStartingPositions() {
@@ -112,4 +112,8 @@ std::vector<glm::vec4> Scene::getLevelColors() {
         colors.push_back((*it)->getColor());
 
     return colors;
+}
+
+void Scene::toggleBackground() {
+    //TODO: from dark to light background
 }
