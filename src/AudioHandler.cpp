@@ -49,7 +49,7 @@ void AudioHandler::initialize() {
 	mMusics[BGMUSIC] = std::make_pair(new sf::Music, new Timer(-0.5f, 1.0f, 1.0f, 0.0f));
 
 	// Play music using SFML
-	if(!mMusics[BGMUSIC].first->openFromFile("../assets/soundfiles/soundtrack.ogg")) {
+	if(!mMusics[BGMUSIC].first->openFromFile("../assets/soundfiles/soundtrack.wav")) {
         std::cout << "ERROR WHEN LOADING AUDIO FILE!!!" << std::endl;
         return;
     }
