@@ -68,6 +68,11 @@ void GameHandler::update(float dt) {
 
     resolveLevelProgression();
 
+    mAudioHandler->updateSound(dt);
+
+    if(mCountDown)
+        runCountDown();
+
     mScene->update(dt);
 }
 
@@ -136,6 +141,10 @@ void GameHandler::keyCallback(int key, int action) {
             case SGCT_KEY_Q:
                 mScene->getCharacter()->incrementRadius(-0.2f);
             break;
+
+            case SGCT_KEY_1:
+                mCountDown = true;
+            break;
         }
     }
 }
@@ -187,4 +196,18 @@ void GameHandler::resolveLevelProgression() {
             mCurrentLevel++;
         }
     }
+}
+
+
+void GameHandler::runCountDown() {
+
+    //std::cout << "Volume: " << mAudioHandler->getMusicObject(BGMUSIC)->getVolume() << std::endl;
+
+    mAudioHandler->getMusicTimer(BGMUSIC)->start();
+
+    if(mAudioHandler->getMusicTimer(BGMUSIC)->isComplete())
+        mScene->shallRenderLetter(FIVE, true);
+
+    //if(!mAudioHandler->getMusicTimer(BGMUSIC)->isComplete())
+        //mAudioHandler->fadeSound(BGMUSIC);
 }
