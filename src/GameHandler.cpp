@@ -275,6 +275,7 @@ void GameHandler::resolveLevelProgression() {
             //if we are at the last level, we should end the game
             if(mCurrentLevel == mNumberOfLevels - 1) {
                 mSoundHandler->playSound("win.wav");
+                mScene->toggleBackground();
                 mState = END;
             } else {
                 mSoundHandler->playSound("lock-level-success.wav");
