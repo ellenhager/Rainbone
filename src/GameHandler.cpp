@@ -5,7 +5,8 @@ GameHandler::GameHandler(sgct::Engine *e, unsigned int n)
 
     std::cout << "\nCreating GameHandler...\n" << std::endl;
 
-	mAudioHandler = new AudioHandler();
+	mInputAudio = new InputAudio();
+    mOutputAudio = new OutputAudio();
 
 	// 1 => gravitational force is just as high as Audio Force
 	// 0.1 => gravitational force is 10% if audio force
@@ -15,6 +16,9 @@ GameHandler::GameHandler(sgct::Engine *e, unsigned int n)
 	mAudioMultiplier = 1000;
 
 	mScene = new Scene(mNumberOfLevels);
+
+	mState = INTRO;
+    mOutputAudio->playMusic("western-themetune.wav", true);
 
     std::cout << "\nGameHandler created!\n";
 }
@@ -40,7 +44,7 @@ void GameHandler::initialize() {
 
     firstLevel->setCurrentLevel();
 
-	mAudioHandler->initialize();
+    mInputAudio->initialize();
 
     std::cout << "\nGameHandler initialized!\n";
 }
@@ -48,29 +52,93 @@ void GameHandler::initialize() {
 
 void GameHandler::update(float dt) {
 
-	// can be switched to un-normalized amplitude function
-	float audioForce = mAudioHandler->getNormalizedAmplitude() * mAudioMultiplier;
-
-	// the gravitational force will be the gravitational ratio times maximum audio amplitude.
-	float gravitationalForce = mAudioMultiplier * mAudioGravityRatio;
-
-	mScene->getLevel(mCurrentLevel)->applyForce(audioForce, gravitationalForce, dt);
-
-    // Make the completed levels follow the leader
-    for(unsigned int i = 0; i < mCurrentLevel; i++)
-        mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
-
-	// if next level is not the last level...
-	if (mCurrentLevel + 1 < mNumberOfLevels) {
-		// update the next levels color based on angular distance from current level.
-		mScene->getLevel(mCurrentLevel + 1)->updateColor( mScene->getLevelAngle(mCurrentLevel) );
+	switch (mState) {
+		case INTRO:
+			updateIntro(dt);
+			break;
+		case STARTING:
+			updateStarting(dt);
+			break;
+		case GAME:
+			updateGame(dt);
+			break;
+		case END:
+			updateEnd(dt);
+			break;
 	}
-
-    resolveLevelProgression();
 
     mScene->update(dt);
 }
 
+void GameHandler::updateIntro(float dt) {
+	// the gravitational force will be the gravitational ratio times maximum audio amplitude.
+	float gravitationalForce = mAudioMultiplier * mAudioGravityRatio;
+
+	// can be switched to un-normalized amplitude function
+	float audioForce = mInputAudio->getNormalizedAmplitude() * mAudioMultiplier;
+
+	// apply force to all levels
+	for (unsigned int i = 0; i < mNumberOfLevels; i++)
+		mScene->getLevel(i)->applyForce(audioForce, gravitationalForce, dt);
+
+	// Make the completed levels follow the leader
+	for (unsigned int i = 0; i < mCurrentLevel; i++)
+		mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
+}
+
+void GameHandler::updateStarting(float dt) {
+	// the gravitational force will be the gravitational ratio times maximum audio amplitude.
+	float gravitationalForce = mAudioMultiplier * mAudioGravityRatio;
+
+	// Make all levels pull towards their randomized gravitaional point
+	for (unsigned int i = 0; i < mNumberOfLevels; i++)
+		mScene->getLevel(i)->applyForce(0.0f, gravitationalForce, dt);
+
+	// as long as within starting time
+	if (mStartingTimer < maxStartingTime) {
+		mStartingTimer += dt;
+		// initialize the levels based on time (cast timer to integer and use as index for level)
+		if (levelInitializationIndex != int(mStartingTimer) && levelInitializationIndex < mNumberOfLevels - 1) {
+			levelInitializationIndex = int(mStartingTimer);
+			mScene->getLevel(levelInitializationIndex)->saturate(false);
+            mOutputAudio->playSound("lock-level-evil-short.wav");
+		}
+	}
+	else {
+		// When maxStartingTime has passed, switch to GAME state.
+		// play cat sound! (the first level will switch to red)
+		mState = GAME;
+		mScene->getLevel(mCurrentLevel)->saturate(true);
+        mOutputAudio->playSound("cat-meow2.wav");
+		mScene->resetStartingPositions();
+	}
+}
+
+void GameHandler::updateGame(float dt) {
+	// the gravitational force will be the gravitational ratio times maximum audio amplitude.
+	float gravitationalForce = mAudioMultiplier * mAudioGravityRatio;
+
+	// can be switched to un-normalized amplitude function
+	float audioForce = mInputAudio->getNormalizedAmplitude() * mAudioMultiplier;
+
+	mScene->getLevel(mCurrentLevel)->applyForce(audioForce, gravitationalForce, dt);
+
+	// Make the completed levels follow the leader
+	for (unsigned int i = 0; i < mCurrentLevel; i++)
+		mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
+
+	// if next level is not the last level...
+	if (mCurrentLevel + 1 < mNumberOfLevels) {
+		// update the next levels color based on angular distance from current level.
+		mScene->getLevel(mCurrentLevel + 1)->updateColor(mScene->getLevelAngle(mCurrentLevel));
+	}
+
+	resolveLevelProgression();
+}
+
+void GameHandler::updateEnd(float dt) {
+    //TODO
+}
 
 void GameHandler::render() {
 
@@ -101,17 +169,27 @@ void GameHandler::keyCallback(int key, int action) {
 
             case SGCT_KEY_UP:
                 if(action == SGCT_PRESS) {
-                    mAudioHandler->updateMaxAmplitude(0.2f);
-                    std::cout << "Max amplitude: " << mAudioHandler->getMaxAmplitude() << std::endl;
+                    mInputAudio->updateMaxAmplitude(0.2f);
+                    std::cout << "Max amplitude: " << mInputAudio->getMaxAmplitude() << std::endl;
                 }
             break;
 
             case SGCT_KEY_DOWN:
                 if(action == SGCT_PRESS) {
-                    mAudioHandler->updateMaxAmplitude(-0.2f);
-                    std::cout << "Max amplitude: " << mAudioHandler->getMaxAmplitude() << std::endl;
+                    mInputAudio->updateMaxAmplitude(-0.2f);
+                    std::cout << "Max amplitude: " << mInputAudio->getMaxAmplitude() << std::endl;
                 }
             break;
+
+			case SGCT_KEY_P:
+				if (action == SGCT_PRESS) {
+
+					mState = STARTING;
+                    mOutputAudio->playMusic("evil-intro.wav", false);
+                    //mScene->toggleBackground();
+					mScene->randomizeStartingPositions();
+				}
+			break;
 
             case SGCT_KEY_W:
                 mScene->getCharacter()->incrementTheta(2.0f);
@@ -135,6 +213,10 @@ void GameHandler::keyCallback(int key, int action) {
 
             case SGCT_KEY_Q:
                 mScene->getCharacter()->incrementRadius(-0.2f);
+            break;
+
+            case SGCT_KEY_SPACE:
+                mState = END;
             break;
         }
     }
@@ -179,12 +261,21 @@ void GameHandler::resolveLevelProgression() {
         Level * nextLevel = mScene->getLevel(mCurrentLevel + 1);
 
         if((currentLevel->getAngle() > nextLevel->getAngle() - mAngleCompletionSpan &&
-            currentLevel->getAngle() < nextLevel->getAngle() + mAngleCompletionSpan) && 
+            currentLevel->getAngle() < nextLevel->getAngle() + mAngleCompletionSpan) &&
             (currentLevel->getVelocity() < mMaximumCompletionVelocity && currentLevel->getVelocity() > -mMaximumCompletionVelocity)) {
-        
+
             nextLevel->setCurrentLevel();
+			nextLevel->saturate(true);
 
             mCurrentLevel++;
+
+            //if we are at the last level, we should end the game
+            if(mCurrentLevel == mNumberOfLevels - 1) {
+                mOutputAudio->playSound("win.wav");
+                mState = END;
+            } else {
+                mOutputAudio->playSound("lock-level-success.wav");
+            }
         }
     }
 }
