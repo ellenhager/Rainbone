@@ -66,7 +66,7 @@ void GameHandler::update(float dt) {
 			updateEnd(dt);
 			break;
 	}
-
+	mOutputAudio->updateSound(dt);
     mScene->update(dt);
 }
 
@@ -84,6 +84,9 @@ void GameHandler::updateIntro(float dt) {
 	// Make the completed levels follow the leader
 	for (unsigned int i = 0; i < mCurrentLevel; i++)
 		mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
+
+	if (mCountDown)
+		runCountDown();
 }
 
 void GameHandler::updateStarting(float dt) {
@@ -134,13 +137,6 @@ void GameHandler::updateGame(float dt) {
 	}
 
     resolveLevelProgression();
-
-    mOutputAudio->updateSound(dt);
-
-    if(mCountDown)
-        runCountDown();
-
-    mScene->update(dt);
 }
 
 void GameHandler::updateEnd(float dt) {
