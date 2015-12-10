@@ -115,5 +115,9 @@ std::vector<glm::vec4> Scene::getLevelColors() {
 }
 
 void Scene::toggleBackground() {
-    //TODO: from dark to light background
+	if (mSkySphere->getBrightness() > 0.5f)
+		mSkySphere->setBrightness(0.15f);
+	else {
+		mSkySphere->setBrightness(1.0f);
+	}
 }
