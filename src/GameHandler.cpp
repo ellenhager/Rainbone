@@ -85,6 +85,7 @@ void GameHandler::updateIntro(float dt) {
 	for (unsigned int i = 0; i < mCurrentLevel; i++)
 		mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
 
+    // Countdown
 	if (mCountDown)
 		runCountDown();
 }
@@ -105,6 +106,7 @@ void GameHandler::updateStarting(float dt) {
 			levelInitializationIndex = int(mStartingTimer);
 			mScene->getLevel(levelInitializationIndex)->saturate(false);
             //mOutputAudio->playSound("lock-level-evil-short.wav");
+            mOutputAudio->playMusic(ELOCK, "lock-level-evil-short.wav", false);
 		}
 	}
 	else {
@@ -112,7 +114,8 @@ void GameHandler::updateStarting(float dt) {
 		// play cat sound! (the first level will switch to red)
 		mState = GAME;
 		mScene->getLevel(mCurrentLevel)->saturate(true);
-        //mOutputAudio->playSound("cat-meow2.wav");
+        //mOutputAudio->playSound("cat-meow3.wav");
+        mOutputAudio->playMusic(CATHELP, "cat-meow3.wav", false);
 		mScene->resetStartingPositions();
 	}
 }
@@ -199,7 +202,7 @@ void GameHandler::keyCallback(int key, int action) {
             case SGCT_KEY_H:
                 if(action == SGCT_PRESS) {
                     //mOutputAudio->playSound(CATHELP);
-                    mOutputAudio->playMusic(CATHELP, "cat-meow2.wav", false);
+                    mOutputAudio->playMusic(CATHELP, "cat-meow3.wav", false);
                 }
                 mScene->getLevel(mCurrentLevel)->applyForce(2.5 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
             break;
@@ -309,9 +312,11 @@ void GameHandler::resolveLevelProgression() {
             //if we are at the last level, we should end the game
             if(mCurrentLevel == mNumberOfLevels - 1) {
                 //mOutputAudio->playSound("win.wav");
+                mOutputAudio->playMusic(WIN, "win.wav", false);
                 mState = END;
             } else {
                 //mOutputAudio->playSound("lock-level-success.wav");
+                mOutputAudio->playMusic(SLOCK, "lock-level-success.wav", false);
             }
         }
     }
