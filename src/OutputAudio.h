@@ -22,7 +22,7 @@ public:
 
     void playMusic(SoundFile m, std::string, bool);
 
-    //void playSound(std::string);
+    void playSound(SoundFile m, std::string);
 
     void updateSound(float);
 
@@ -38,10 +38,15 @@ public:
 
     std::pair<sf::Music*, Timer*> getMusicPair(SoundFile m) { return mMusics[m]; }
 
+    sf::Sound* getSoundObject(SoundFile m) { return mSounds[m].first; }
+
+    Timer* getSoundTimer(SoundFile m) { return mSounds[m].second; }
+
+    std::pair<sf::Sound*, Timer*> getSoundPair(SoundFile m) { return mSounds[m]; }
+
 private:
-    //sf::Music mMusic;
-    //sf::SoundBuffer mBuffer;
-    //sf::Sound mSound;
+
+    sf::SoundBuffer mBuffer;
 
     std::map<SoundFile, std::pair<sf::Music*, Timer*> > mMusics;                // Music files
 
