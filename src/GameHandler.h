@@ -2,7 +2,8 @@
 #define GAMEHANDLER_H
 
 #include "Scene.h"
-#include "AudioHandler.h"
+#include "InputAudio.h"
+#include "OutputAudio.h"
 
 class GameHandler {
 
@@ -18,6 +19,14 @@ public:
 
     void update(float dt);
 
+	void updateIntro(float dt);
+
+	void updateStarting(float dt);
+
+	void updateGame(float dt);
+
+	void updateEnd(float dt);
+
     void keyCallback(int, int);
 
     std::vector<float> getLevelAngles() { return mScene->getLevelAngles(); }
@@ -28,11 +37,21 @@ public:
 
     void setLevelColors(std::vector<glm::vec4>);
 
-    void rotateByVoice();
+    InputAudio* getInputAudio() { return mInputAudio; }
 
-    AudioHandler* getAudiohandler() { return mAudioHandler; }
+    OutputAudio* getOutputAudio() { return mOutputAudio; }
 
 private:
+
+	enum GameState { INTRO, STARTING, GAME, END};
+
+	GameState mState;
+
+	float mStartingTimer = 0.0f;
+
+	const float maxStartingTime = 8.0f;
+
+	int levelInitializationIndex = -1;
 
     void resolveLevelProgression();
 
@@ -44,11 +63,13 @@ private:
 
     Scene * mScene;
 
-    AudioHandler * mAudioHandler;
+    InputAudio * mInputAudio;
 
     float mAudioGravityRatio;
 
     float mAudioMultiplier;
+
+    OutputAudio * mOutputAudio;
 
     const float mAngleCompletionSpan = 5.0f;
 

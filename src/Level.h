@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <algorithm>
 
 #include "sgct.h"
 #include "Objloader.hpp"
@@ -29,6 +30,8 @@ public:
 
     void update(float dt);
 
+	void saturate(bool);
+
 	void updateColor(float previousAngle);
 
     void applyForce(float audioForce, float gravitationalForce, float dt);
@@ -41,19 +44,23 @@ public:
 
     void setAngle(float a) { mAngle = a; }
 
+	void setStartingAngle(float a);
+
     void setCurrentLevel() { mCurrentLevel = true; }
 
     void setColor(glm::vec4 c) { mMaterial.currentColor = c; } 
 
     void incrementAngle(float a) { mAngle += a; }
 
-private:
+	float randomizeAngle(float, float);
 
-    float randomizeAngle(float, float);
+private:
 
     void interpolateColor();
 
     float mAngle = 0.0f;
+
+	bool mIsSaturated = true;
 
     float mInterpolationTimer = 0.0f;
 
@@ -71,6 +78,8 @@ private:
     float mVelocity;
 
     bool mCurrentLevel = false;
+
+	float mGravityAngle = 0.0;
 
     std::vector<glm::vec3> mVertices;
 

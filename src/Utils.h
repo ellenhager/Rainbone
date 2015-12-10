@@ -17,7 +17,7 @@
 #ifndef SOUNDFILE
 #define SOUNDFILE
 // If a new music file is added, be sure to add a enum for it here as well.
-enum SoundFile { BGMUSIC, MEOWHELP, MEOWAAHH };
+enum SoundFile { INTROMUSIC, EVILMUSIC, CATAAHH, CATHELP };
 #endif // SOUNDFILE
 
 #ifndef WORD
