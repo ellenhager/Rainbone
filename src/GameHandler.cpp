@@ -138,6 +138,9 @@ void GameHandler::updateGame(float dt) {
 
 void GameHandler::updateEnd(float dt) {
     //TODO
+	// Make the completed levels follow the leader
+	for (unsigned int i = 0; i < mCurrentLevel; i++)
+		mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
 }
 
 void GameHandler::render() {
