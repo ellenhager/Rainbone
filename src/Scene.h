@@ -1,9 +1,13 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include <map>
+
 #include "Level.h"
 #include "Character.h"
 #include "SkySphere.h"
+#include "Utils.h"
+#include "Letter.h"
 
 class Scene {
 
@@ -40,12 +44,16 @@ public:
 
     void setLevelAngle(unsigned int i, float a) { mLevels[i]->setAngle(a); }
 
+    void shallRenderLetter(Word, bool);
+
     void toggleBackground();
 
 private:
 
     std::vector<Level *> mLevels;
 
+    std::map<Word, std::vector<Letter *> > mWords;
+    
     Character * mCharacter;
 	SkySphere * mSkySphere;
 

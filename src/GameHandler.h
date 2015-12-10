@@ -55,6 +55,8 @@ private:
 
     void resolveLevelProgression();
 
+    void runCountDown();
+
     unsigned int mCurrentLevel = 0;
 
     sgct::Engine * mEngine;
@@ -74,6 +76,8 @@ private:
     const float mMaximumCompletionVelocity = 60.0f;
 
     float mNumberOfLevels;
+
+    bool mCountDown = false;
 };
 
 #endif // GAMEHANDLER_H

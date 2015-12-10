@@ -1,57 +1,42 @@
-#ifndef CHARACTER_H
-#define CHARACTER_H
-
+#ifndef LETTER_H
+#define LETTER_H
 #define _USE_MATH_DEFINES
 
-#include <cmath>
-#include <vector>
 #include <iostream>
 #include <stdio.h>
-#include <string>
-#include <glm/gtc/matrix_inverse.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <vector>
 
 #include "sgct.h"
 #include "Objloader.hpp"
 #include "Utils.h"
 
-class Character {
+class Letter {
 
 public:
 
-    Character(const char *, std::string);
+	Letter(const char *, glm::vec4);
 
-    ~Character();
+	~Letter();
 
-    void initialize(glm::vec3);
+	void initialize(glm::vec3);
 
     void render(std::vector<glm::mat4>);
 
-    void incrementTheta(float th) { mTheta += th; }
+    bool shallRender() { return mShallRender; }
 
-    void incrementPhi(float ph) { mPhi += ph; }
-
-    void incrementRadius(float r) { mRadius += r; }
+    void setRenderState(bool b) { mShallRender = b; }
 
 private:
 
-    glm::vec3 mPosition;
+	std::vector<glm::vec3> mVertices;
+	
+	std::vector<glm::vec3> mNormals;
+	
+	//std::vector<glm::vec3> mUvs;
 
-    std::string mTextureName;
+	bool mShallRender = false;
 
-    float mRadius = 5.0f;
-
-    float mTheta = 90.0f;
-
-    float mPhi = 0.0f;
-
-    std::vector<glm::vec3> mVertices;
-
-    std::vector<glm::vec3> mNormals;
-
-    std::vector<glm::vec2> mUvs;
-
-    struct Material {
+	struct Material {
         glm::vec4 color;
         glm::vec4 ambient;
         glm::vec4 diffuse;
@@ -63,7 +48,7 @@ private:
     GLuint vertexArray;
     GLuint vertexBuffer;
     GLuint normalBuffer;
-    GLuint textureBuffer;
+    //GLuint textureBuffer;
 
     GLint MVPLoc;           // MVP matrix
     GLint MVLoc;            // MV matrix
@@ -76,8 +61,8 @@ private:
     GLint lightSpeLoc;      // Specular light
     GLint specularityLoc;   // Specular constant
     GLint shinynessLoc;     // How much specularity (magnitude)
-    GLint TexLoc;           // Texture sampler
+    //GLint TexLoc;           // Texture sampler
 
 };
 
-#endif // CHARACTER_H
+#endif // LETTER_H

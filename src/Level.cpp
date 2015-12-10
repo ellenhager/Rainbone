@@ -70,6 +70,8 @@ void Level::initialize(glm::vec3 lightSourcePosition) {
     specularityLoc          = sgct::ShaderManager::instance()->getShaderProgram( "level").getUniformLocation( "specularity" );
     shinynessLoc            = sgct::ShaderManager::instance()->getShaderProgram( "level").getUniformLocation( "shinyness" );
 
+    glUniform4f(lightPosLoc, lightSourcePosition.x, lightSourcePosition.y, lightSourcePosition.z, 1.0f);
+
     sgct::ShaderManager::instance()->unBindShaderProgram();
 
     // Generate the VAO
