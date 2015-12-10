@@ -1,18 +1,18 @@
-#include "SoundHandler.h"
+#include "OutputAudio.h"
 
-SoundHandler::SoundHandler() {
+OutputAudio::OutputAudio() {
 
-  std::cout << "Creating SoundHandler..." << std::endl;
+  std::cout << "Creating OutputAudio..." << std::endl;
 }
 
 
-SoundHandler::~SoundHandler() {
+OutputAudio::~OutputAudio() {
 
-  std::cout << "Destroying SoundHandler..." << std::endl;
+  std::cout << "Destroying OutputAudio..." << std::endl;
   //delete mStream; // This might result in memory leaks. Deleting pointer to void.
 }
 
-void SoundHandler::playMusic(std::string file, bool loop) {
+void OutputAudio::playMusic(std::string file, bool loop) {
   // Play music using SFML
   if(!mMusic.openFromFile("../assets/soundfiles/" + file)) {
         std::cout << "ERROR WHEN LOADING AUDIO FILE!!!" << std::endl;
@@ -28,7 +28,7 @@ void SoundHandler::playMusic(std::string file, bool loop) {
     }
 }
 
-void SoundHandler::playSound(std::string file) {
+void OutputAudio::playSound(std::string file) {
   if(!mBuffer.loadFromFile("../assets/soundfiles/" + file)) {
     std::cout << "ERROR WHEN LOADING CUSTOM SOUND FILE!!!" << std::endl;
     return;

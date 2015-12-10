@@ -5,8 +5,8 @@ GameHandler::GameHandler(sgct::Engine *e, unsigned int n)
 
     std::cout << "\nCreating GameHandler...\n" << std::endl;
 
-	mAudioHandler = new AudioHandler();
-    mSoundHandler = new SoundHandler();
+	mInputAudio = new InputAudio();
+    mOutputAudio = new OutputAudio();
 
 	// 1 => gravitational force is just as high as Audio Force
 	// 0.1 => gravitational force is 10% if audio force
@@ -18,7 +18,7 @@ GameHandler::GameHandler(sgct::Engine *e, unsigned int n)
 	mScene = new Scene(mNumberOfLevels);
 
 	mState = INTRO;
-    mSoundHandler->playMusic("western-themetune.wav", true);
+    mOutputAudio->playMusic("western-themetune.wav", true);
 
     std::cout << "\nGameHandler created!\n";
 }
@@ -44,7 +44,7 @@ void GameHandler::initialize() {
 
     firstLevel->setCurrentLevel();
 
-    mAudioHandler->initialize();
+    mInputAudio->initialize();
 
     std::cout << "\nGameHandler initialized!\n";
 }
@@ -75,7 +75,7 @@ void GameHandler::updateIntro(float dt) {
 	float gravitationalForce = mAudioMultiplier * mAudioGravityRatio;
 
 	// can be switched to un-normalized amplitude function
-	float audioForce = mAudioHandler->getNormalizedAmplitude() * mAudioMultiplier;
+	float audioForce = mInputAudio->getNormalizedAmplitude() * mAudioMultiplier;
 
 	// apply force to all levels
 	for (unsigned int i = 0; i < mNumberOfLevels; i++)
@@ -101,7 +101,7 @@ void GameHandler::updateStarting(float dt) {
 		if (levelInitializationIndex != int(mStartingTimer) && levelInitializationIndex < mNumberOfLevels - 1) {
 			levelInitializationIndex = int(mStartingTimer);
 			mScene->getLevel(levelInitializationIndex)->saturate(false);
-            mSoundHandler->playSound("lock-level-evil-short.wav");
+            mOutputAudio->playSound("lock-level-evil-short.wav");
 		}
 	}
 	else {
@@ -109,7 +109,7 @@ void GameHandler::updateStarting(float dt) {
 		// play cat sound! (the first level will switch to red)
 		mState = GAME;
 		mScene->getLevel(mCurrentLevel)->saturate(true);
-        mSoundHandler->playSound("cat-meow2.wav");
+        mOutputAudio->playSound("cat-meow2.wav");
 		mScene->resetStartingPositions();
 	}
 }
@@ -119,7 +119,7 @@ void GameHandler::updateGame(float dt) {
 	float gravitationalForce = mAudioMultiplier * mAudioGravityRatio;
 
 	// can be switched to un-normalized amplitude function
-	float audioForce = mAudioHandler->getNormalizedAmplitude() * mAudioMultiplier;
+	float audioForce = mInputAudio->getNormalizedAmplitude() * mAudioMultiplier;
 
 	mScene->getLevel(mCurrentLevel)->applyForce(audioForce, gravitationalForce, dt);
 
@@ -169,15 +169,15 @@ void GameHandler::keyCallback(int key, int action) {
 
             case SGCT_KEY_UP:
                 if(action == SGCT_PRESS) {
-                    mAudioHandler->updateMaxAmplitude(0.2f);
-                    std::cout << "Max amplitude: " << mAudioHandler->getMaxAmplitude() << std::endl;
+                    mInputAudio->updateMaxAmplitude(0.2f);
+                    std::cout << "Max amplitude: " << mInputAudio->getMaxAmplitude() << std::endl;
                 }
             break;
 
             case SGCT_KEY_DOWN:
                 if(action == SGCT_PRESS) {
-                    mAudioHandler->updateMaxAmplitude(-0.2f);
-                    std::cout << "Max amplitude: " << mAudioHandler->getMaxAmplitude() << std::endl;
+                    mInputAudio->updateMaxAmplitude(-0.2f);
+                    std::cout << "Max amplitude: " << mInputAudio->getMaxAmplitude() << std::endl;
                 }
             break;
 
@@ -185,7 +185,7 @@ void GameHandler::keyCallback(int key, int action) {
 				if (action == SGCT_PRESS) {
 
 					mState = STARTING;
-                    mSoundHandler->playMusic("evil-intro.wav", false);
+                    mOutputAudio->playMusic("evil-intro.wav", false);
                     //mScene->toggleBackground();
 					mScene->randomizeStartingPositions();
 				}
@@ -271,10 +271,10 @@ void GameHandler::resolveLevelProgression() {
 
             //if we are at the last level, we should end the game
             if(mCurrentLevel == mNumberOfLevels - 1) {
-                mSoundHandler->playSound("win.wav");
+                mOutputAudio->playSound("win.wav");
                 mState = END;
             } else {
-                mSoundHandler->playSound("lock-level-success.wav");
+                mOutputAudio->playSound("lock-level-success.wav");
             }
         }
     }

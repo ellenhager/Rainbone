@@ -1,18 +1,18 @@
-#ifndef SOUNDHANDLER_H
-#define SOUNDHANDLER_H
+#ifndef OUTPUTAUDIO_H
+#define OUTPUTAUDIO_H
 
 #include <iostream>
 #include <stdio.h>
 
 #include <SFML/Audio.hpp>
 
-class SoundHandler {
+class OutputAudio {
 
 public:
 
-    SoundHandler();
+    OutputAudio();
 
-    ~SoundHandler();
+    ~OutputAudio();
 
     void stop() { mMusic.stop(); }
 
@@ -26,6 +26,4 @@ private:
     sf::Sound mSound;
 };
 
-#endif // SOUNDHANDLER_H
-
-
+#endif // OUTPUTAUDIO_H

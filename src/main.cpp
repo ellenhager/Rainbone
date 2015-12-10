@@ -120,6 +120,6 @@ void keyCallback(int key, int action) {
 
 
 void cleanUp() {
-    rainbone->getSoundHandler()->stop();
+    rainbone->getOutputAudio()->stop();
     delete rainbone;
 }

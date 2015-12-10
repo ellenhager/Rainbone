@@ -1,18 +1,18 @@
-#ifndef AUDIOHANDLER_H
-#define AUDIOHANDLER_H
+#ifndef INPUTAUDIO_H
+#define INPUTAUDIO_H
 
 #include <iostream>
 #include <stdio.h>
 
 #include "portaudio.h"
 
-class AudioHandler {
+class InputAudio {
 
 public:
 
-    AudioHandler();
+    InputAudio();
 
-    ~AudioHandler();
+    ~InputAudio();
 
     void initialize();
 
@@ -41,4 +41,4 @@ private:
     PaStream *mStream;
 };
 
-#endif // AUDIOHANDLER_H
+#endif // INPUTAUDIO_H
