@@ -48,16 +48,22 @@ public:
 
     void toggleBackground();
 
+    void interpolateBackground();
+
 private:
 
     std::vector<Level *> mLevels;
 
     std::map<Word, std::vector<Letter *> > mWords;
-    
+
     Character * mCharacter;
 	SkySphere * mSkySphere;
 
     glm::vec3 mLightSourcePosition;
+
+    bool mToggledBackground = false;
+    float mInterpolationTimer = 0.0f;
+    const float maxInterpolationTime = 1.0f;
 
     const glm::vec4 sColorScale[7] = {
         glm::vec4(0.8f, 0.2f, 0.2f, 1.0f),
