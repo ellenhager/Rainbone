@@ -123,10 +123,10 @@ void Level::applyForce(float force, float gravitationalForce, float dt) {
 	} else if (mAngle > 360.0f) { // make it harder to rotate after a 360, to stop the heavy rotating
         gravitationalForce *= 2.0f;
     } else if ((mAngle > mGravityAngle - 1.0f) && (mAngle < mGravityAngle + 1.0f)) {
-		// having a span of 2 degrees at the pivot point where the gravity has no effekt and 
-		// a low velocity results in no velocity. without this the level will wiggle a little 
+		// having a span of 2 degrees at the pivot point where the gravity has no effekt and
+		// a low velocity results in no velocity. without this the level will wiggle a little
 		// at the pivot point.
-		if (abs(mVelocity) < 5.0f) {
+		if (fabs(mVelocity) < 5.0f) {
 			mVelocity = 0.0f;
 		}
 		gravitationalForce = 0.0f;
