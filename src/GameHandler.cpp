@@ -142,6 +142,9 @@ void GameHandler::updateGame(float dt) {
 
 void GameHandler::updateEnd(float dt) {
     //TODO
+	// Make the completed levels follow the leader
+	for (unsigned int i = 0; i < mCurrentLevel; i++)
+		mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
 }
 
 void GameHandler::render() {
@@ -169,7 +172,7 @@ void GameHandler::keyCallback(int key, int action) {
             case SGCT_KEY_1:
                 mCountDown = true;
             break;
-            
+
             // Play sound, if the users fail to "start" the game
             case SGCT_KEY_2:
                 if(action == SGCT_PRESS) {
@@ -183,7 +186,7 @@ void GameHandler::keyCallback(int key, int action) {
 
                     mState = STARTING;
                     mOutputAudio->playMusic(EVILMUSIC, "evil-intro.wav", false);
-                    //mScene->toggleBackground();
+                    mScene->toggleBackground();
                     mScene->randomizeStartingPositions();
                 }
             break;
@@ -318,6 +321,8 @@ void GameHandler::resolveLevelProgression() {
 
             //if we are at the last level, we should end the game
             if(mCurrentLevel == mNumberOfLevels - 1) {
+                mScene->toggleBackground();
+
                 mOutputAudio->playSound(WIN, "win.wav");
                 mState = END;
             } else {

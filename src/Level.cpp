@@ -118,12 +118,19 @@ void Level::initialize(glm::vec3 lightSourcePosition) {
 void Level::applyForce(float force, float gravitationalForce, float dt) {
 
     // calculate gravitational force
-    if (mAngle < mGravityAngle) { // for having a pendulum, where 0.0f is the pivot point
+    if (mAngle < mGravityAngle - 1.0f) { // for having a pendulum, where 0.0f is the pivot point
         gravitationalForce = -gravitationalForce;
-    } else if (mAngle > 360.0f) { // make it harder to rotate after a 360, to stop the heavy rotating
+	} else if (mAngle > 360.0f) { // make it harder to rotate after a 360, to stop the heavy rotating
         gravitationalForce *= 2.0f;
-    }
-
+    } else if ((mAngle > mGravityAngle - 1.0f) && (mAngle < mGravityAngle + 1.0f)) {
+		// having a span of 2 degrees at the pivot point where the gravity has no effekt and 
+		// a low velocity results in no velocity. without this the level will wiggle a little 
+		// at the pivot point.
+		if (abs(mVelocity) < 5.0f) {
+			mVelocity = 0.0f;
+		}
+		gravitationalForce = 0.0f;
+	}
     // audio acceleraion - gravity
 	float netForce = force - gravitationalForce;
 	mAcceleration = netForce / mMass;
@@ -133,7 +140,7 @@ void Level::applyForce(float force, float gravitationalForce, float dt) {
 
     if (mVelocity > 100.0f) { // cap velocity
         mVelocity = 100.0f;
-    }
+	}
 
 	// calculate angle position
 	float tempAngle = mAngle + mVelocity * dt;
