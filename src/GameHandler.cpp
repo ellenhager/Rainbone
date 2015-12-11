@@ -74,8 +74,8 @@ void GameHandler::updateIntro(float dt) {
 	// the gravitational force will be the gravitational ratio times maximum audio amplitude.
 	float gravitationalForce = mAudioMultiplier * mAudioGravityRatio;
 
-	// voice should not be activated from the start
-	float audioForce = 0;
+	// can be switched to un-normalized amplitude function
+	float audioForce = 0; // voice should not be activated from the start
 
 	// apply force to all levels
 	for (unsigned int i = 0; i < mNumberOfLevels; i++)
