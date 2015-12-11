@@ -2,8 +2,8 @@
 #define GAMEHANDLER_H
 
 #include "Scene.h"
-#include "AudioHandler.h"
-#include "SoundHandler.h"
+#include "InputAudio.h"
+#include "OutputAudio.h"
 
 class GameHandler {
 
@@ -37,9 +37,9 @@ public:
 
     void setLevelColors(std::vector<glm::vec4>);
 
-    AudioHandler* getAudioHandler() { return mAudioHandler; }
+    InputAudio* getInputAudio() { return mInputAudio; }
 
-    SoundHandler* getSoundHandler() { return mSoundHandler; }
+    OutputAudio* getOutputAudio() { return mOutputAudio; }
 
 private:
 
@@ -55,25 +55,29 @@ private:
 
     void resolveLevelProgression();
 
+    void runCountDown();
+
     unsigned int mCurrentLevel = 0;
 
     sgct::Engine * mEngine;
 
     Scene * mScene;
 
-    AudioHandler * mAudioHandler;
+    InputAudio * mInputAudio;
 
     float mAudioGravityRatio;
 
     float mAudioMultiplier;
 
-    SoundHandler * mSoundHandler;
+    OutputAudio * mOutputAudio;
 
     const float mAngleCompletionSpan = 5.0f;
 
     const float mMaximumCompletionVelocity = 60.0f;
 
     float mNumberOfLevels;
+
+    bool mCountDown = false;
 };
 
 #endif // GAMEHANDLER_H
