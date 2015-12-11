@@ -52,6 +52,8 @@ public:
 
     void incrementAngle(float a) { mAngle += a; }
 
+    void incrementLevelTrans(float l) { mLevelsTrans += l; }
+
 	float randomizeAngle(float, float);
 
 private:
@@ -59,6 +61,8 @@ private:
     void interpolateColor();
 
     float mAngle = 0.0f;
+
+    float mLevelsTrans = 0.0f;
 
 	bool mIsSaturated = true;
 

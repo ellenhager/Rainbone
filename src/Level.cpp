@@ -162,10 +162,11 @@ void Level::render(std::vector<glm::mat4> sceneMatrices) {
     // Create scene transform (animation)
     glm::mat4 levelTransform = glm::rotate( glm::mat4(1.0f), tilt , glm::vec3(-1.0f, 0.0f, 0.0f));
     glm::mat4 levelRotation  = glm::rotate( glm::mat4(1.0f), static_cast<float>(mAngle * M_PI / 180.0f) , glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 levelTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, mLevelsTrans, 0.0f));
 
     // Apply scene transforms to MVP and MV matrices
-    sceneMatrices[I_MVP] = sceneMatrices[I_MVP] * levelTransform * levelRotation;
-    sceneMatrices[I_MV]  = sceneMatrices[I_MV] * levelTransform;
+    sceneMatrices[I_MVP] = sceneMatrices[I_MVP] * levelTransform * levelRotation * levelTranslate;
+    sceneMatrices[I_MV]  = sceneMatrices[I_MV] * levelTransform * levelTranslate;
 
     // Bind shader program
     sgct::ShaderManager::instance()->bindShaderProgram( "level" );

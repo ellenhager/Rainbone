@@ -203,7 +203,7 @@ void GameHandler::keyCallback(int key, int action) {
                 mScene->getLevel(mCurrentLevel)->applyForce(2.5 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
             break;
 
-            // Manual level steering of levels, if the users suck and for testing
+            // Manual level steering of levels, if the users suck
             case SGCT_KEY_RIGHT:
                 mScene->getLevel(mCurrentLevel)->applyForce(2.0 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
             break;
@@ -227,9 +227,20 @@ void GameHandler::keyCallback(int key, int action) {
                 }
             break;
 
-            /* --- Charachter interaction --- */
+            /* --- Charachter and Level matrix transformations --- */
 
-            // Controls for steering the character object
+            // Translate the levels along the y-axis
+            case SGCT_KEY_N:
+                for (unsigned int i = 0; i < mNumberOfLevels; i++)
+                    mScene->getLevel(i)->incrementLevelTrans(1.0f);
+            break;
+
+            case SGCT_KEY_M:
+                for (unsigned int i = 0; i < mNumberOfLevels; i++)
+                    mScene->getLevel(i)->incrementLevelTrans(-1.0f);
+            break;
+
+            // Controls for moving the character object
             case SGCT_KEY_W:
                 mScene->getCharacter()->incrementTheta(2.0f);
             break;
