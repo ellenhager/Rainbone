@@ -103,7 +103,9 @@ void Scene::interpolateBackground() {
     if(mToggledBackground == false) { //day
         mSkySphere->setBrightness(mInterpolationTimer / maxInterpolationTime);
     } else if(mToggledBackground == true) { //night
-        mSkySphere->setBrightness(1 - (mInterpolationTimer / maxInterpolationTime));
+        if(mSkySphere->getBrightness() > 0.15) {
+            mSkySphere->setBrightness(1 - (mInterpolationTimer / maxInterpolationTime));
+        }
     }
 
 }
