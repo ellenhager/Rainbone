@@ -15,8 +15,9 @@
 * Up arrow - Increase the max amplitude, to customize how loud the input need to be.
 * Down arrow - Decrease the max amplitude, to customize how loud the input need to be.
 
-## Character interaction, "the cat"
+## Character (the cat) and Level matrix transformations
 
-* Increment the objects radius (in/out): Q, E
-* Increment theta (+/-): W, S
-* Increment phi (+/-): A, D
+* Translate Levels (+/-): N, M 
+* Increment Charachter radius (in/out): Q, E
+* Increment Charachter theta (+/-): W, S
+* Increment Charachter phi (+/-): A, D

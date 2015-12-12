@@ -21,20 +21,21 @@ void OutputAudio::playMusic(SoundFile m, std::string file, bool loop) {
         return;
     }
 
-    //mMusic.play();
+    // mMusic play
     mMusics[m].first->play();
 
     if(loop) {
-      //mMusic setLoop true
+      // mMusic setLoop true
       mMusics[m].first->setLoop(true);
     } else {
-      //mMusic setLoop false
+      // mMusic setLoop false
       mMusics[m].first->setLoop(false);
     }
 }
 
 void OutputAudio::playSound(SoundFile m, std::string file) {
 
+  // Play music using SFML
   mSounds[m] = std::make_pair(new sf::Sound, new Timer(-0.5f, 1.0f, 1.0f, 0.0f));
 
   if(!mBuffer.loadFromFile("../assets/soundfiles/" + file)) {

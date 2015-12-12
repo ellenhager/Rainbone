@@ -1,6 +1,9 @@
 # Setup rainbone
 
-Rainbone uses three different frameworks, SGCT, PORTAUDIO and SFML.
+Rainbone uses three different libraries, which needs to be installed to run to program.
+* [SGCT](https://github.com/opensgct/sgct)
+* [PORTAUDIO](http://www.portaudio.com/)
+* [SFML](http://www.sfml-dev.org/index.php)
 
 ----
 

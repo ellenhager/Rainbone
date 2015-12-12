@@ -23,8 +23,8 @@ void SkySphere::initialize() {
 
 	if (!sgct::ShaderManager::instance()->shaderProgramExists("sky")) {
 		sgct::ShaderManager::instance()->addShaderProgram("sky",
-			"../shaders/texturevertexshader.glsl",
-			"../shaders/texturefragmentshader.glsl");
+		        "../shaders/texturevertexshader.glsl",
+		        "../shaders/texturefragmentshader.glsl");
 	}
 
 	sgct::ShaderManager::instance()->bindShaderProgram("sky");
@@ -69,5 +69,5 @@ void SkySphere::render(std::vector<glm::mat4> sceneMatrices) {
 }
 
 void SkySphere::update(float dt) {
-	mAngle += mSpeed*dt;
+	mAngle += mSpeed * dt;
 }

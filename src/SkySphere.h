@@ -28,6 +28,7 @@ public:
 	void update(float dt);
 
 	void setBrightness(float val) { brightness = val; };
+	
 	float getBrightness() { return brightness; };
 
 private:
@@ -39,8 +40,6 @@ private:
 	float brightness = 1.0f;
 	GLint MVPLoc;           // MVP matrix
 	GLint lightnessLoc;
-	
-	
 };
 
 #endif // SKYSPHERE_H
