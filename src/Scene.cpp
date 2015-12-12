@@ -91,6 +91,23 @@ void Scene::update(float dt) {
         (*it)->update(dt);
 
 	mSkySphere->update(dt);
+
+    if(mInterpolationTimer <= maxInterpolationTime && mInterpolationTimer > 0.0f) {
+        mInterpolationTimer += dt;
+
+        interpolateBackground();
+    }
+}
+
+void Scene::interpolateBackground() {
+    if(mToggledBackground == false) { //day
+        mSkySphere->setBrightness(mInterpolationTimer / maxInterpolationTime);
+    } else if(mToggledBackground == true) { //night
+        if(mSkySphere->getBrightness() > 0.15) {
+            mSkySphere->setBrightness(1 - (mInterpolationTimer / maxInterpolationTime));
+        }
+    }
+
 }
 
 
@@ -138,5 +155,11 @@ void Scene::shallRenderLetter(Word word, bool shallRender) {
 }
 
 void Scene::toggleBackground() {
-    //TODO: from dark to light background
+    mInterpolationTimer = 0.1f;
+
+    if(mToggledBackground) {
+        mToggledBackground = false;
+    } else {
+        mToggledBackground = true;
+    }
 }
