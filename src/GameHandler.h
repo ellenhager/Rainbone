@@ -21,6 +21,8 @@ public:
 
 	void updateIntro(float dt);
 
+    void updateCountdown(float dt);
+
 	void updateStarting(float dt);
 
 	void updateGame(float dt);
@@ -43,7 +45,7 @@ public:
 
 private:
 
-	enum GameState { INTRO, STARTING, GAME, END};
+	enum GameState { INTRO, COUNTDOWN, STARTING, GAME, END};
 
 	GameState mState;
 
@@ -76,8 +78,6 @@ private:
     const float mMaximumCompletionVelocity = 60.0f;
 
     float mNumberOfLevels;
-
-    bool mCountDown = false;
 };
 
 #endif // GAMEHANDLER_H

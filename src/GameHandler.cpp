@@ -56,6 +56,9 @@ void GameHandler::update(float dt) {
     case INTRO:
         updateIntro(dt);
         break;
+    case COUNTDOWN:
+        updateCountdown(dt);
+        break;
     case STARTING:
         updateStarting(dt);
         break;
@@ -84,10 +87,25 @@ void GameHandler::updateIntro(float dt) {
     // Make the completed levels follow the leader
     for (unsigned int i = 0; i < mCurrentLevel; i++)
         mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
+}
+
+void GameHandler::updateCountdown(float dt) {
+    // the gravitational force will be the gravitational ratio times maximum audio amplitude.
+    float gravitationalForce = mAudioMultiplier * mAudioGravityRatio;
+
+    // can be switched to un-normalized amplitude function
+    float audioForce = 0; // voice should not be activated from the start
+
+    // apply force to all levels
+    for (unsigned int i = 0; i < mNumberOfLevels; i++)
+        mScene->getLevel(i)->applyForce(audioForce, gravitationalForce, dt);
+
+    // Make the completed levels follow the leader
+    for (unsigned int i = 0; i < mCurrentLevel; i++)
+        mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
 
     // Countdown
-    if (mCountDown)
-        runCountDown();
+    runCountDown();
 }
 
 void GameHandler::updateStarting(float dt) {
@@ -170,7 +188,7 @@ void GameHandler::keyCallback(int key, int action) {
 
         // Start countdown
         case SGCT_KEY_1:
-            mCountDown = true;
+            mState = COUNTDOWN;
             break;
 
         // Play sound, if the users fail to "start" the game
