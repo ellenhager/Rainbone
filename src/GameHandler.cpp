@@ -56,6 +56,9 @@ void GameHandler::update(float dt) {
     case INTRO:
         updateIntro(dt);
         break;
+    case COUNTDOWN:
+        updateCountDown(dt);
+        break;
     case STARTING:
         updateStarting(dt);
         break;
@@ -84,10 +87,34 @@ void GameHandler::updateIntro(float dt) {
     // Make the completed levels follow the leader
     for (unsigned int i = 0; i < mCurrentLevel; i++)
         mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
+}
 
-    // Countdown
-    if (mCountDown)
-        runCountDown();
+void GameHandler::updateCountDown(float dt) {
+
+    if (mOutputAudio->getMusicTimer(INTROMUSIC)->isComplete()) {
+        if(!mScene->isLetterComplete(FIVE)) {
+            mScene->shallRenderLetter(FIVE, true);
+        }
+        else if(mScene->isLetterComplete(FIVE) && mScene->isLetterRendering(FIVE)) {
+            mScene->shallRenderLetter(FIVE, false);
+            mScene->shallRenderLetter(FOUR, true);
+        }
+        else if(mScene->isLetterComplete(FOUR) && mScene->isLetterRendering(FOUR)) {
+            mScene->shallRenderLetter(FOUR, false);
+            mScene->shallRenderLetter(THREE, true);
+        }
+        else if(mScene->isLetterComplete(THREE) && mScene->isLetterRendering(THREE)) {
+            mScene->shallRenderLetter(THREE, false);
+            mScene->shallRenderLetter(TWO, true);
+        }
+        else if(mScene->isLetterComplete(TWO) && mScene->isLetterRendering(TWO)) {
+            mScene->shallRenderLetter(TWO, false);
+            mScene->shallRenderLetter(ONE, true);
+        }
+        else if(mScene->isLetterComplete(ONE) && mScene->isLetterRendering(ONE)) {
+            mScene->shallRenderLetter(ONE, false);
+        }
+    }
 }
 
 void GameHandler::updateStarting(float dt) {
@@ -117,8 +144,6 @@ void GameHandler::updateStarting(float dt) {
         mScene->resetStartingPositions();
     }
 }
-    if(mCountDown)
-        runCountDown();
 
 void GameHandler::updateGame(float dt) {
     // the gravitational force will be the gravitational ratio times maximum audio amplitude.
@@ -172,7 +197,10 @@ void GameHandler::keyCallback(int key, int action) {
 
         // Start countdown
         case SGCT_KEY_1:
-            mCountDown = true;
+            if (action == SGCT_PRESS) {
+                mOutputAudio->getMusicTimer(INTROMUSIC)->start();
+                mState = COUNTDOWN;
+            }
             break;
 
         // Play sound, if the users fail to "start" the game
@@ -184,7 +212,7 @@ void GameHandler::keyCallback(int key, int action) {
 
         // Start the game
         case SGCT_KEY_3:
-            if (action == SGCT_PRESS) {
+            if (action == SGCT_PRESS && mState < STARTING) {
 
                 mState = STARTING;
                 mOutputAudio->playMusic(EVILMUSIC, "evil-intro.wav", false);
@@ -339,10 +367,9 @@ void GameHandler::runCountDown() {
 
     //std::cout << "Volume: " << mOutputAudio->getMusicObject(BGMUSIC)->getVolume() << std::endl;
 
-    mOutputAudio->getMusicTimer(INTROMUSIC)->start();
+    //mOutputAudio->getMusicTimer(INTROMUSIC)->start();
 
-    if (mOutputAudio->getMusicTimer(INTROMUSIC)->isComplete())
-        mScene->shallRenderLetter(FIVE, true);
+    
 
     //if(!mOutputAudio->getMusicTimer(BGMUSIC)->isComplete())
     //mOutputAudio->fadeSound(BGMUSIC);

@@ -21,6 +21,8 @@ public:
 
 	void updateIntro(float dt);
 
+    void updateCountDown(float dt);
+
 	void updateStarting(float dt);
 
 	void updateGame(float dt);
@@ -43,21 +45,11 @@ public:
 
 private:
 
-	enum GameState { INTRO, STARTING, GAME, END};
+	enum GameState { INTRO, COUNTDOWN, STARTING, GAME, END};
 
-	GameState mState;
+    GameState mState;
 
-	float mStartingTimer = 0.0f;
-
-	const float maxStartingTime = 8.0f;
-
-	int levelInitializationIndex = -1;
-
-    void resolveLevelProgression();
-
-    void runCountDown();
-
-    unsigned int mCurrentLevel = 0;
+    OutputAudio * mOutputAudio;
 
     sgct::Engine * mEngine;
 
@@ -65,11 +57,17 @@ private:
 
     InputAudio * mInputAudio;
 
+	float mStartingTimer = 0.0f;
+
+	const float maxStartingTime = 8.0f;
+
+	int levelInitializationIndex = -1;
+
+    unsigned int mCurrentLevel = 0;
+
     float mAudioGravityRatio;
 
     float mAudioMultiplier;
-
-    OutputAudio * mOutputAudio;
 
     const float mAngleCompletionSpan = 5.0f;
 
@@ -77,7 +75,9 @@ private:
 
     float mNumberOfLevels;
 
-    bool mCountDown = false;
+    void resolveLevelProgression();
+
+    void runCountDown();
 };
 
 #endif // GAMEHANDLER_H

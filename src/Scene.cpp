@@ -24,10 +24,15 @@ Scene::Scene(unsigned int n) {
     //L.push_back(new Letter("../assets/objs/5.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
 
     mWords[FIVE].push_back(new Letter("../assets/objs/5.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
-    /*mWords[FOUR].push_back(new Letter("../assets/objs/4.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+    //mWords[FIVE]->setRenderState(false);
+    mWords[FOUR].push_back(new Letter("../assets/objs/4.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+    //mWords[FOUR]->setRenderState(false);
     mWords[THREE].push_back(new Letter("../assets/objs/3.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+    //mWords[THREE]->setRenderState(false);
     mWords[TWO].push_back(new Letter("../assets/objs/2.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
-    mWords[ONE].push_back(new Letter("../assets/objs/1.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));*/
+    //mWords[TWO]->setRenderState(false);
+    mWords[ONE].push_back(new Letter("../assets/objs/1.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+    //mWords[ONE]->setRenderState(false);
 
 
     std::cout << "\nScene created!\n";
@@ -100,6 +105,13 @@ void Scene::update(float dt) {
         mInterpolationTimer += dt;
 
         interpolateBackground();
+    }
+
+    for(std::map<Word, std::vector<Letter *> >::iterator it = mWords.begin(); it != mWords.end(); ++it) {
+        for(std::vector<Letter *>::iterator it2 = (*it).second.begin(); it2 != (*it).second.end(); ++it2) {
+            if((*it2)->shallRender() && !(*it2)->isComplete())
+                (*it2)->interpolateLetter(dt);
+        }
     }
 }
 

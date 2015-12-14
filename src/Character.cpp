@@ -13,7 +13,6 @@ Character::Character(const char * objPath, std::string tn)
     mMaterial.specular      = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     mMaterial.specularity   = 50.0f;
     mMaterial.shinyness     = 0.6f;
-
 }
 
 
@@ -130,19 +129,20 @@ void Character::render(std::vector<glm::mat4> sceneMatrices) {
 
     // Dome tilt
     float tilt = M_PI * 27.0f / 180.0f;
-    glm::mat4 characterTransform = glm::rotate(glm::mat4(1.0f), tilt, glm::vec3(-1.0f, 0.0f, 0.0f));
+    glm::mat4 characterDomeTilt = glm::rotate(glm::mat4(1.0f), tilt, glm::vec3(-1.0f, 0.0f, 0.0f));
     // Character transform (spherical coordinates: https://en.wikipedia.org/wiki/Spherical_coordinate_system)
-    characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * mPhi / 180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * -mTheta / 180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    characterTransform = glm::translate(characterTransform, glm::vec3(0.0f, 0.0f, mRadius));
+    glm::mat4 characterSpherical = glm::rotate(glm::mat4(1.0f), static_cast<float>(M_PI * mPhi / 180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    characterSpherical = glm::rotate(characterSpherical, static_cast<float>(M_PI * -mTheta / 180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::mat4 characterTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, mRadius));
     // Align to center of dome
-    characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    glm::mat4 characterAlignment = glm::rotate(glm::mat4(1.0f), static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    characterAlignment = glm::rotate(characterAlignment, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    characterAlignment = glm::rotate(characterAlignment, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    characterAlignment = glm::rotate(characterAlignment, static_cast<float>(M_PI * 180.0f / 180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
     // Apply scene transforms to MVP and MV matrices
-    sceneMatrices[I_MVP] = sceneMatrices[I_MVP] * characterTransform;
-    sceneMatrices[I_MV]  = sceneMatrices[I_MV]  * characterTransform;
+    sceneMatrices[I_MVP] = sceneMatrices[I_MVP] * characterDomeTilt * characterSpherical * characterTranslate * characterAlignment;
+    sceneMatrices[I_MV]  = sceneMatrices[I_MV] * characterDomeTilt * characterSpherical * characterTranslate * characterAlignment;
 
     // Bind texture
     glActiveTexture(GL_TEXTURE0);

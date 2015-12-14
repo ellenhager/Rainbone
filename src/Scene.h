@@ -26,6 +26,7 @@ public:
     void addLevel(Level *l) { mLevels.push_back(l); }
 
 	void randomizeStartingPositions();
+
 	void resetStartingPositions();
 
     std::vector<float> getLevelAngles();
@@ -45,6 +46,10 @@ public:
     void setLevelAngle(unsigned int i, float a) { mLevels[i]->setAngle(a); }
 
     void shallRenderLetter(Word, bool);
+
+    bool isLetterRendering(Word w) { return mWords[w].front()->shallRender(); }
+
+    bool isLetterComplete(Word w) { return mWords[w].front()->isComplete(); }
 
     void toggleBackground();
 

@@ -24,17 +24,25 @@ public:
 
     bool shallRender() { return mShallRender; }
 
-    void setRenderState(bool b) { mShallRender = b; }
+    bool isComplete() { return mIsComplete; }
+
+    void setRenderState(bool);
+
+    void interpolateLetter(float dt);
 
 private:
 
 	std::vector<glm::vec3> mVertices;
 	
 	std::vector<glm::vec3> mNormals;
-	
-	//std::vector<glm::vec3> mUvs;
 
 	bool mShallRender = false;
+
+    bool mIsComplete = false;
+
+    float mTime = 0.0f;
+
+    const float mTargetTime = 1.0f;
 
 	struct Material {
         glm::vec4 color;
@@ -48,7 +56,6 @@ private:
     GLuint vertexArray;
     GLuint vertexBuffer;
     GLuint normalBuffer;
-    //GLuint textureBuffer;
 
     GLint MVPLoc;           // MVP matrix
     GLint MVLoc;            // MV matrix
@@ -61,8 +68,6 @@ private:
     GLint lightSpeLoc;      // Specular light
     GLint specularityLoc;   // Specular constant
     GLint shinynessLoc;     // How much specularity (magnitude)
-    //GLint TexLoc;           // Texture sampler
-
 };
 
 #endif // LETTER_H

@@ -5,6 +5,7 @@ Letter::Letter(const char * objPath, glm::vec4 c) {
 	loadObj(objPath, mVertices, mNormals);
 
     mMaterial.color         = c;
+    mMaterial.color[3]      = 0.0f;
     mMaterial.ambient       = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
     mMaterial.diffuse       = glm::vec4(0.8f, 0.8f, 0.8f, 1.0f);
     mMaterial.specular      = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -98,25 +99,15 @@ void Letter::render(std::vector<glm::mat4> sceneMatrices) {
     // Dome tilt
     float tilt = M_PI * 27.0f / 180.0f;
     glm::mat4 transform = glm::rotate(glm::mat4(1.0f), tilt, glm::vec3(-1.0f, 0.0f, 0.0f));
-    // Character transform (spherical coordinates: https://en.wikipedia.org/wiki/Spherical_coordinate_system)
-    //characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * mPhi / 180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    //characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * -mTheta / 180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
     transform = glm::translate(transform, glm::vec3(0.0f, 2.0f, -1.0f));
     transform = glm::rotate(transform, static_cast<float>(M_PI), glm::vec3(0.0f, 1.0f, 0.0f));
     transform = glm::rotate(transform, static_cast<float>(M_PI), glm::vec3(0.0f, 0.0f, 1.0f));
     transform = glm::rotate(transform, static_cast<float>(-M_PI / 4.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    // Align to center of dome
-    //characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    //characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    //characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
     // Apply scene transforms to MVP and MV matrices
     sceneMatrices[I_MVP] = sceneMatrices[I_MVP] * transform;
     sceneMatrices[I_MV]  = sceneMatrices[I_MV] * transform;
-
-    // Bind texture
-    //glActiveTexture(GL_TEXTURE0);
-    //glBindTexture(GL_TEXTURE_2D, sgct::TextureManager::instance()->getTextureId("characterTexture"));
 
     // Bind shader program
     sgct::ShaderManager::instance()->bindShaderProgram("letter");
@@ -153,4 +144,20 @@ void Letter::render(std::vector<glm::mat4> sceneMatrices) {
 
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
+}
+
+void Letter::setRenderState(bool b) {
+    
+    mShallRender = b;
+}
+
+void Letter::interpolateLetter(float dt) {
+
+    if(mTime < mTargetTime && !mIsComplete) {
+        mTime += dt;
+    }
+
+    if(mTime >= mTargetTime) {
+        mIsComplete = true;
+    }
 }

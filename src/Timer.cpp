@@ -24,9 +24,9 @@ void Timer::update(float dt) {
 
 void Timer::reset() {
 
-	float mCurrentTime = 0.0f;
-
-	bool mIsActive = false;
+	mCurrentTime = 0.0f;
+	mIsComplete = false;
+	mIsActive = false;
 }
 
 void Timer::setTimer(float s, float ct, float st, float tt) {
