@@ -18,7 +18,7 @@ GameHandler::GameHandler(sgct::Engine *e, unsigned int n)
     mScene = new Scene(mNumberOfLevels);
 
     mState = INTRO;
-    mOutputAudio->playMusic(INTROMUSIC, "western-themetune.wav", true);
+    mOutputAudio->playMusic(INTROMUSIC, "soundtrack.ogg", true);
 
     std::cout << "\nGameHandler created!\n";
 }
