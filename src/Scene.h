@@ -50,6 +50,8 @@ public:
 
     void interpolateBackground();
 
+    void zoomLevels();
+
 private:
 
     std::vector<Level *> mLevels;
