@@ -83,7 +83,7 @@ private:
 
     bool mCurrentLevel = false;
 
-	float mGravityAngle = 0.0;
+	float mGravityAngle = 0.0f;
 
     std::vector<glm::vec3> mVertices;
 
