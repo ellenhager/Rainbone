@@ -37,8 +37,11 @@ public:
 private:
 
     float mAmplitude = 0;
+    
     float mMaxAmplitude;
+    
     PaStream *mStream;
+
 };
 
 #endif // INPUTAUDIO_H

@@ -20,6 +20,12 @@ Scene::Scene(unsigned int n) {
 
     mSkySphere = new SkySphere(35);
 
+    //std::vector<Letter *> L;
+    //L.push_back(new Letter("../assets/objs/5.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+
+    mWords[FIVE].push_back(new Letter("../assets/objs/_5.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+
+
     std::cout << "\nScene created!\n";
 }
 
@@ -50,6 +56,10 @@ void Scene::initialize() {
     for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
         (*it)->initialize(mLightSourcePosition);
 
+    for(std::map<Word, std::vector<Letter *> >::iterator it = mWords.begin(); it != mWords.end(); ++it)
+        for(std::vector<Letter *>::iterator it2 = (*it).second.begin(); it2 != (*it).second.end(); ++it2)
+            (*it2)->initialize(mLightSourcePosition);
+
     mCharacter->initialize(mLightSourcePosition);
 
 	mSkySphere->initialize();
@@ -63,6 +73,13 @@ void Scene::render(std::vector<glm::mat4> sceneMatrices) {
     for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
         (*it)->render(sceneMatrices);
 
+    for(std::map<Word, std::vector<Letter *> >::iterator it = mWords.begin(); it != mWords.end(); ++it) {
+        for(std::vector<Letter *>::iterator it2 = (*it).second.begin(); it2 != (*it).second.end(); ++it2) {
+            if((*it2)->shallRender())
+                (*it2)->render(sceneMatrices);
+        }
+    }
+
     mCharacter->render(sceneMatrices);
 	mSkySphere->render(sceneMatrices);
 }
@@ -74,6 +91,23 @@ void Scene::update(float dt) {
         (*it)->update(dt);
 
 	mSkySphere->update(dt);
+
+    if(mInterpolationTimer <= maxInterpolationTime && mInterpolationTimer > 0.0f) {
+        mInterpolationTimer += dt;
+
+        interpolateBackground();
+    }
+}
+
+void Scene::interpolateBackground() {
+    if(mToggledBackground == false) { //day
+        mSkySphere->setBrightness(mInterpolationTimer / maxInterpolationTime);
+    } else if(mToggledBackground == true) { //night
+        if(mSkySphere->getBrightness() > 0.15) {
+            mSkySphere->setBrightness(1 - (mInterpolationTimer / maxInterpolationTime));
+        }
+    }
+
 }
 
 
@@ -114,6 +148,18 @@ std::vector<glm::vec4> Scene::getLevelColors() {
     return colors;
 }
 
+void Scene::shallRenderLetter(Word word, bool shallRender) {
+
+    for(std::vector<Letter *>::iterator it = mWords[word].begin(); it != mWords[word].end(); ++it)
+        (*it)->setRenderState(shallRender);
+}
+
 void Scene::toggleBackground() {
-    //TODO: from dark to light background
+    mInterpolationTimer = 0.1f;
+
+    if(mToggledBackground) {
+        mToggledBackground = false;
+    } else {
+        mToggledBackground = true;
+    }
 }

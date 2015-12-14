@@ -12,7 +12,6 @@ InputAudio::~InputAudio() {
 
 	std::cout << "Destroying InputAudio..." << std::endl;
 	closeAudio();
-	//delete mStream; // This might result in memory leaks. Deleting pointer to void.
 }
 
 
@@ -45,6 +44,7 @@ void InputAudio::initialize() {
 	err = Pa_StartStream(mStream);
 	if (err != paNoError)
 		printError(err);
+
 }
 
 float InputAudio::getNormalizedAmplitude() {
@@ -52,7 +52,6 @@ float InputAudio::getNormalizedAmplitude() {
 		mMaxAmplitude = mAmplitude;
 	return mAmplitude / mMaxAmplitude;
 }
-
 
 void InputAudio::closeAudio() {
 	// Stop the stream

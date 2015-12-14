@@ -37,7 +37,7 @@ vec4 calcSpecularShading( vec3 N, vec3 L ) {
     spec = (spec > 0.0) ? (1.0 * pow(spec, specularity)) : 0.0;
 
     vec4 intensitySpecular = specularColor * spec;
-    
+
     intensitySpecular = clamp(intensitySpecular, 0.0, 1.0);
 
     return intensitySpecular;
@@ -50,12 +50,12 @@ void main() {
 
     frag_color = texture(tex, UV.st);
 
-    /*frag_color.rgb *= calcShading(
+    frag_color.rgb *= calcShading(
         normalize(vec3(NM * vec4(normal, 1.0))),
         lightDirection).rgb * 1.0;
     
     frag_color.rgb += calcSpecularShading(
         normalize(vec3(NM * vec4(normal, 1.0))),
-        lightDirection).rgb * shinyness;*/
+        lightDirection).rgb * shinyness;
 
 }

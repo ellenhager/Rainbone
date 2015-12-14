@@ -63,6 +63,8 @@ void Character::initialize(glm::vec3 lightSourcePosition) {
     shinynessLoc            = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "shinyness" );
     TexLoc                  = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "tex" );
 
+    glUniform4f(lightPosLoc, lightSourcePosition.x, lightSourcePosition.y, lightSourcePosition.z, 1.0f);
+
     sgct::ShaderManager::instance()->unBindShaderProgram();
 
     // Generate the VAO

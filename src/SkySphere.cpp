@@ -23,13 +23,14 @@ void SkySphere::initialize() {
 
 	if (!sgct::ShaderManager::instance()->shaderProgramExists("sky")) {
 		sgct::ShaderManager::instance()->addShaderProgram("sky",
-			"../shaders/texturevertexshader.glsl",
-			"../shaders/texturefragmentshader.glsl");
+		        "../shaders/texturevertexshader.glsl",
+		        "../shaders/texturefragmentshader.glsl");
 	}
 
 	sgct::ShaderManager::instance()->bindShaderProgram("sky");
 
 	MVPLoc = sgct::ShaderManager::instance()->getShaderProgram("sky").getUniformLocation("MVP");
+	lightnessLoc = sgct::ShaderManager::instance()->getShaderProgram("sky").getUniformLocation("lightnessValue");
 	GLint Tex_Loc = sgct::ShaderManager::instance()->getShaderProgram("sky").getUniformLocation("Tex");
 	glUniform1i(Tex_Loc, 0);
 
@@ -57,6 +58,7 @@ void SkySphere::render(std::vector<glm::mat4> sceneMatrices) {
 
 	// Set uniform values, so that we have some data to work with in the shaders
 	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, &sceneMatrices[I_MVP][0][0]);
+	glUniform1f(lightnessLoc, brightness);
 
 	mSphere->draw();
 
@@ -67,5 +69,5 @@ void SkySphere::render(std::vector<glm::mat4> sceneMatrices) {
 }
 
 void SkySphere::update(float dt) {
-	mAngle += mSpeed*dt;
+	mAngle += mSpeed * dt;
 }

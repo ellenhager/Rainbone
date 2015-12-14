@@ -27,14 +27,19 @@ public:
 
 	void update(float dt);
 
+	void setBrightness(float val) { brightness = val; };
+	
+	float getBrightness() { return brightness; };
+
 private:
 
 	size_t mSphereTextureHandle;
 	sgct_utils::SGCTSphere * mSphere = NULL;
 	float mAngle = 0.0f;
 	float mSpeed = 4;
+	float brightness = 1.0f;
 	GLint MVPLoc;           // MVP matrix
-	
+	GLint lightnessLoc;
 };
 
 #endif // SKYSPHERE_H

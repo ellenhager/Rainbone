@@ -21,7 +21,7 @@ sgct::SharedVector<float> mSharedLevelAngles;
 // Shared container for colors of each level
 sgct::SharedVector<glm::vec4> mSharedLevelColors;
 
-unsigned int numLevels = 7;
+unsigned int numLevels = 6;
 
 
 int main(int argc, char* argv[]) {
@@ -120,6 +120,7 @@ void keyCallback(int key, int action) {
 
 
 void cleanUp() {
-    rainbone->getOutputAudio()->stop();
+    //rainbone->getOutputAudio()->stop();
+    rainbone->getOutputAudio()->stopAllSounds();
     delete rainbone;
 }

@@ -1,23 +1,27 @@
-# Copyright Linkoping University 2011
-# SGCT Project Authors see Authors.txt
-
 cmake_minimum_required(VERSION 2.8)
 
 SET(APP_NAME rainbone)
-
-SET(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "add a postfix, usually d on windows")
-SET(CMAKE_RELEASE_POSTFIX "" CACHE STRING "add a postfix, usually empty on windows")
-
 PROJECT(${APP_NAME})
 
+# include the directory itself as a path to include directories
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+# set the output path
 set(CMAKE_BINARY_DIR ${PROJECT_SOURCE_DIR}/build)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
+# SOURCES containing all .cpp files
 file(GLOB SOURCE src/*.cpp)
 
+# create an executable file from SOURCES
 add_executable(${APP_NAME}
     ${SOURCE})
 
+# add postfix
+set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "add a postfix, usually d on windows")
+set(CMAKE_RELEASE_POSTFIX "" CACHE STRING "add a postfix, usually empty on windows")
+
+# target properties
 set_target_properties(${APP_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY_DEBUG ${EXECUTABLE_OUTPUT_PATH}/debug
     RUNTIME_OUTPUT_DIRECTORY_RELEASE ${EXECUTABLE_OUTPUT_PATH}/release
@@ -31,6 +35,7 @@ if( APPLE )
     endif()
 endif()
 
+# add external libraries
 find_library(SGCT_RELEASE_LIBRARY
     NAMES sgct libsgct libsgct_cpp11
     REQUIRED)
@@ -111,8 +116,10 @@ set(SFML_AUDIO_LIBS
     optimized ${SFML_AUDIO_RELEASE_LIBRARY}
 )
 
+# find packages
 find_package(OpenGL REQUIRED)
 
+# include directories
 include_directories(${SGCT_INCLUDE_DIRECTORY} ${PORTAUDIO_INCLUDE_DIRECTORY}
 ${SFML_SYSTEM_INCLUDE_DIRECTORY}
 ${SFML_AUDIO_INCLUDE_DIRECTORY})
@@ -144,11 +151,6 @@ elseif( APPLE )
     find_library(AUDIOUNIT_LIBRARY AudioUnit REQUIRED)
     find_library(CORESERVICES_LIBRARY CoreServices REQUIRED)
     find_library(CARBON_LIBRARY Carbon REQUIRED)
-
-#AudioToolbox.framework
-#AudioUnit.framework
-#CoreServices.framework
-#Carbon.framework
 
     set(LIBS
         ${SGCT_LIBS}
@@ -227,9 +229,5 @@ elseif( APPLE  )
 else()
     add_definitions(-D__LINUX__)
 endif()
-
-#if( CMAKE_COMPILER_IS_GNUCXX )
-#   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++ -static")
-#endif()
 
 target_link_libraries(${APP_NAME} ${LIBS})
