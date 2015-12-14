@@ -41,9 +41,9 @@ private:
 
     float mRadius = 5.0f;
 
-    float mTheta = 90.0f;
+    float mTheta = 171.0f;
 
-    float mPhi = 0.0f;
+    float mPhi = 2.0f;
 
     std::vector<glm::vec3> mVertices;
 
