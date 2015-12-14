@@ -152,11 +152,14 @@ void GameHandler::updateEnd(float dt) {
     for (unsigned int i = 0; i < mCurrentLevel; i++)
         mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
 
+	//make the character follow the levels
+	mScene->getCharacter()->setPhi(mScene->getLevelAngle(mCurrentLevel) + 180.0f);
+
 	mScene->getLevel(mCurrentLevel)->applyForce(0.0f, gravitationalForce, dt);
 
 	//if the levels are standing still in starting positions
 	if (mScene->getLevel(mCurrentLevel)->getVelocity() == 0.0f) {
-		std::cout << "animation of cat" << std::endl;
+		//animation of cat
 	}
 }
 
