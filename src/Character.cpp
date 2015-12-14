@@ -141,7 +141,7 @@ void Character::render(std::vector<glm::mat4> sceneMatrices) {
     characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	characterTransform = glm::scale(characterTransform, glm::vec3(1.0f, 1.0f, -1.0f));
+
     // Apply scene transforms to MVP and MV matrices
     sceneMatrices[I_MVP] = sceneMatrices[I_MVP] * characterTransform;
     sceneMatrices[I_MV]  = sceneMatrices[I_MV]  * characterTransform;

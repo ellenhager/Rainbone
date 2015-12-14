@@ -132,7 +132,7 @@ void GameHandler::updateGame(float dt) {
         mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
 
 	//make the character follow the levels
-	mScene->getCharacter()->setPhi(mScene->getLevelAngle(mCurrentLevel));
+	mScene->getCharacter()->setPhi(mScene->getLevelAngle(mCurrentLevel) + 180.0f);
 
     // if next level is not the last level...
     if (mCurrentLevel + 1 < mNumberOfLevels) {
@@ -250,11 +250,13 @@ void GameHandler::keyCallback(int key, int action) {
         case SGCT_KEY_N:
             for (unsigned int i = 0; i < mNumberOfLevels; i++)
                 mScene->getLevel(i)->incrementLevelTrans(1.0f);
+				mScene->getCharacter()->incrementTheta(5.0f);
             break;
 
         case SGCT_KEY_M:
             for (unsigned int i = 0; i < mNumberOfLevels; i++)
                 mScene->getLevel(i)->incrementLevelTrans(-1.0f);
+				mScene->getCharacter()->incrementTheta(-5.0f);
             break;
 
         // Controls for moving the character object
