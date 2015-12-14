@@ -246,11 +246,11 @@ void GameHandler::keyCallback(int key, int action) {
 
         // Controls for moving the character object
         case SGCT_KEY_W:
-            mScene->getCharacter()->incrementTheta(2.0f);
+            mScene->getCharacter()->incrementTheta(-2.0f);
             break;
 
         case SGCT_KEY_S:
-            mScene->getCharacter()->incrementTheta(-2.0f);
+            mScene->getCharacter()->incrementTheta(2.0f);
             break;
 
         case SGCT_KEY_A:
