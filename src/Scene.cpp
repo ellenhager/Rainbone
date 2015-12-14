@@ -127,6 +127,11 @@ void Scene::resetStartingPositions() {
 		(*it)->setStartingAngle(0.0f);
 }
 
+void Scene::zoomLevels() {
+    for (std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
+        (*it)->zoom();
+}
+
 std::vector<float> Scene::getLevelAngles() {
 
     std::vector<float> angles;

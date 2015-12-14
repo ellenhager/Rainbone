@@ -28,7 +28,7 @@ public:
 	void update(float dt);
 
 	void setBrightness(float val) { brightness = val; };
-	
+
 	float getBrightness() { return brightness; };
 
 private:

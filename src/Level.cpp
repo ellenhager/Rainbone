@@ -219,6 +219,12 @@ void Level::update(float dt) {
         mInterpolationTimer += dt;
 
 		interpolateColor();
+
+        if(mIsZoom) {
+            incrementLevelTrans(-(mInterpolationTimer / maxInterpolationTime));
+        }
+    } else {
+        mIsZoom = false; //stop zooming after a certain time
     }
 }
 
@@ -257,6 +263,12 @@ void Level::interpolateColor() {
 		mMaterial.currentColor.y = std::max(mMaterial.color.y - g * (mInterpolationTimer / maxInterpolationTime), mMaterial.greyScale.y);
 		mMaterial.currentColor.z = std::max(mMaterial.color.z - b * (mInterpolationTimer / maxInterpolationTime), mMaterial.greyScale.z);
 	}
+}
+
+void Level::zoom() {
+    std::cout << "Here you are" << std::endl;
+    mInterpolationTimer = 0.0f;
+    mIsZoom = true;
 }
 
 void Level::updateColor(float previousAngle) {

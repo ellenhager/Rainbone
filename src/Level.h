@@ -48,13 +48,15 @@ public:
 
     void setCurrentLevel() { mCurrentLevel = true; }
 
-    void setColor(glm::vec4 c) { mMaterial.currentColor = c; } 
+    void setColor(glm::vec4 c) { mMaterial.currentColor = c; }
 
     void incrementAngle(float a) { mAngle += a; }
 
     void incrementLevelTrans(float l) { mLevelsTrans += l; }
 
 	float randomizeAngle(float, float);
+
+    void zoom();
 
 private:
 
@@ -82,6 +84,8 @@ private:
     float mVelocity;
 
     bool mCurrentLevel = false;
+
+    bool mIsZoom = false;
 
 	float mGravityAngle = 0.0;
 
