@@ -33,6 +33,8 @@ public:
 
     void incrementRadius(float r) { mRadius += r; }
 
+	void setPhi(float ph) { mPhi = ph; };
+
 private:
 
     glm::vec3 mPosition;
@@ -41,9 +43,9 @@ private:
 
     float mRadius = 5.0f;
 
-    float mTheta = 171.0f;
+    float mTheta = 175.0f;
 
-    float mPhi = 2.0f;
+    float mPhi = 0.0f;
 
     std::vector<glm::vec3> mVertices;
 

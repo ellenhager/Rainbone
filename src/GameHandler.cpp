@@ -131,6 +131,9 @@ void GameHandler::updateGame(float dt) {
     for (unsigned int i = 0; i < mCurrentLevel; i++)
         mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
 
+	//make the character follow the levels
+	mScene->getCharacter()->setPhi(mScene->getLevelAngle(mCurrentLevel));
+
     // if next level is not the last level...
     if (mCurrentLevel + 1 < mNumberOfLevels) {
         // update the next levels color based on angular distance from current level.

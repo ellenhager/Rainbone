@@ -131,15 +131,17 @@ void Character::render(std::vector<glm::mat4> sceneMatrices) {
     // Dome tilt
     float tilt = M_PI * 27.0f / 180.0f;
     glm::mat4 characterTransform = glm::rotate(glm::mat4(1.0f), tilt, glm::vec3(-1.0f, 0.0f, 0.0f));
+	
     // Character transform (spherical coordinates: https://en.wikipedia.org/wiki/Spherical_coordinate_system)
     characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * mPhi / 180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * -mTheta / 180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     characterTransform = glm::translate(characterTransform, glm::vec3(0.0f, 0.0f, mRadius));
+
     // Align to center of dome
     characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-
+	characterTransform = glm::scale(characterTransform, glm::vec3(1.0f, 1.0f, -1.0f));
     // Apply scene transforms to MVP and MV matrices
     sceneMatrices[I_MVP] = sceneMatrices[I_MVP] * characterTransform;
     sceneMatrices[I_MV]  = sceneMatrices[I_MV]  * characterTransform;

@@ -99,6 +99,8 @@ void Scene::update(float dt) {
     }
 }
 
+
+
 void Scene::interpolateBackground() {
     if(mToggledBackground == false) { //day
         mSkySphere->setBrightness(mInterpolationTimer / maxInterpolationTime);
