@@ -40,7 +40,7 @@ void Character::initialize(glm::vec3 lightSourcePosition) {
 
     sgct::TextureManager::instance()->setAnisotropicFilterSize(8.0f);
     sgct::TextureManager::instance()->setCompression(sgct::TextureManager::S3TC_DXT);
-    sgct::TextureManager::instance()->loadTexure("characterTexture", "../assets/textures/debug_texture.png", true);
+    sgct::TextureManager::instance()->loadTexure("characterTexture", "../assets/textures/char_texture.png", true);
 
     if(!sgct::ShaderManager::instance()->shaderProgramExists("character")) {
         sgct::ShaderManager::instance()->addShaderProgram( "character",

@@ -16,7 +16,7 @@ Scene::Scene(unsigned int n) {
         addLevel(new Level(("../assets/objs/_level" + std::to_string(i) + ".obj").c_str(), sColorScale[i-1]));
     }
 
-    mCharacter = new Character("../assets/objs/char_tmp.obj", "../assets/textures/debug_texture.png");
+    mCharacter = new Character("../assets/objs/character.obj", "../assets/textures/char_texture.png");
 
     mSkySphere = new SkySphere(35);
 
