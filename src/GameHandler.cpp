@@ -185,6 +185,7 @@ void GameHandler::keyCallback(int key, int action) {
             if (action == SGCT_PRESS) {
 
                 mState = STARTING;
+				mOutputAudio->stopAllSounds();
                 mOutputAudio->playMusic(EVILMUSIC, "evil-intro.wav", false);
                 mScene->toggleBackground();
                 mScene->randomizeStartingPositions();

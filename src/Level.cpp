@@ -168,7 +168,8 @@ void Level::render(std::vector<glm::mat4> sceneMatrices) {
     float tilt = M_PI * 27.0f / 180.0f;
     // Create scene transform (animation)
     glm::mat4 levelTransform = glm::rotate( glm::mat4(1.0f), tilt , glm::vec3(-1.0f, 0.0f, 0.0f));
-    glm::mat4 levelRotation  = glm::rotate( glm::mat4(1.0f), static_cast<float>(mAngle * M_PI / 180.0f) , glm::vec3(0.0f, 1.0f, 0.0f));
+	//add 90 degrees because starting rotation is otherwise to the right.
+    glm::mat4 levelRotation  = glm::rotate( glm::mat4(1.0f), static_cast<float>((mAngle + 90.0f) * M_PI / 180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 levelTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, mLevelsTrans, 0.0f));
 
     // Apply scene transforms to MVP and MV matrices
