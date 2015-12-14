@@ -266,7 +266,6 @@ void Level::interpolateColor() {
 }
 
 void Level::zoom() {
-    std::cout << "Here you are" << std::endl;
     mInterpolationTimer = 0.0f;
     mIsZoom = true;
 }
