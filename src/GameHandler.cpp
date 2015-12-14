@@ -236,6 +236,26 @@ void GameHandler::keyCallback(int key, int action) {
             }
             break;
 
+        // Change audio gravity
+        case SGCT_KEY_O:
+            if (action == SGCT_PRESS) {
+                if(mAudioGravityRatio <= 0.49)
+                    mAudioGravityRatio += 0.01;
+
+                std::cout << "Audio gravity: " << mAudioGravityRatio << std::endl;
+            }
+            break;
+
+        case SGCT_KEY_I:
+            if (action == SGCT_PRESS) {
+                if(mAudioGravityRatio > 0.02)
+                    mAudioGravityRatio -= 0.01;
+
+                std::cout << "Audio gravity: " << mAudioGravityRatio << std::endl;
+
+            }
+            break;
+
         /* --- Character and Level matrix transformations --- */
 
         // Translate the levels
