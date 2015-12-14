@@ -51,6 +51,10 @@ public:
 
     bool isLetterComplete(Word w) { return mWords[w].front()->isComplete(); }
 
+    void setWordStatic(Word w, bool b) { mWords[w].front()->setStatic(b); }
+
+    void setWordComplete(Word w) { mWords[w].front()->setComplete(); }
+
     void toggleBackground();
 
     void interpolateBackground();

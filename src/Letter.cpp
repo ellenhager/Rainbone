@@ -153,11 +153,19 @@ void Letter::setRenderState(bool b) {
 
 void Letter::interpolateLetter(float dt) {
 
-    if(mTime < mTargetTime && !mIsComplete) {
-        mTime += dt;
-    }
+    if(!isStatic) {
+        if(mTime < mTargetTime && !mIsComplete) {
+            mTime += dt;
+        }
 
-    if(mTime >= mTargetTime) {
-        mIsComplete = true;
+        if(mTime >= mTargetTime) {
+            mIsComplete = true;
+        }
     }
+}
+
+void Letter::setComplete() {
+
+    mIsComplete = true;
+    mShallRender = true;
 }

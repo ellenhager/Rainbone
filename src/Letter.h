@@ -30,6 +30,12 @@ public:
 
     void interpolateLetter(float dt);
 
+    void setTargetTime(float t) { mTargetTime = t; }
+
+    void setComplete();
+
+    void setStatic(bool b) { isStatic = b; }
+
 private:
 
 	std::vector<glm::vec3> mVertices;
@@ -40,9 +46,11 @@ private:
 
     bool mIsComplete = false;
 
+    bool isStatic = false;
+
     float mTime = 0.0f;
 
-    const float mTargetTime = 1.0f;
+    float mTargetTime = 1.0f;
 
 	struct Material {
         glm::vec4 color;

@@ -92,7 +92,11 @@ void GameHandler::updateIntro(float dt) {
 void GameHandler::updateCountDown(float dt) {
 
     if (mOutputAudio->getMusicTimer(INTROMUSIC)->isComplete()) {
-        if(!mScene->isLetterComplete(FIVE)) {
+        if(!mScene->isLetterComplete(START)) {
+            mScene->shallRenderLetter(START, true);
+        }
+        else if(mScene->isLetterComplete(START) && mScene->isLetterRendering(START)) {
+            mScene->shallRenderLetter(START, false);
             mScene->shallRenderLetter(FIVE, true);
         }
         else if(mScene->isLetterComplete(FIVE) && mScene->isLetterRendering(FIVE)) {
@@ -186,6 +190,12 @@ void GameHandler::render() {
     mScene->render(sceneMatrices);
 }
 
+/***************************************************************
+ Fix so that the countdown can be reset
+ Show "ROPA START OM..." until the entire countdown is complete
+ Maybe add sounds when the numbers are changing?
+ ***************************************************************/
+
 
 void GameHandler::keyCallback(int key, int action) {
 
@@ -200,6 +210,8 @@ void GameHandler::keyCallback(int key, int action) {
             if (action == SGCT_PRESS) {
                 mOutputAudio->getMusicTimer(INTROMUSIC)->start();
                 mState = COUNTDOWN;
+                mScene->shallRenderLetter(START, true);
+                mScene->setWordStatic(START, true);
             }
             break;
 
@@ -210,10 +222,15 @@ void GameHandler::keyCallback(int key, int action) {
             }
             break;
 
-        // Start the game
         case SGCT_KEY_3:
-            if (action == SGCT_PRESS && mState < STARTING) {
+            if (action == SGCT_PRESS) {
+                mScene->setWordComplete(START);
+            }
+            break;
 
+        // Start the game
+        case SGCT_KEY_4:
+            if (action == SGCT_PRESS && mState < STARTING) {
                 mState = STARTING;
                 mOutputAudio->playMusic(EVILMUSIC, "evil-intro.wav", false);
                 mScene->toggleBackground();

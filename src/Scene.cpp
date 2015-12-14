@@ -20,20 +20,17 @@ Scene::Scene(unsigned int n) {
 
     mSkySphere = new SkySphere(35);
 
-    //std::vector<Letter *> L;
-    //L.push_back(new Letter("../assets/objs/5.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+    mWords[START].push_back(new Letter("../assets/objs/start.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
 
     mWords[FIVE].push_back(new Letter("../assets/objs/5.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
-    //mWords[FIVE]->setRenderState(false);
-    mWords[FOUR].push_back(new Letter("../assets/objs/4.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
-    //mWords[FOUR]->setRenderState(false);
-    mWords[THREE].push_back(new Letter("../assets/objs/3.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
-    //mWords[THREE]->setRenderState(false);
-    mWords[TWO].push_back(new Letter("../assets/objs/2.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
-    //mWords[TWO]->setRenderState(false);
-    mWords[ONE].push_back(new Letter("../assets/objs/1.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
-    //mWords[ONE]->setRenderState(false);
 
+    mWords[FOUR].push_back(new Letter("../assets/objs/4.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+
+    mWords[THREE].push_back(new Letter("../assets/objs/3.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+
+    mWords[TWO].push_back(new Letter("../assets/objs/2.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+
+    mWords[ONE].push_back(new Letter("../assets/objs/1.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
 
     std::cout << "\nScene created!\n";
 }
