@@ -141,10 +141,15 @@ void GameHandler::updateGame(float dt) {
 }
 
 void GameHandler::updateEnd(float dt) {
-    //TODO
+
+	// the gravitational force will be the gravitational ratio times maximum audio amplitude.
+	float gravitationalForce = mAudioMultiplier * mAudioGravityRatio;
+
     // Make the completed levels follow the leader
     for (unsigned int i = 0; i < mCurrentLevel; i++)
         mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
+
+	mScene->getLevel(mCurrentLevel)->applyForce(0.0f, gravitationalForce, dt);
 }
 
 void GameHandler::render() {
@@ -185,7 +190,6 @@ void GameHandler::keyCallback(int key, int action) {
             if (action == SGCT_PRESS) {
 
                 mState = STARTING;
-				mOutputAudio->fadeSound(INTROMUSIC);
                 mOutputAudio->playMusic(EVILMUSIC, "evil-intro.wav", false);
                 mScene->toggleBackground();
                 mScene->randomizeStartingPositions();
@@ -325,6 +329,7 @@ void GameHandler::resolveLevelProgression() {
                 mScene->toggleBackground();
 
                 mOutputAudio->playSound(WIN, "win.wav");
+				mScene->resetStartingPositions();
                 mState = END;
             } else {
                 mOutputAudio->playSound(SLOCK, "lock-level-success.wav");
