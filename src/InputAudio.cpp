@@ -49,7 +49,7 @@ void InputAudio::initialize() {
 
 float InputAudio::getNormalizedAmplitude() {
 	if (mAmplitude > mMaxAmplitude)
-		mMaxAmplitude = mAmplitude;
+		mAmplitude = mMaxAmplitude;
 	return mAmplitude / mMaxAmplitude;
 }
 

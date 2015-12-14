@@ -141,10 +141,15 @@ void GameHandler::updateGame(float dt) {
 }
 
 void GameHandler::updateEnd(float dt) {
-    //TODO
+
+	// the gravitational force will be the gravitational ratio times maximum audio amplitude.
+	float gravitationalForce = mAudioMultiplier * mAudioGravityRatio;
+
     // Make the completed levels follow the leader
     for (unsigned int i = 0; i < mCurrentLevel; i++)
         mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
+
+	mScene->getLevel(mCurrentLevel)->applyForce(0.0f, gravitationalForce, dt);
 }
 
 void GameHandler::render() {
@@ -231,6 +236,26 @@ void GameHandler::keyCallback(int key, int action) {
             }
             break;
 
+        // Change audio gravity
+        case SGCT_KEY_O:
+            if (action == SGCT_PRESS) {
+                if(mAudioGravityRatio <= 0.49)
+                    mAudioGravityRatio += 0.01;
+
+                std::cout << "Audio gravity: " << mAudioGravityRatio << std::endl;
+            }
+            break;
+
+        case SGCT_KEY_I:
+            if (action == SGCT_PRESS) {
+                if(mAudioGravityRatio > 0.02)
+                    mAudioGravityRatio -= 0.01;
+
+                std::cout << "Audio gravity: " << mAudioGravityRatio << std::endl;
+
+            }
+            break;
+
         /* --- Character and Level matrix transformations --- */
 
         // Translate the levels
@@ -246,11 +271,11 @@ void GameHandler::keyCallback(int key, int action) {
 
         // Controls for moving the character object
         case SGCT_KEY_W:
-            mScene->getCharacter()->incrementTheta(2.0f);
+            mScene->getCharacter()->incrementTheta(-2.0f);
             break;
 
         case SGCT_KEY_S:
-            mScene->getCharacter()->incrementTheta(-2.0f);
+            mScene->getCharacter()->incrementTheta(2.0f);
             break;
 
         case SGCT_KEY_A:
@@ -326,6 +351,7 @@ void GameHandler::resolveLevelProgression() {
                 mScene->zoomLevels();
 
                 mOutputAudio->playSound(WIN, "win.wav");
+				mScene->resetStartingPositions();
                 mState = END;
             } else {
                 mOutputAudio->playSound(SLOCK, "lock-level-success.wav");
