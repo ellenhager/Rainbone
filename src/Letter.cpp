@@ -101,7 +101,7 @@ void Letter::render(std::vector<glm::mat4> sceneMatrices) {
     // Character transform (spherical coordinates: https://en.wikipedia.org/wiki/Spherical_coordinate_system)
     //characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * mPhi / 180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     //characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * -mTheta / 180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    transform = glm::translate(transform, glm::vec3(0.0f, 4.0f, -1.0f));
+    transform = glm::translate(transform, glm::vec3(0.0f, 2.0f, -1.0f));
     transform = glm::rotate(transform, static_cast<float>(M_PI), glm::vec3(0.0f, 1.0f, 0.0f));
     transform = glm::rotate(transform, static_cast<float>(M_PI), glm::vec3(0.0f, 0.0f, 1.0f));
     transform = glm::rotate(transform, static_cast<float>(-M_PI / 4.0f), glm::vec3(1.0f, 0.0f, 0.0f));

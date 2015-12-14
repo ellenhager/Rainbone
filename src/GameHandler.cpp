@@ -117,6 +117,8 @@ void GameHandler::updateStarting(float dt) {
         mScene->resetStartingPositions();
     }
 }
+    if(mCountDown)
+        runCountDown();
 
 void GameHandler::updateGame(float dt) {
     // the gravitational force will be the gravitational ratio times maximum audio amplitude.

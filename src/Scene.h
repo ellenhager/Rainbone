@@ -57,6 +57,7 @@ private:
     std::map<Word, std::vector<Letter *> > mWords;
 
     Character * mCharacter;
+
 	SkySphere * mSkySphere;
 
     glm::vec3 mLightSourcePosition;
