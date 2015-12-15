@@ -52,7 +52,17 @@ public:
 
     void zoomLevels();
 
+	void setDay();
+
+	void setNight();
+
+	void setBlack();
+
 private:
+
+	enum SKYSTATE {DAY, NIGHT, BLACK};
+
+	SKYSTATE mSkyState = DAY;
 
     std::vector<Level *> mLevels;
 
@@ -63,7 +73,7 @@ private:
 
     glm::vec3 mLightSourcePosition;
 
-    bool mToggledBackground = false;
+    //bool mToggledBackground = false;
     float mInterpolationTimer = 0.0f;
     const float maxInterpolationTime = 1.0f;
 

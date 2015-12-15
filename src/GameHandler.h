@@ -27,6 +27,8 @@ public:
 
 	void updateEnd(float dt);
 
+	void updateFade(float dt);
+
     void keyCallback(int, int);
 
     std::vector<float> getLevelAngles() { return mScene->getLevelAngles(); }
@@ -43,7 +45,7 @@ public:
 
 private:
 
-	enum GameState { INTRO, STARTING, GAME, END};
+	enum GameState { INTRO, STARTING, GAME, END, FADE, STOP};
 
 	GameState mState;
 

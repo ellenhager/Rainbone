@@ -122,6 +122,14 @@ void Character::initialize(glm::vec3 lightSourcePosition) {
 }
 
 
+void Character::update(float dt) {
+	if (mIsMoving && mTheta<80.0f) {
+		mTheta += 0.5f;
+	} else {
+		mIsMoving = false;
+	}
+}
+
 void Character::render(std::vector<glm::mat4> sceneMatrices) {
 
     // Enable backface culling and depth test, we dont want to draw unnecessary stuff
@@ -138,7 +146,7 @@ void Character::render(std::vector<glm::mat4> sceneMatrices) {
     characterTransform = glm::translate(characterTransform, glm::vec3(0.0f, 0.0f, mRadius));
 
     // Align to center of dome
-    characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * (90.0f + mLocalRotation) / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     characterTransform = glm::rotate(characterTransform, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 

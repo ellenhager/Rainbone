@@ -65,6 +65,9 @@ void GameHandler::update(float dt) {
     case END:
         updateEnd(dt);
         break;
+	case FADE:
+		updateFade(dt);
+		break;
     }
     mOutputAudio->updateSound(dt);
     mScene->update(dt);
@@ -160,6 +163,20 @@ void GameHandler::updateEnd(float dt) {
 	//if the levels are standing still in starting positions
 	if (mScene->getLevel(mCurrentLevel)->getVelocity() == 0.0f) {
 		//animation of cat
+		mScene->zoomLevels();
+		mScene->getCharacter()->setRotation(90.0f);
+		mScene->getCharacter()->moveCenter();
+		mState = FADE;
+		
+	}
+}
+
+void GameHandler::updateFade(float dt) {
+	if (!mScene->getCharacter()->isMoving()) {
+		mScene->getCharacter()->setRotation(180.0f);
+		mOutputAudio->playSound(CATHELP, "cat-meow3.wav");
+		mScene->setBlack();
+		mState = STOP;
 	}
 }
 
@@ -203,7 +220,7 @@ void GameHandler::keyCallback(int key, int action) {
                 mState = STARTING;
 				mOutputAudio->stopAllSounds();
                 mOutputAudio->playMusic(EVILMUSIC, "evil-intro.wav", false);
-                mScene->toggleBackground();
+                mScene->setNight();
                 mScene->randomizeStartingPositions();
             }
             break;
@@ -360,8 +377,7 @@ void GameHandler::resolveLevelProgression() {
 
             //if we are at the last level, we should end the game
             if (mCurrentLevel == mNumberOfLevels - 1) {
-                mScene->toggleBackground();
-                mScene->zoomLevels();
+                mScene->setDay();
 
                 mOutputAudio->playSound(WIN, "win.wav");
 				mScene->resetStartingPositions();

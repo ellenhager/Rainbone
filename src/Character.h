@@ -33,9 +33,20 @@ public:
 
     void incrementRadius(float r) { mRadius += r; }
 
-	void setPhi(float ph) { mPhi = ph; };
+	void setPhi(float ph) { mPhi = ph; }
 
+	float getTheta() { return mTheta; }
+
+	bool isMoving() { return mIsMoving; }
+
+	void setRotation(float rotation) { mLocalRotation = rotation; }
+
+	void moveCenter() { mIsMoving = true; }
+
+	void update(float dt);
 private:
+
+	bool mIsMoving = false;
 
     glm::vec3 mPosition;
 
@@ -46,6 +57,8 @@ private:
     float mTheta = 5.0f;
 
     float mPhi = 180.0f;
+
+	float mLocalRotation = 0.0f;
 
     std::vector<glm::vec3> mVertices;
 
