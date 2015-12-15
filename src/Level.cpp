@@ -215,18 +215,16 @@ void Level::render(std::vector<glm::mat4> sceneMatrices) {
 
 void Level::update(float dt) {
 
-    if(mInterpolationTimer <= maxInterpolationTime) {
+    if(mColorInterpolationTimer <= maxColorInterpolationTime) {
 
-        mInterpolationTimer += dt;
+        mColorInterpolationTimer += dt;
 
 		interpolateColor();
-
-        if(mIsZoom) {
-            incrementLevelTrans(-(mInterpolationTimer / maxInterpolationTime));
-        }
-    } else {
-        mIsZoom = false; //stop zooming after a certain time
     }
+	if (mZoomInterpolationTimer <= maxZoomInterpolationTime) {
+		mZoomInterpolationTimer += dt;
+		incrementLevelTrans(-(mZoomInterpolationTimer / maxZoomInterpolationTime));
+	}
 }
 
 
@@ -256,7 +254,7 @@ void Level::incrementAngle(float a) {
 
 void Level::saturate(bool s) {
 	mIsSaturated = s;
-	mInterpolationTimer = 0.0f;
+	mColorInterpolationTimer = 0.0f;
 }
 
 
@@ -268,19 +266,19 @@ void Level::interpolateColor() {
 	float b = mMaterial.color.z - mMaterial.greyScale.z;
 
 	if (mIsSaturated) {
-		mMaterial.currentColor.x = std::min(mMaterial.greyScale.x + r * (mInterpolationTimer / maxInterpolationTime), mMaterial.color.x);
-		mMaterial.currentColor.y = std::min(mMaterial.greyScale.y + g * (mInterpolationTimer / maxInterpolationTime), mMaterial.color.y);
-		mMaterial.currentColor.z = std::min(mMaterial.greyScale.z + b * (mInterpolationTimer / maxInterpolationTime), mMaterial.color.z);
+		mMaterial.currentColor.x = std::min(mMaterial.greyScale.x + r * (mColorInterpolationTimer / maxColorInterpolationTime), mMaterial.color.x);
+		mMaterial.currentColor.y = std::min(mMaterial.greyScale.y + g * (mColorInterpolationTimer / maxColorInterpolationTime), mMaterial.color.y);
+		mMaterial.currentColor.z = std::min(mMaterial.greyScale.z + b * (mColorInterpolationTimer / maxColorInterpolationTime), mMaterial.color.z);
 	}
 	else {
-		mMaterial.currentColor.x = std::max(mMaterial.color.x - r * (mInterpolationTimer / maxInterpolationTime), mMaterial.greyScale.x);
-		mMaterial.currentColor.y = std::max(mMaterial.color.y - g * (mInterpolationTimer / maxInterpolationTime), mMaterial.greyScale.y);
-		mMaterial.currentColor.z = std::max(mMaterial.color.z - b * (mInterpolationTimer / maxInterpolationTime), mMaterial.greyScale.z);
+		mMaterial.currentColor.x = std::max(mMaterial.color.x - r * (mColorInterpolationTimer / maxColorInterpolationTime), mMaterial.greyScale.x);
+		mMaterial.currentColor.y = std::max(mMaterial.color.y - g * (mColorInterpolationTimer / maxColorInterpolationTime), mMaterial.greyScale.y);
+		mMaterial.currentColor.z = std::max(mMaterial.color.z - b * (mColorInterpolationTimer / maxColorInterpolationTime), mMaterial.greyScale.z);
 	}
 }
 
 void Level::zoom() {
-    mInterpolationTimer = 0.0f;
+    mZoomInterpolationTimer = 0.0f;
     mIsZoom = true;
 }
 

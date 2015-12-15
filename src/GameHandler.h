@@ -29,6 +29,8 @@ public:
 
 	void updateEnd(float dt);
 
+	void updateFade(float dt);
+
     void keyCallback(int, int);
 
     std::vector<float> getLevelAngles() { return mScene->getLevelAngles(); }
@@ -59,9 +61,13 @@ public:
 
     OutputAudio* getOutputAudio() { return mOutputAudio; }
 
+	std::vector< float > getCharacterPlacement();
+
+	void setCharacterPlacement(std::vector< float > placement);
+
 private:
 
-	enum GameState { INTRO, PRECOUNTDOWN, COUNTDOWN, STARTING, GAME, END};
+	enum GameState { INTRO, PRECOUNTDOWN, COUNTDOWN, STARTING, GAME, END, FADE, STOP};
 
     GameState mState;
 

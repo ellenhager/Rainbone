@@ -121,6 +121,14 @@ void Character::initialize(glm::vec3 lightSourcePosition) {
 }
 
 
+void Character::update(float dt) {
+	if (mIsMoving && mTheta<80.0f) {
+		mTheta += 0.5f;
+	} else {
+		mIsMoving = false;
+	}
+}
+
 void Character::render(std::vector<glm::mat4> sceneMatrices) {
 
     // Enable backface culling and depth test, we dont want to draw unnecessary stuff
@@ -129,16 +137,16 @@ void Character::render(std::vector<glm::mat4> sceneMatrices) {
 
     // Dome tilt
     float tilt = M_PI * 27.0f / 180.0f;
+
     glm::mat4 characterDomeTilt = glm::rotate(glm::mat4(1.0f), tilt, glm::vec3(-1.0f, 0.0f, 0.0f));
     // Character transform (spherical coordinates: https://en.wikipedia.org/wiki/Spherical_coordinate_system)
     glm::mat4 characterSpherical = glm::rotate(glm::mat4(1.0f), static_cast<float>(M_PI * mPhi / 180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     characterSpherical = glm::rotate(characterSpherical, static_cast<float>(M_PI * -mTheta / 180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     glm::mat4 characterTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, mRadius));
     // Align to center of dome
-    glm::mat4 characterAlignment = glm::rotate(glm::mat4(1.0f), static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    glm::mat4 characterAlignment = glm::rotate(glm::mat4(1.0f), static_cast<float>(M_PI * (90.0f + mLocalRotation) / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     characterAlignment = glm::rotate(characterAlignment, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     characterAlignment = glm::rotate(characterAlignment, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    characterAlignment = glm::rotate(characterAlignment, static_cast<float>(M_PI * 180.0f / 180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
     // Apply scene transforms to MVP and MV matrices
     sceneMatrices[I_MVP] = sceneMatrices[I_MVP] * characterDomeTilt * characterSpherical * characterTranslate * characterAlignment;

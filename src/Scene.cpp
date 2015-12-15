@@ -104,6 +104,8 @@ void Scene::update(float dt) {
 
 	mSkySphere->update(dt);
 
+	mCharacter->update(dt);
+
     if(mInterpolationTimer <= maxInterpolationTime && mInterpolationTimer > 0.0f) {
         mInterpolationTimer += dt;
 
@@ -118,14 +120,20 @@ void Scene::update(float dt) {
     }
 }
 
+
+
 void Scene::interpolateBackground() {
-    if(mToggledBackground == false) { //day
+    if(mSkyState == DAY) { //day
         mSkySphere->setBrightness(mInterpolationTimer / maxInterpolationTime);
-    } else if(mToggledBackground == true) { //night
+    } else if(mSkyState == NIGHT) { //night
         if(mSkySphere->getBrightness() > 0.15) {
             mSkySphere->setBrightness(1 - (mInterpolationTimer / maxInterpolationTime));
         }
-    }
+	} else if (mSkyState == BLACK) {
+		if (mSkySphere->getBrightness() > 0.0) {
+			mSkySphere->setBrightness(1 - (mInterpolationTimer / maxInterpolationTime));
+		}
+	}
 
 }
 
@@ -203,12 +211,17 @@ void Scene::shallRenderLetter(Word word, bool shallRender) {
         (*it)->setRenderState(shallRender);
 }
 
-void Scene::toggleBackground() {
-    mInterpolationTimer = 0.1f;
-
-    if(mToggledBackground) {
-        mToggledBackground = false;
-    } else {
-        mToggledBackground = true;
-    }
+void Scene::setDay() { 
+	mInterpolationTimer = 0.01f;
+	mSkyState = DAY; 
 }
+
+void Scene::setNight() { 
+	mInterpolationTimer = 0.01f;
+	mSkyState = NIGHT;
+};
+
+void Scene::setBlack() { 
+	mInterpolationTimer = 0.01f;
+	mSkyState = BLACK; 
+};

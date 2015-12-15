@@ -68,15 +68,19 @@ private:
 
     float mAngle = 0.0f;
 
-    float mLevelsTrans = 0.0f;
+    float mLevelsTrans = 1.0f;
 
 	bool mIsSaturated = true;
 
-    float mInterpolationTimer = 0.0f;
+    float mColorInterpolationTimer = 0.0f;
+
+	const float maxColorInterpolationTime = 1.0f;
+
+	float mZoomInterpolationTimer = 5.0f;
+
+	const float maxZoomInterpolationTime = 5.0f;
 
 	float mInterpolationAngle = 60.0f;
-
-    const float maxInterpolationTime = 1.0f;
 
     // for motion
     float mForce;

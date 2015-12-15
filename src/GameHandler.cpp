@@ -50,6 +50,24 @@ void GameHandler::initialize() {
 }
 
 
+std::vector< float > GameHandler::getCharacterPlacement() {
+
+	std::vector< float > placement;
+	placement.push_back(mScene->getCharacter()->getTheta());
+	placement.push_back(mScene->getCharacter()->getPhi());
+	placement.push_back(mScene->getCharacter()->getRadius());
+	placement.push_back(mScene->getCharacter()->getRotation());
+	return placement;
+}
+
+void GameHandler::setCharacterPlacement(std::vector< float > placement) {
+	//std::cout << "placement: " << th << " " << ph << " " << r <<  std::endl;
+	mScene->getCharacter()->setTheta(placement[0]);
+	mScene->getCharacter()->setPhi(placement[1]);
+	mScene->getCharacter()->setRadius(placement[2]);
+	mScene->getCharacter()->setRotation(placement[3]);
+}
+
 void GameHandler::update(float dt) {
 
     switch (mState) {
@@ -71,6 +89,9 @@ void GameHandler::update(float dt) {
     case END:
         updateEnd(dt);
         break;
+	case FADE:
+		updateFade(dt);
+		break;
     }
     mOutputAudio->updateSound(dt);
     mScene->update(dt);
@@ -162,6 +183,9 @@ void GameHandler::updateGame(float dt) {
     for (unsigned int i = 0; i < mCurrentLevel; i++)
         mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
 
+	//make the character follow the levels
+	mScene->getCharacter()->setPhi(mScene->getLevelAngle(mCurrentLevel) + 180.0f);
+
     // if next level is not the last level...
     if (mCurrentLevel + 1 < mNumberOfLevels) {
         // update the next levels color based on angular distance from current level.
@@ -180,7 +204,29 @@ void GameHandler::updateEnd(float dt) {
     for (unsigned int i = 0; i < mCurrentLevel; i++)
         mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
 
+	//make the character follow the levels
+	mScene->getCharacter()->setPhi(mScene->getLevelAngle(mCurrentLevel) + 180.0f);
+
 	mScene->getLevel(mCurrentLevel)->applyForce(0.0f, gravitationalForce, dt);
+
+	//if the levels are standing still in starting positions
+	if (mScene->getLevel(mCurrentLevel)->getVelocity() == 0.0f) {
+		//animation of cat
+		mScene->zoomLevels();
+		mScene->getCharacter()->setRotation(90.0f);
+		mScene->getCharacter()->moveCenter();
+		mState = FADE;
+		
+	}
+}
+
+void GameHandler::updateFade(float dt) {
+	if (!mScene->getCharacter()->isMoving()) {
+		mScene->getCharacter()->setRotation(180.0f);
+		mOutputAudio->playSound(CATHELP, "cat-meow3.wav");
+		mScene->setBlack();
+		mState = STOP;
+	}
 }
 
 void GameHandler::render() {
@@ -240,7 +286,7 @@ void GameHandler::keyCallback(int key, int action) {
                 mState = STARTING;
 				mOutputAudio->stopAllSounds();
                 mOutputAudio->playMusic(EVILMUSIC, "evil-intro.wav", false);
-                mScene->toggleBackground();
+                mScene->setNight();
                 mScene->randomizeStartingPositions();
             }
             break;
@@ -310,11 +356,13 @@ void GameHandler::keyCallback(int key, int action) {
         case SGCT_KEY_N:
             for (unsigned int i = 0; i < mNumberOfLevels; i++)
                 mScene->getLevel(i)->incrementLevelTrans(1.0f);
+				mScene->getCharacter()->incrementTheta(5.0f);
             break;
 
         case SGCT_KEY_M:
             for (unsigned int i = 0; i < mNumberOfLevels; i++)
                 mScene->getLevel(i)->incrementLevelTrans(-1.0f);
+				mScene->getCharacter()->incrementTheta(-5.0f);
             break;
 
         // Controls for moving the character object
@@ -428,8 +476,7 @@ void GameHandler::resolveLevelProgression() {
 
             //if we are at the last level, we should end the game
             if (mCurrentLevel == mNumberOfLevels - 1) {
-                mScene->toggleBackground();
-                mScene->zoomLevels();
+                mScene->setDay();
 
                 mOutputAudio->playSound(WIN, "win.wav");
 				mScene->resetStartingPositions();
