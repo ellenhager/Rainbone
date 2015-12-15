@@ -56,4 +56,6 @@ void main() {
         normalize(vec3(NM * vec4(normal, 1.0))),
         lightDirection).rgb * shinyness;
 
+    frag_color.a = 0.5;
+
 }

@@ -39,13 +39,19 @@ public:
 
     float getSkySphereAngle() { return mSkySphere->getAngle(); }
 
+    std::vector<std::pair<bool, bool> > getLetterStates();
+
     float getLevelAngle(unsigned int i) { return mLevels[i]->getAngle(); }
 
     std::vector<Level *> getLevels() { return mLevels; }
 
     Level *getLevel(unsigned int i) { return mLevels[i]; }
 
+    Letter *getLetter(Word w) { return mWords[w].front(); }
+
     int getNumberOfLevels() { return mLevels.size(); }
+
+    int getNumberOfWords() { return mWords.size(); }
 
     Character *getCharacter() { return mCharacter; }
 
@@ -56,6 +62,16 @@ public:
     void setSkySphereAngle(float a) { mSkySphere->setAngle(a); }
 
     void shallRenderLetter(Word, bool);
+
+    bool isLetterRendering(Word w) { return mWords[w].front()->shallRender(); }
+
+    bool isLetterComplete(Word w) { return mWords[w].front()->isComplete(); }
+
+    void setWordStatic(Word w, bool b) { mWords[w].front()->setStatic(b); }
+
+    void setWordComplete(Word w) { mWords[w].front()->setComplete(); }
+
+    void setWordIncomplete(Word w) { mWords[w].front()->setIncomplete(); }
 
     void toggleBackground();
 
@@ -70,6 +86,7 @@ private:
     std::map<Word, std::vector<Letter *> > mWords;
 
     Character * mCharacter;
+
 	SkySphere * mSkySphere;
 
     glm::vec3 mLightSourcePosition;

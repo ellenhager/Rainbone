@@ -26,6 +26,8 @@ sgct::SharedFloat mSharedSkySphereBrightness(1.0f);
 sgct::SharedFloat mSharedSkySphereAngle(0.0f);
 // Shared container for translation of each level
 sgct::SharedVector<float> mSharedLevelTranslations;
+// Shared container for states of our letters
+sgct::SharedVector<std::pair<bool, bool> > mSharedLetterStates;
 
 unsigned int numLevels = 6;
 
@@ -88,6 +90,9 @@ void preSync() {
         mSharedSkySphereAngle.setVal(rainbone->getSkySphereAngle());
 
         mSharedLevelTranslations.setVal(rainbone->getLevelTranslations());
+
+        mSharedLetterStates.setVal(rainbone->getLetterStates());
+
     }
 }
 
@@ -104,6 +109,9 @@ void postSync() {
         rainbone->setSkySphereAngle(mSharedSkySphereAngle.getVal());
 
         rainbone->setLevelTranslations(mSharedLevelTranslations.getVal());
+
+        rainbone->setLetterStates(mSharedLetterStates.getVal());
+
 	}
 }
 
@@ -123,6 +131,7 @@ void encode() {
     sgct::SharedData::instance()->writeFloat (&mSharedSkySphereBrightness);
     sgct::SharedData::instance()->writeFloat (&mSharedSkySphereAngle);
     sgct::SharedData::instance()->writeVector(&mSharedLevelTranslations);
+    sgct::SharedData::instance()->writeVector(&mSharedLetterStates);
 }
 
 
@@ -134,6 +143,7 @@ void decode() {
     sgct::SharedData::instance()->readFloat (&mSharedSkySphereBrightness);
     sgct::SharedData::instance()->readFloat (&mSharedSkySphereAngle);
     sgct::SharedData::instance()->readVector(&mSharedLevelTranslations);
+    sgct::SharedData::instance()->readVector(&mSharedLetterStates);
 }
 
 
