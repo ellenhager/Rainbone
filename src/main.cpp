@@ -105,6 +105,7 @@ void postSync() {
 	if (!gEngine->isMaster()) {
 		// Sync all angles across the slaves
 		rainbone->setLevelAngles(mSharedLevelAngles.getVal());
+
         rainbone->setLevelColors(mSharedLevelColors.getVal());
 
 		rainbone->setCharacterPlacement(mSharedCharacterPlacement.getVal());
@@ -133,7 +134,6 @@ void encode() {
     sgct::SharedData::instance()->writeVector(&mSharedLevelAngles);
     sgct::SharedData::instance()->writeVector(&mSharedLevelColors);
 	sgct::SharedData::instance()->writeVector(&mSharedCharacterPlacement);
-
     sgct::SharedData::instance()->writeFloat (&mSharedSkySphereBrightness);
     sgct::SharedData::instance()->writeFloat (&mSharedSkySphereAngle);
     sgct::SharedData::instance()->writeVector(&mSharedLevelTranslations);
@@ -147,7 +147,6 @@ void decode() {
     sgct::SharedData::instance()->readVector(&mSharedLevelAngles);
     sgct::SharedData::instance()->readVector(&mSharedLevelColors);
 	sgct::SharedData::instance()->readVector(&mSharedCharacterPlacement);
-
     sgct::SharedData::instance()->readFloat (&mSharedSkySphereBrightness);
     sgct::SharedData::instance()->readFloat (&mSharedSkySphereAngle);
     sgct::SharedData::instance()->readVector(&mSharedLevelTranslations);

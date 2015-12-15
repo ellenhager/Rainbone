@@ -30,6 +30,10 @@ GameHandler::~GameHandler() {
 
     delete mScene;
 
+    delete mOutputAudio;
+
+    delete mInputAudio;
+
     std::cout << "GameHandler destroyed!\n\n";
 }
 
@@ -61,7 +65,15 @@ std::vector< float > GameHandler::getCharacterPlacement() {
 }
 
 void GameHandler::setCharacterPlacement(std::vector< float > placement) {
-	//std::cout << "placement: " << th << " " << ph << " " << r <<  std::endl;
+
+    // In the first sync interation this case will happen because slave gets called before master
+    if (placement.size() != 4) {
+        std::cout << "Error when syncing character placement - size must match!" << std::endl;
+        std::cout << "placement.size(): " << placement.size() << std::endl;
+        std::cout << "mLevels.size(): " << mScene->getNumberOfLevels() << std::endl;
+        return;
+    }
+
 	mScene->getCharacter()->setTheta(placement[0]);
 	mScene->getCharacter()->setPhi(placement[1]);
 	mScene->getCharacter()->setRadius(placement[2]);
@@ -92,6 +104,8 @@ void GameHandler::update(float dt) {
 	case FADE:
 		updateFade(dt);
 		break;
+    case STOP:
+        break;
     }
     mOutputAudio->updateSound(dt);
     mScene->update(dt);
@@ -240,12 +254,6 @@ void GameHandler::render() {
 
     mScene->render(sceneMatrices);
 }
-
-/***************************************************************
- Fix so that the countdown can be reset
- Show "ROPA START OM..." until the entire countdown is complete
- Maybe add sounds when the numbers are changing?
- ***************************************************************/
 
 
 void GameHandler::keyCallback(int key, int action) {
