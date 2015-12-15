@@ -20,6 +20,12 @@ sgct::SharedDouble curr_time(0.0);
 sgct::SharedVector<float> mSharedLevelAngles;
 // Shared container for colors of each level
 sgct::SharedVector<glm::vec4> mSharedLevelColors;
+// Shared value for brightness of background sphere
+sgct::SharedFloat mSharedSkySphereBrightness(1.0f);
+// Shared value for angle of background sphere
+sgct::SharedFloat mSharedSkySphereAngle(0.0f);
+// Shared container for translation of each level
+sgct::SharedVector<float> mSharedLevelTranslations;
 
 unsigned int numLevels = 6;
 
@@ -76,6 +82,12 @@ void preSync() {
         mSharedLevelAngles.setVal(rainbone->getLevelAngles());
 
         mSharedLevelColors.setVal(rainbone->getLevelColors());
+
+        mSharedSkySphereBrightness.setVal(rainbone->getSkySphereBrightness());
+
+        mSharedSkySphereAngle.setVal(rainbone->getSkySphereAngle());
+
+        mSharedLevelTranslations.setVal(rainbone->getLevelTranslations());
     }
 }
 
@@ -86,6 +98,12 @@ void postSync() {
 		rainbone->setLevelAngles(mSharedLevelAngles.getVal());
 
         rainbone->setLevelColors(mSharedLevelColors.getVal());
+
+        rainbone->setSkySphereBrightness(mSharedSkySphereBrightness.getVal());
+
+        rainbone->setSkySphereAngle(mSharedSkySphereAngle.getVal());
+
+        rainbone->setLevelTranslations(mSharedLevelTranslations.getVal());
 	}
 }
 
@@ -102,6 +120,9 @@ void encode() {
     sgct::SharedData::instance()->writeDouble(&curr_time);
     sgct::SharedData::instance()->writeVector(&mSharedLevelAngles);
     sgct::SharedData::instance()->writeVector(&mSharedLevelColors);
+    sgct::SharedData::instance()->writeFloat (&mSharedSkySphereBrightness);
+    sgct::SharedData::instance()->writeFloat (&mSharedSkySphereAngle);
+    sgct::SharedData::instance()->writeVector(&mSharedLevelTranslations);
 }
 
 
@@ -110,6 +131,9 @@ void decode() {
     sgct::SharedData::instance()->readDouble(&curr_time);
     sgct::SharedData::instance()->readVector(&mSharedLevelAngles);
     sgct::SharedData::instance()->readVector(&mSharedLevelColors);
+    sgct::SharedData::instance()->readFloat (&mSharedSkySphereBrightness);
+    sgct::SharedData::instance()->readFloat (&mSharedSkySphereAngle);
+    sgct::SharedData::instance()->readVector(&mSharedLevelTranslations);
 }
 
 

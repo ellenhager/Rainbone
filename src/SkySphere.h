@@ -29,11 +29,15 @@ public:
 
 	void setBrightness(float val) { brightness = val; };
 
+	void setAngle(float a) { mAngle = a; }
+
 	float getBrightness() { return brightness; };
+
+	float getAngle() { return mAngle; }
 
 private:
 
-	size_t mSphereTextureHandle;
+	//size_t mSphereTextureHandle;
 	sgct_utils::SGCTSphere * mSphere = NULL;
 	float mAngle = 0.0f;
 	float mSpeed = 4;

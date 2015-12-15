@@ -20,9 +20,6 @@ Scene::Scene(unsigned int n) {
 
     mSkySphere = new SkySphere(35);
 
-    //std::vector<Letter *> L;
-    //L.push_back(new Letter("../assets/objs/5.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
-
     mWords[FIVE].push_back(new Letter("../assets/objs/_5.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
 
 
@@ -152,6 +149,18 @@ std::vector<glm::vec4> Scene::getLevelColors() {
 
     return colors;
 }
+
+
+std::vector<float> Scene::getLevelTranslations() {
+
+    std::vector<float> translations;
+
+    for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
+        translations.push_back((*it)->getLevelTrans());
+
+    return translations;
+}
+
 
 void Scene::shallRenderLetter(Word word, bool shallRender) {
 
