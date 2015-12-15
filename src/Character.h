@@ -35,11 +35,21 @@ public:
 
 	void setPhi(float ph) { mPhi = ph; }
 
-	float getTheta() { return mTheta; }
+	void setTheta(float th) { mTheta = th; }
 
-	bool isMoving() { return mIsMoving; }
+	void setRadius(float r) { mRadius = r; }
 
 	void setRotation(float rotation) { mLocalRotation = rotation; }
+
+	float getTheta() { return mTheta; }
+
+	float getRadius() { return mRadius; }
+
+	float getPhi() { return mPhi; }
+
+	float getRotation() { return mLocalRotation; }
+
+	bool isMoving() { return mIsMoving; }
 
 	void moveCenter() { mIsMoving = true; }
 

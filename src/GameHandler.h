@@ -43,6 +43,10 @@ public:
 
     OutputAudio* getOutputAudio() { return mOutputAudio; }
 
+	std::vector< float > getCharacterPlacement();
+
+	void setCharacterPlacement(std::vector< float > placement);
+
 private:
 
 	enum GameState { INTRO, STARTING, GAME, END, FADE, STOP};

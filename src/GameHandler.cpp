@@ -50,6 +50,24 @@ void GameHandler::initialize() {
 }
 
 
+std::vector< float > GameHandler::getCharacterPlacement() {
+
+	std::vector< float > placement;
+	placement.push_back(mScene->getCharacter()->getTheta());
+	placement.push_back(mScene->getCharacter()->getPhi());
+	placement.push_back(mScene->getCharacter()->getRadius());
+	placement.push_back(mScene->getCharacter()->getRotation());
+	return placement;
+}
+
+void GameHandler::setCharacterPlacement(std::vector< float > placement) {
+	//std::cout << "placement: " << th << " " << ph << " " << r <<  std::endl;
+	mScene->getCharacter()->setTheta(placement[0]);
+	mScene->getCharacter()->setPhi(placement[1]);
+	mScene->getCharacter()->setRadius(placement[2]);
+	mScene->getCharacter()->setRotation(placement[3]);
+}
+
 void GameHandler::update(float dt) {
 
     switch (mState) {

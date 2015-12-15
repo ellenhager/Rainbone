@@ -20,6 +20,8 @@ sgct::SharedDouble curr_time(0.0);
 sgct::SharedVector<float> mSharedLevelAngles;
 // Shared container for colors of each level
 sgct::SharedVector<glm::vec4> mSharedLevelColors;
+// Shared container for character placement
+sgct::SharedVector<float> mSharedCharacterPlacement;
 
 unsigned int numLevels = 6;
 
@@ -76,6 +78,10 @@ void preSync() {
         mSharedLevelAngles.setVal(rainbone->getLevelAngles());
 
         mSharedLevelColors.setVal(rainbone->getLevelColors());
+
+		mSharedCharacterPlacement.setVal(rainbone->getCharacterPlacement());
+		//std::cout << "placement: " << placement[0] << " " << placement[1] << " " << placement[2] << std::endl;
+
     }
 }
 
@@ -84,8 +90,8 @@ void postSync() {
 	if (!gEngine->isMaster()) {
 		// Sync all angles across the slaves
 		rainbone->setLevelAngles(mSharedLevelAngles.getVal());
-
         rainbone->setLevelColors(mSharedLevelColors.getVal());
+		rainbone->setCharacterPlacement(mSharedCharacterPlacement.getVal());
 	}
 }
 
@@ -102,6 +108,8 @@ void encode() {
     sgct::SharedData::instance()->writeDouble(&curr_time);
     sgct::SharedData::instance()->writeVector(&mSharedLevelAngles);
     sgct::SharedData::instance()->writeVector(&mSharedLevelColors);
+	sgct::SharedData::instance()->writeVector(&mSharedCharacterPlacement);
+
 }
 
 
@@ -110,6 +118,8 @@ void decode() {
     sgct::SharedData::instance()->readDouble(&curr_time);
     sgct::SharedData::instance()->readVector(&mSharedLevelAngles);
     sgct::SharedData::instance()->readVector(&mSharedLevelColors);
+	sgct::SharedData::instance()->readVector(&mSharedCharacterPlacement);
+
 }
 
 
