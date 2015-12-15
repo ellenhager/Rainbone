@@ -241,6 +241,19 @@ void Level::setStartingAngle(float angle) {
 	mGravityAngle = angle;
 }
 
+
+void Level::incrementAngle(float a) {
+    
+    mAngle += a;
+
+    if(mAngle > 360.0f)
+        mAngle = mAngle - 360.0f;
+
+    if(mAngle < 0.0f)
+        mAngle = 360.0f - mAngle;
+}
+
+
 void Level::saturate(bool s) {
 	mIsSaturated = s;
 	mInterpolationTimer = 0.0f;

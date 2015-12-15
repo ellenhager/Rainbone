@@ -33,6 +33,12 @@ public:
 
     std::vector<glm::vec4> getLevelColors();
 
+    std::vector<float> getLevelTranslations();
+
+    float getSkySphereBrightness() { return mSkySphere->getBrightness(); }
+
+    float getSkySphereAngle() { return mSkySphere->getAngle(); }
+
     std::vector<std::pair<bool, bool> > getLetterStates();
 
     float getLevelAngle(unsigned int i) { return mLevels[i]->getAngle(); }
@@ -50,6 +56,10 @@ public:
     Character *getCharacter() { return mCharacter; }
 
     void setLevelAngle(unsigned int i, float a) { mLevels[i]->setAngle(a); }
+
+    void setSkySphereBrightness(float b) { mSkySphere->setBrightness(b); }
+
+    void setSkySphereAngle(float a) { mSkySphere->setAngle(a); }
 
     void shallRenderLetter(Word, bool);
 

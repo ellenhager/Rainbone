@@ -50,9 +50,13 @@ public:
 
     void setColor(glm::vec4 c) { mMaterial.currentColor = c; }
 
-    void incrementAngle(float a) { mAngle += a; }
+    void incrementAngle(float a);
 
     void incrementLevelTrans(float l) { mLevelsTrans += l; }
+
+    float getLevelTrans() { return mLevelsTrans; }
+
+    void setLevelTrans(float l) { mLevelsTrans = l; }
 
 	float randomizeAngle(float, float);
 

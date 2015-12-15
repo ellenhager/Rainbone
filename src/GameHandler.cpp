@@ -377,6 +377,18 @@ void GameHandler::setLevelColors(std::vector<glm::vec4> syncronizedColors) {
 }
 
 
+void GameHandler::setLevelTranslations(std::vector<float> syncronizedTranslations) {
+
+	if (syncronizedTranslations.size() != mScene->getNumberOfLevels()) {
+		std::cout << "Error when syncing level translations - size must match!" << std::endl;
+		std::cout << "syncronizedTranslations.size(): " << syncronizedTranslations.size() << std::endl;
+		std::cout << "mLevels.size(): " << mScene->getNumberOfLevels() << std::endl;
+		return;
+	}
+
+	for (unsigned int i = 0; i < mScene->getNumberOfLevels(); i++)
+		mScene->getLevel(i)->setLevelTrans(syncronizedTranslations[i]);
+}
 void GameHandler::setLetterStates(std::vector<std::pair<bool, bool> > syncronizedStates) {
 
     if(syncronizedStates.size() != mScene->getNumberOfWords()) {

@@ -173,6 +173,17 @@ std::vector<glm::vec4> Scene::getLevelColors() {
 }
 
 
+std::vector<float> Scene::getLevelTranslations() {
+
+    std::vector<float> translations;
+
+    for(std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it)
+        translations.push_back((*it)->getLevelTrans());
+
+    return translations;
+}
+
+
 std::vector<std::pair<bool, bool> > Scene::getLetterStates() {
 
     std::vector<std::pair<bool, bool> > letterStates;
@@ -184,6 +195,7 @@ std::vector<std::pair<bool, bool> > Scene::getLetterStates() {
     }
     return letterStates;
 }
+
 
 void Scene::shallRenderLetter(Word word, bool shallRender) {
 
