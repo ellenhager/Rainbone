@@ -20,11 +20,17 @@ Scene::Scene(unsigned int n) {
 
     mSkySphere = new SkySphere(35);
 
-    //std::vector<Letter *> L;
-    //L.push_back(new Letter("../assets/objs/5.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+    mWords[START].push_back(new Letter("../assets/objs/start.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
 
-    mWords[FIVE].push_back(new Letter("../assets/objs/_5.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+    mWords[FIVE].push_back(new Letter("../assets/objs/5.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
 
+    mWords[FOUR].push_back(new Letter("../assets/objs/4.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+
+    mWords[THREE].push_back(new Letter("../assets/objs/3.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+
+    mWords[TWO].push_back(new Letter("../assets/objs/2.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+
+    mWords[ONE].push_back(new Letter("../assets/objs/1.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
 
     std::cout << "\nScene created!\n";
 }
@@ -59,6 +65,12 @@ void Scene::initialize() {
     for(std::map<Word, std::vector<Letter *> >::iterator it = mWords.begin(); it != mWords.end(); ++it)
         for(std::vector<Letter *>::iterator it2 = (*it).second.begin(); it2 != (*it).second.end(); ++it2)
             (*it2)->initialize(mLightSourcePosition);
+
+    mWords[FIVE].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
+    mWords[FOUR].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
+    mWords[THREE].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
+    mWords[TWO].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
+    mWords[ONE].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
 
     mCharacter->initialize(mLightSourcePosition);
 
@@ -96,6 +108,13 @@ void Scene::update(float dt) {
         mInterpolationTimer += dt;
 
         interpolateBackground();
+    }
+
+    for(std::map<Word, std::vector<Letter *> >::iterator it = mWords.begin(); it != mWords.end(); ++it) {
+        for(std::vector<Letter *>::iterator it2 = (*it).second.begin(); it2 != (*it).second.end(); ++it2) {
+            if((*it2)->shallRender() && !(*it2)->isComplete())
+                (*it2)->interpolateLetter(dt);
+        }
     }
 }
 
@@ -151,6 +170,19 @@ std::vector<glm::vec4> Scene::getLevelColors() {
         colors.push_back((*it)->getColor());
 
     return colors;
+}
+
+
+std::vector<std::pair<bool, bool> > Scene::getLetterStates() {
+
+    std::vector<std::pair<bool, bool> > letterStates;
+
+    for(std::map<Word, std::vector<Letter *> >::iterator it = mWords.begin(); it != mWords.end(); ++it) {
+        for(std::vector<Letter *>::iterator it2 = (*it).second.begin(); it2 != (*it).second.end(); ++it2) {
+            letterStates.push_back(std::make_pair( (*it2)->shallRender(), (*it2)->isComplete() ));
+        }
+    }
+    return letterStates;
 }
 
 void Scene::shallRenderLetter(Word word, bool shallRender) {
