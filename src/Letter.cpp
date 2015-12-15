@@ -9,8 +9,8 @@ Letter::Letter(const char * objPath, glm::vec4 c) {
     mMaterial.ambient       = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
     mMaterial.diffuse       = glm::vec4(0.8f, 0.8f, 0.8f, 1.0f);
     mMaterial.specular      = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    mMaterial.specularity   = 50.0f;
-    mMaterial.shinyness     = 0.6f;
+    mMaterial.specularity   = 5.0f;
+    mMaterial.shinyness     = 0.1f;
 }
 
 Letter::~Letter() {
@@ -100,14 +100,14 @@ void Letter::render(std::vector<glm::mat4> sceneMatrices) {
     float tilt = M_PI * 27.0f / 180.0f;
     glm::mat4 transform = glm::rotate(glm::mat4(1.0f), tilt, glm::vec3(-1.0f, 0.0f, 0.0f));
 
-    transform = glm::translate(transform, glm::vec3(0.0f, 2.0f, -1.0f));
+    transform = glm::translate(transform, glm::vec3(0.0f, 4.0f, -2.0f));
     transform = glm::rotate(transform, static_cast<float>(M_PI), glm::vec3(0.0f, 1.0f, 0.0f));
     transform = glm::rotate(transform, static_cast<float>(M_PI), glm::vec3(0.0f, 0.0f, 1.0f));
     transform = glm::rotate(transform, static_cast<float>(-M_PI / 4.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
     // Apply scene transforms to MVP and MV matrices
-    sceneMatrices[I_MVP] = sceneMatrices[I_MVP] * transform;
-    sceneMatrices[I_MV]  = sceneMatrices[I_MV] * transform;
+    sceneMatrices[I_MVP] = sceneMatrices[I_MVP] * mSceneTransform * transform;
+    sceneMatrices[I_MV]  = sceneMatrices[I_MV] * mSceneTransform * transform;
 
     // Bind shader program
     sgct::ShaderManager::instance()->bindShaderProgram("letter");
@@ -169,3 +169,26 @@ void Letter::setComplete() {
     mIsComplete = true;
     mShallRender = true;
 }
+
+
+void Letter::setIncomplete() {
+
+    mIsComplete = false;
+    mTime = 0.0f;
+}
+
+
+void Letter::translate(glm::vec3 t) {
+    mSceneTransform = glm::translate(mSceneTransform, t);
+}
+
+
+void Letter::scale(glm::vec3 s) {
+    mSceneTransform = glm::scale(mSceneTransform, s);
+}
+
+
+void Letter::rotate(glm::vec3 r, float a) {
+    mSceneTransform = glm::rotate(mSceneTransform, a, r);
+}
+

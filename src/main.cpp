@@ -20,6 +20,8 @@ sgct::SharedDouble curr_time(0.0);
 sgct::SharedVector<float> mSharedLevelAngles;
 // Shared container for colors of each level
 sgct::SharedVector<glm::vec4> mSharedLevelColors;
+// Shared container for states of our letters
+sgct::SharedVector<std::pair<bool, bool> > mSharedLetterStates;
 
 unsigned int numLevels = 6;
 
@@ -76,6 +78,8 @@ void preSync() {
         mSharedLevelAngles.setVal(rainbone->getLevelAngles());
 
         mSharedLevelColors.setVal(rainbone->getLevelColors());
+
+        mSharedLetterStates.setVal(rainbone->getLetterStates());
     }
 }
 
@@ -86,6 +90,8 @@ void postSync() {
 		rainbone->setLevelAngles(mSharedLevelAngles.getVal());
 
         rainbone->setLevelColors(mSharedLevelColors.getVal());
+
+        rainbone->setLetterStates(mSharedLetterStates.getVal());
 	}
 }
 
@@ -102,6 +108,7 @@ void encode() {
     sgct::SharedData::instance()->writeDouble(&curr_time);
     sgct::SharedData::instance()->writeVector(&mSharedLevelAngles);
     sgct::SharedData::instance()->writeVector(&mSharedLevelColors);
+    sgct::SharedData::instance()->writeVector(&mSharedLetterStates);
 }
 
 
@@ -110,6 +117,7 @@ void decode() {
     sgct::SharedData::instance()->readDouble(&curr_time);
     sgct::SharedData::instance()->readVector(&mSharedLevelAngles);
     sgct::SharedData::instance()->readVector(&mSharedLevelColors);
+    sgct::SharedData::instance()->readVector(&mSharedLetterStates);
 }
 
 

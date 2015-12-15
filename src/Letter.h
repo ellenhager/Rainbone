@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <vector>
+#include <utility>
 
 #include "sgct.h"
 #include "Objloader.hpp"
@@ -34,13 +35,23 @@ public:
 
     void setComplete();
 
+    void setIncomplete();
+
     void setStatic(bool b) { isStatic = b; }
+
+    void translate(glm::vec3);
+
+    void scale(glm::vec3);
+
+    void rotate(glm::vec3, float);
 
 private:
 
 	std::vector<glm::vec3> mVertices;
 	
 	std::vector<glm::vec3> mNormals;
+
+    glm::mat4 mSceneTransform = glm::mat4(1.0f);
 
 	bool mShallRender = false;
 

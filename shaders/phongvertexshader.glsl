@@ -21,7 +21,7 @@ void main() {
 
     normal = normals;
 
-    vec3 l = vec3(MV_Light * lightPosition);
+    vec3 l = vec3(MV * lightPosition);
 
     lightDirection = normalize(l - v);
 }

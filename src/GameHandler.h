@@ -35,9 +35,13 @@ public:
 
     std::vector<glm::vec4> getLevelColors() { return mScene->getLevelColors(); }
 
+    std::vector<std::pair<bool, bool> > getLetterStates() { return mScene->getLetterStates(); }
+
     void setLevelAngles(std::vector<float>);
 
     void setLevelColors(std::vector<glm::vec4>);
+
+    void setLetterStates(std::vector<std::pair<bool, bool> >);
 
     InputAudio* getInputAudio() { return mInputAudio; }
 
@@ -45,7 +49,7 @@ public:
 
 private:
 
-	enum GameState { INTRO, COUNTDOWN, STARTING, GAME, END};
+	enum GameState { INTRO, PRECOUNTDOWN, COUNTDOWN, STARTING, GAME, END};
 
     GameState mState;
 
@@ -77,7 +81,7 @@ private:
 
     void resolveLevelProgression();
 
-    void runCountDown();
+    void resetCountDown();
 };
 
 #endif // GAMEHANDLER_H

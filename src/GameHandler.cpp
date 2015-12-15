@@ -56,6 +56,9 @@ void GameHandler::update(float dt) {
     case INTRO:
         updateIntro(dt);
         break;
+    case PRECOUNTDOWN:
+        mScene->shallRenderLetter(START, true);
+        break;
     case COUNTDOWN:
         updateCountDown(dt);
         break;
@@ -92,11 +95,7 @@ void GameHandler::updateIntro(float dt) {
 void GameHandler::updateCountDown(float dt) {
 
     if (mOutputAudio->getMusicTimer(INTROMUSIC)->isComplete()) {
-        if(!mScene->isLetterComplete(START)) {
-            mScene->shallRenderLetter(START, true);
-        }
-        else if(mScene->isLetterComplete(START) && mScene->isLetterRendering(START)) {
-            mScene->shallRenderLetter(START, false);
+        if(!mScene->isLetterComplete(FIVE)) {
             mScene->shallRenderLetter(FIVE, true);
         }
         else if(mScene->isLetterComplete(FIVE) && mScene->isLetterRendering(FIVE)) {
@@ -116,6 +115,7 @@ void GameHandler::updateCountDown(float dt) {
             mScene->shallRenderLetter(ONE, true);
         }
         else if(mScene->isLetterComplete(ONE) && mScene->isLetterRendering(ONE)) {
+            mScene->shallRenderLetter(START, false);
             mScene->shallRenderLetter(ONE, false);
         }
     }
@@ -209,9 +209,7 @@ void GameHandler::keyCallback(int key, int action) {
         case SGCT_KEY_1:
             if (action == SGCT_PRESS) {
                 mOutputAudio->getMusicTimer(INTROMUSIC)->start();
-                mState = COUNTDOWN;
-                mScene->shallRenderLetter(START, true);
-                mScene->setWordStatic(START, true);
+                mState = PRECOUNTDOWN;
             }
             break;
 
@@ -219,12 +217,15 @@ void GameHandler::keyCallback(int key, int action) {
         case SGCT_KEY_2:
             if (action == SGCT_PRESS) {
                 mOutputAudio->playSound(CATAAHH, "cat-agressive.wav");
+                resetCountDown();
+                mState = PRECOUNTDOWN;
             }
             break;
 
         case SGCT_KEY_3:
             if (action == SGCT_PRESS) {
                 mScene->setWordComplete(START);
+                mState = COUNTDOWN;
             }
             break;
 
@@ -339,14 +340,35 @@ void GameHandler::setLevelColors(std::vector<glm::vec4> syncronizedColors) {
 
     // In the first sync interation this case will happen because slave gets called before master
     if (syncronizedColors.size() != mScene->getNumberOfLevels()) {
-        std::cout << "Error when syncing level angles - size must match!" << std::endl;
-        std::cout << "syncronizedAngles.size(): " << syncronizedColors.size() << std::endl;
+        std::cout << "Error when syncing level Colors - size must match!" << std::endl;
+        std::cout << "syncronizedColors.size(): " << syncronizedColors.size() << std::endl;
         std::cout << "mLevels.size(): " << mScene->getNumberOfLevels() << std::endl;
         return;
     }
 
     for (unsigned int i = 0; i < mScene->getNumberOfLevels(); i++)
         mScene->getLevel(i)->setColor(syncronizedColors[i]);
+}
+
+
+void GameHandler::setLetterStates(std::vector<std::pair<bool, bool> > syncronizedStates) {
+
+    if(syncronizedStates.size() != mScene->getNumberOfWords()) {
+        std::cout << "Error when syncing letter states - size must match!" << std::endl;
+        std::cout << "syncronizedStates.size(): " << syncronizedStates.size() << std::endl;
+        std::cout << "mWords.size(): " << mScene->getNumberOfWords() << std::endl;
+        return;
+    }
+
+    for(unsigned int i = ONE; i != LAST; i++) {
+        
+        mScene->getLetter(static_cast<Word>(i))->setRenderState(syncronizedStates[i].first);
+        
+        if(mScene->getLetter(static_cast<Word>(i))->isComplete())
+            mScene->getLetter(static_cast<Word>(i))->setComplete();
+        else
+            mScene->getLetter(static_cast<Word>(i))->setIncomplete();
+    }   
 }
 
 
@@ -380,14 +402,13 @@ void GameHandler::resolveLevelProgression() {
 }
 
 
-void GameHandler::runCountDown() {
+void GameHandler::resetCountDown() {
 
-    //std::cout << "Volume: " << mOutputAudio->getMusicObject(BGMUSIC)->getVolume() << std::endl;
-
-    //mOutputAudio->getMusicTimer(INTROMUSIC)->start();
-
-    
-
-    //if(!mOutputAudio->getMusicTimer(BGMUSIC)->isComplete())
-    //mOutputAudio->fadeSound(BGMUSIC);
+    mScene->setWordIncomplete(START);
+    mScene->setWordIncomplete(FIVE);
+    mScene->setWordIncomplete(FOUR);
+    mScene->setWordIncomplete(THREE);
+    mScene->setWordIncomplete(TWO);
+    mScene->setWordIncomplete(ONE);
+    mScene->shallRenderLetter(START, true);
 }

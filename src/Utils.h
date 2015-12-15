@@ -23,5 +23,5 @@ enum SoundFile { INTROMUSIC, EVILMUSIC, CATAAHH, CATHELP, ELOCK, SLOCK, WIN };
 #ifndef WORD
 #define WORD
 // Enum for our 3D words
-enum Word { ONE, TWO, THREE, FOUR, FIVE, START };
+enum Word { ONE, TWO, THREE, FOUR, FIVE, START, LAST};
 #endif // WORD

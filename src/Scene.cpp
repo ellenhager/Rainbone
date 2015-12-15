@@ -66,6 +66,12 @@ void Scene::initialize() {
         for(std::vector<Letter *>::iterator it2 = (*it).second.begin(); it2 != (*it).second.end(); ++it2)
             (*it2)->initialize(mLightSourcePosition);
 
+    mWords[FIVE].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
+    mWords[FOUR].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
+    mWords[THREE].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
+    mWords[TWO].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
+    mWords[ONE].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
+
     mCharacter->initialize(mLightSourcePosition);
 
 	mSkySphere->initialize();
@@ -159,6 +165,19 @@ std::vector<glm::vec4> Scene::getLevelColors() {
         colors.push_back((*it)->getColor());
 
     return colors;
+}
+
+
+std::vector<std::pair<bool, bool> > Scene::getLetterStates() {
+
+    std::vector<std::pair<bool, bool> > letterStates;
+
+    for(std::map<Word, std::vector<Letter *> >::iterator it = mWords.begin(); it != mWords.end(); ++it) {
+        for(std::vector<Letter *>::iterator it2 = (*it).second.begin(); it2 != (*it).second.end(); ++it2) {
+            letterStates.push_back(std::make_pair( (*it2)->shallRender(), (*it2)->isComplete() ));
+        }
+    }
+    return letterStates;
 }
 
 void Scene::shallRenderLetter(Word word, bool shallRender) {
