@@ -22,6 +22,14 @@ sgct::SharedVector<float> mSharedLevelAngles;
 sgct::SharedVector<glm::vec4> mSharedLevelColors;
 // Shared container for character placement
 sgct::SharedVector<float> mSharedCharacterPlacement;
+// Shared value for brightness of background sphere
+sgct::SharedFloat mSharedSkySphereBrightness(1.0f);
+// Shared value for angle of background sphere
+sgct::SharedFloat mSharedSkySphereAngle(0.0f);
+// Shared container for translation of each level
+sgct::SharedVector<float> mSharedLevelTranslations;
+// Shared container for states of our letters
+sgct::SharedVector<std::pair<bool, bool> > mSharedLetterStates;
 
 unsigned int numLevels = 6;
 
@@ -80,7 +88,14 @@ void preSync() {
         mSharedLevelColors.setVal(rainbone->getLevelColors());
 
 		mSharedCharacterPlacement.setVal(rainbone->getCharacterPlacement());
-		//std::cout << "placement: " << placement[0] << " " << placement[1] << " " << placement[2] << std::endl;
+
+        mSharedSkySphereBrightness.setVal(rainbone->getSkySphereBrightness());
+
+        mSharedSkySphereAngle.setVal(rainbone->getSkySphereAngle());
+
+        mSharedLevelTranslations.setVal(rainbone->getLevelTranslations());
+
+        mSharedLetterStates.setVal(rainbone->getLetterStates());
 
     }
 }
@@ -91,7 +106,16 @@ void postSync() {
 		// Sync all angles across the slaves
 		rainbone->setLevelAngles(mSharedLevelAngles.getVal());
         rainbone->setLevelColors(mSharedLevelColors.getVal());
+
 		rainbone->setCharacterPlacement(mSharedCharacterPlacement.getVal());
+
+        rainbone->setSkySphereBrightness(mSharedSkySphereBrightness.getVal());
+
+        rainbone->setSkySphereAngle(mSharedSkySphereAngle.getVal());
+
+        rainbone->setLevelTranslations(mSharedLevelTranslations.getVal());
+
+        rainbone->setLetterStates(mSharedLetterStates.getVal());
 	}
 }
 
@@ -110,6 +134,10 @@ void encode() {
     sgct::SharedData::instance()->writeVector(&mSharedLevelColors);
 	sgct::SharedData::instance()->writeVector(&mSharedCharacterPlacement);
 
+    sgct::SharedData::instance()->writeFloat (&mSharedSkySphereBrightness);
+    sgct::SharedData::instance()->writeFloat (&mSharedSkySphereAngle);
+    sgct::SharedData::instance()->writeVector(&mSharedLevelTranslations);
+    sgct::SharedData::instance()->writeVector(&mSharedLetterStates);
 }
 
 
@@ -120,6 +148,10 @@ void decode() {
     sgct::SharedData::instance()->readVector(&mSharedLevelColors);
 	sgct::SharedData::instance()->readVector(&mSharedCharacterPlacement);
 
+    sgct::SharedData::instance()->readFloat (&mSharedSkySphereBrightness);
+    sgct::SharedData::instance()->readFloat (&mSharedSkySphereAngle);
+    sgct::SharedData::instance()->readVector(&mSharedLevelTranslations);
+    sgct::SharedData::instance()->readVector(&mSharedLetterStates);
 }
 
 

@@ -16,7 +16,7 @@ out vec3 lightDirection;
 void main() {
 
     gl_Position =  MVP * vec4(vertPositions, 1.0);
-    
+
     v = vec3(MV * vec4(vertPositions, 1.0));
 
     normal = normals;

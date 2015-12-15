@@ -21,6 +21,8 @@ public:
 
 	void updateIntro(float dt);
 
+    void updateCountDown(float dt);
+
 	void updateStarting(float dt);
 
 	void updateGame(float dt);
@@ -35,9 +37,25 @@ public:
 
     std::vector<glm::vec4> getLevelColors() { return mScene->getLevelColors(); }
 
+    float getSkySphereBrightness() { return mScene->getSkySphereBrightness(); }
+
+    float getSkySphereAngle() { return mScene->getSkySphereAngle(); }
+
+    std::vector<float> getLevelTranslations() { return mScene->getLevelTranslations(); }
+
+    std::vector<std::pair<bool, bool> > getLetterStates() { return mScene->getLetterStates(); }
+
     void setLevelAngles(std::vector<float>);
 
     void setLevelColors(std::vector<glm::vec4>);
+
+    void setSkySphereBrightness(float b) { mScene->setSkySphereBrightness(b); }
+
+    void setSkySphereAngle(float a) { mScene->setSkySphereAngle(a); }
+
+    void setLevelTranslations(std::vector<float>);
+
+    void setLetterStates(std::vector<std::pair<bool, bool> >);
 
     InputAudio* getInputAudio() { return mInputAudio; }
 
@@ -49,21 +67,11 @@ public:
 
 private:
 
-	enum GameState { INTRO, STARTING, GAME, END, FADE, STOP};
+	enum GameState { INTRO, PRECOUNTDOWN, COUNTDOWN, STARTING, GAME, END, FADE, STOP};
 
-	GameState mState;
+    GameState mState;
 
-	float mStartingTimer = 0.0f;
-
-	const float maxStartingTime = 8.0f;
-
-	int levelInitializationIndex = -1;
-
-    void resolveLevelProgression();
-
-    void runCountDown();
-
-    unsigned int mCurrentLevel = 0;
+    OutputAudio * mOutputAudio;
 
     sgct::Engine * mEngine;
 
@@ -71,11 +79,17 @@ private:
 
     InputAudio * mInputAudio;
 
+	float mStartingTimer = 0.0f;
+
+	const float maxStartingTime = 8.0f;
+
+	int levelInitializationIndex = -1;
+
+    unsigned int mCurrentLevel = 0;
+
     float mAudioGravityRatio;
 
     float mAudioMultiplier;
-
-    OutputAudio * mOutputAudio;
 
     const float mAngleCompletionSpan = 5.0f;
 
@@ -83,7 +97,9 @@ private:
 
     float mNumberOfLevels;
 
-    bool mCountDown = false;
+    void resolveLevelProgression();
+
+    void resetCountDown();
 };
 
 #endif // GAMEHANDLER_H

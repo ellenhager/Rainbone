@@ -26,11 +26,20 @@ public:
     void addLevel(Level *l) { mLevels.push_back(l); }
 
 	void randomizeStartingPositions();
+
 	void resetStartingPositions();
 
     std::vector<float> getLevelAngles();
 
     std::vector<glm::vec4> getLevelColors();
+
+    std::vector<float> getLevelTranslations();
+
+    float getSkySphereBrightness() { return mSkySphere->getBrightness(); }
+
+    float getSkySphereAngle() { return mSkySphere->getAngle(); }
+
+    std::vector<std::pair<bool, bool> > getLetterStates();
 
     float getLevelAngle(unsigned int i) { return mLevels[i]->getAngle(); }
 
@@ -38,13 +47,31 @@ public:
 
     Level *getLevel(unsigned int i) { return mLevels[i]; }
 
+    Letter *getLetter(Word w) { return mWords[w].front(); }
+
     int getNumberOfLevels() { return mLevels.size(); }
+
+    int getNumberOfWords() { return mWords.size(); }
 
     Character *getCharacter() { return mCharacter; }
 
     void setLevelAngle(unsigned int i, float a) { mLevels[i]->setAngle(a); }
 
+    void setSkySphereBrightness(float b) { mSkySphere->setBrightness(b); }
+
+    void setSkySphereAngle(float a) { mSkySphere->setAngle(a); }
+
     void shallRenderLetter(Word, bool);
+
+    bool isLetterRendering(Word w) { return mWords[w].front()->shallRender(); }
+
+    bool isLetterComplete(Word w) { return mWords[w].front()->isComplete(); }
+
+    void setWordStatic(Word w, bool b) { mWords[w].front()->setStatic(b); }
+
+    void setWordComplete(Word w) { mWords[w].front()->setComplete(); }
+
+    void setWordIncomplete(Word w) { mWords[w].front()->setIncomplete(); }
 
     void toggleBackground();
 
@@ -69,6 +96,7 @@ private:
     std::map<Word, std::vector<Letter *> > mWords;
 
     Character * mCharacter;
+
 	SkySphere * mSkySphere;
 
     glm::vec3 mLightSourcePosition;
