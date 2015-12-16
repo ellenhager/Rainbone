@@ -486,7 +486,7 @@ void GameHandler::resolveLevelProgression() {
             if (mCurrentLevel == mNumberOfLevels - 1) {
                 mScene->setDay();
 
-                mOutputAudio->playSound(WIN, "win.wav");
+                mOutputAudio->playSound(WIN, "rickoutro.ogg");
 				mScene->resetStartingPositions();
                 mState = END;
             } else {
