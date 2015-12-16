@@ -306,6 +306,13 @@ void GameHandler::keyCallback(int key, int action) {
             }
             break;
 
+        // Fade the outro music
+        case SGCT_KEY_5:
+            if (action == SGCT_PRESS && mState == STOP) {
+                mOutputAudio->getMusicTimer(OUTRO)->start();
+            }
+            break;
+
         // Start the end scene
         case SGCT_KEY_SPACE:
             mState = END;
@@ -349,15 +356,6 @@ void GameHandler::keyCallback(int key, int action) {
             break;
 
         // Change audio gravity
-        case SGCT_KEY_O:
-            if (action == SGCT_PRESS) {
-                if(mAudioGravityRatio <= 0.49)
-                    mAudioGravityRatio += 0.01;
-
-                std::cout << "Audio gravity: " << mAudioGravityRatio << std::endl;
-            }
-            break;
-
         case SGCT_KEY_I:
             if (action == SGCT_PRESS) {
                 if(mAudioGravityRatio > 0.02)
@@ -365,6 +363,15 @@ void GameHandler::keyCallback(int key, int action) {
 
                 std::cout << "Audio gravity: " << mAudioGravityRatio << std::endl;
 
+            }
+            break;
+
+        case SGCT_KEY_O:
+            if (action == SGCT_PRESS) {
+                if(mAudioGravityRatio <= 0.49)
+                    mAudioGravityRatio += 0.01;
+
+                std::cout << "Audio gravity: " << mAudioGravityRatio << std::endl;
             }
             break;
 
@@ -482,7 +489,7 @@ void GameHandler::resolveLevelProgression() {
             if (mCurrentLevel == mNumberOfLevels - 1) {
                 mScene->setDay();
                 mOutputAudio->playSound(SLOCK, "lock-level-success.wav");
-                mOutputAudio->playMusic(WIN, "rickoutro.ogg", false);
+                mOutputAudio->playMusic(OUTRO, "rickoutro.ogg", false);
 				mScene->resetStartingPositions();
                 mState = END;
             } else {
