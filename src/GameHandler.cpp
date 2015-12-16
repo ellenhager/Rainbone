@@ -358,9 +358,22 @@ void GameHandler::keyCallback(int key, int action) {
             }
             break;
 
-        /* --- Character and Level matrix transformations --- */
+        /* --- Game Settings --- */
 
-        // Translate the levels
+        // Set OutputAudio sound volume
+        case SGCT_KEY_Z:
+            if (action == SGCT_PRESS) {
+                mOutputAudio->incrementmSoundVolume(-5);
+            }
+            break;
+
+        case SGCT_KEY_X:
+            if (action == SGCT_PRESS) {
+                mOutputAudio->incrementSoundVolume(5);
+            }
+            break;
+
+        // Translate the levels and the character
         case SGCT_KEY_N:
             for (unsigned int i = 0; i < mNumberOfLevels; i++)
                 mScene->getLevel(i)->incrementLevelTrans(1.0f);
