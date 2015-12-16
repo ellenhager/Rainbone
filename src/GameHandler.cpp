@@ -269,28 +269,29 @@ void GameHandler::keyCallback(int key, int action) {
 
         /* --- Game progresseion controls --- */
 
-        // Start countdown
+        // Set mState to PRECOUNTDOWN
         case SGCT_KEY_1:
-            if (action == SGCT_PRESS) {
+            if (action == SGCT_PRESS && mState <= COUNTDOWN) {
                 mOutputAudio->getMusicTimer(INTROMUSIC)->start();
                 mState = PRECOUNTDOWN;
             }
             break;
 
-        // Play sound, if the users fail to "start" the game
+        // Start Countdown
         case SGCT_KEY_2:
-            if (action == SGCT_PRESS) {
-                mOutputAudio->playSound(CATAAHH, "cat-agressive.wav");
-                resetCountDown();
-                mState = PRECOUNTDOWN;
-            }
-            break;
-
-        case SGCT_KEY_3:
-            if (action == SGCT_PRESS) {
+            if (action == SGCT_PRESS && mState <= COUNTDOWN) {
                 mScene->setWordComplete(START);
                 mState = COUNTDOWN;
                 mOutputAudio->playSound(TICK, "tick.ogg");
+            }
+            break;
+
+        // Play "aahh" sound, if the users fail to "start" the game
+        case SGCT_KEY_3:
+            if (action == SGCT_PRESS && mState <= COUNTDOWN) {
+                mOutputAudio->playSound(CATAAHH, "cat-agressive.wav");
+                resetCountDown();
+                mState = PRECOUNTDOWN;
             }
             break;
 
@@ -329,6 +330,9 @@ void GameHandler::keyCallback(int key, int action) {
             mScene->getLevel(mCurrentLevel)->applyForce(-2.0 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
             break;
 
+
+        /* --- Game Settings --- */
+
         // Change max amplitude, to customize how loud the input need to be
         case SGCT_KEY_UP:
             if (action == SGCT_PRESS) {
@@ -364,8 +368,6 @@ void GameHandler::keyCallback(int key, int action) {
             }
             break;
 
-        /* --- Game Settings --- */
-
         // Set OutputAudio sound volume
         case SGCT_KEY_Z:
             if (action == SGCT_PRESS) {
@@ -390,31 +392,6 @@ void GameHandler::keyCallback(int key, int action) {
             for (unsigned int i = 0; i < mNumberOfLevels; i++)
                 mScene->getLevel(i)->incrementLevelTrans(-1.0f);
 				mScene->getCharacter()->incrementTheta(-5.0f);
-            break;
-
-        // Controls for moving the character object
-        case SGCT_KEY_W:
-            mScene->getCharacter()->incrementTheta(-2.0f);
-            break;
-
-        case SGCT_KEY_S:
-            mScene->getCharacter()->incrementTheta(2.0f);
-            break;
-
-        case SGCT_KEY_A:
-            mScene->getCharacter()->incrementPhi(2.0f);
-            break;
-
-        case SGCT_KEY_D:
-            mScene->getCharacter()->incrementPhi(-2.0f);
-            break;
-
-        case SGCT_KEY_E:
-            mScene->getCharacter()->incrementRadius(0.2f);
-            break;
-
-        case SGCT_KEY_Q:
-            mScene->getCharacter()->incrementRadius(-0.2f);
             break;
 
         }
@@ -504,8 +481,8 @@ void GameHandler::resolveLevelProgression() {
             //if we are at the last level, we should end the game
             if (mCurrentLevel == mNumberOfLevels - 1) {
                 mScene->setDay();
-
-                mOutputAudio->playSound(WIN, "rickoutro.ogg");
+                mOutputAudio->playSound(SLOCK, "lock-level-success.wav");
+                mOutputAudio->playMusic(WIN, "rickoutro.ogg", false);
 				mScene->resetStartingPositions();
                 mState = END;
             } else {
