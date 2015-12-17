@@ -6,7 +6,7 @@ Letter::Letter(const char * objPath, glm::vec4 c) {
 
     mMaterial.color         = c;
     mMaterial.color[3]      = 0.0f;
-    mMaterial.ambient       = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+    mMaterial.ambient       = glm::vec4(0.6f, 0.6f, 0.6f, 1.0f);
     mMaterial.diffuse       = glm::vec4(0.8f, 0.8f, 0.8f, 1.0f);
     mMaterial.specular      = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     mMaterial.specularity   = 5.0f;
