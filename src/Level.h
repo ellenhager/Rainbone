@@ -38,6 +38,8 @@ public:
 
     float getAngle() { return mAngle; }
 
+    float getGravityAngle() { return mGravityAngle; }
+
     float getVelocity() { return mVelocity; }
 
     glm::vec4 getColor() { return mMaterial.currentColor; }

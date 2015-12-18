@@ -24,7 +24,7 @@ Letter::~Letter() {
 
 void Letter::initialize(glm::vec3 lightSourcePosition) {
 
-	std::cout << "\nInitializing Letter...";
+	std::cout << "Initializing Letter...";
 
 	if(!sgct::ShaderManager::instance()->shaderProgramExists("letter")) {
         sgct::ShaderManager::instance()->addShaderProgram( "letter",

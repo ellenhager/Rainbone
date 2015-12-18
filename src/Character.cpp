@@ -8,11 +8,11 @@ Character::Character(const char * objPath, std::string tn)
     loadObj(objPath, mVertices, mUvs, mNormals);
 
     mMaterial.color         = glm::vec4(0.3f, 0.7f, 0.7f, 1.0f);
-    mMaterial.ambient       = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+    mMaterial.ambient       = glm::vec4(0.4f, 0.4f, 0.4f, 1.0f);
     mMaterial.diffuse       = glm::vec4(0.8f, 0.8f, 0.8f, 1.0f);
     mMaterial.specular      = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    mMaterial.specularity   = 50.0f;
-    mMaterial.shinyness     = 0.6f;
+    mMaterial.specularity   = 10.0f;
+    mMaterial.shinyness     = 0.3f;
 }
 
 
@@ -35,7 +35,7 @@ Character::~Character() {
 
 void Character::initialize(glm::vec3 lightSourcePosition) {
 
-    std::cout << "\nInitializing Character...";
+    std::cout << "Initializing Character...";
 
     sgct::TextureManager::instance()->setAnisotropicFilterSize(8.0f);
     sgct::TextureManager::instance()->setCompression(sgct::TextureManager::S3TC_DXT);
@@ -122,11 +122,11 @@ void Character::initialize(glm::vec3 lightSourcePosition) {
 
 
 void Character::update(float dt) {
-	if (mIsMoving && mTheta<80.0f) {
-		mTheta += 0.5f;
-	} else {
+
+	if (mIsMoving && mTheta > 90.0f)
+		mTheta -= 0.5f;
+	else
 		mIsMoving = false;
-	}
 }
 
 void Character::render(std::vector<glm::mat4> sceneMatrices) {
