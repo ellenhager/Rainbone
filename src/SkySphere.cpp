@@ -19,7 +19,7 @@ void SkySphere::initialize() {
 	std::cout << "\nInitializing SkySphere...";
 	sgct::TextureManager::instance()->setAnisotropicFilterSize(8.0f);
 	sgct::TextureManager::instance()->setCompression(sgct::TextureManager::S3TC_DXT);
-	sgct::TextureManager::instance()->loadTexure("clouds", "../assets/textures/clouds_day.jpg", true);
+	sgct::TextureManager::instance()->loadTexure("clouds", "../assets/textures/clouds4k2.png", true);
 
 	if (!sgct::ShaderManager::instance()->shaderProgramExists("sky")) {
 		sgct::ShaderManager::instance()->addShaderProgram("sky",
