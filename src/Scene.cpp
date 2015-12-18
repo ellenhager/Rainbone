@@ -82,13 +82,14 @@ void Scene::initialize() {
     mWords[THREE].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
     mWords[TWO].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
     mWords[ONE].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
-    mWords[TACK].front()->translate(glm::vec3(0.0f, 0.5f, 0.0f));
+    mWords[TACK].front()->translate(glm::vec3(0.0f, 0.0f, 1.0f));
+    mWords[TACK].front()->rotate(glm::vec3(1.0f, 0.0f, 0.0f), 32.0f);
 
     mCharacter->initialize(mLightSourcePosition);
     mCharacter->scale(glm::vec3(1.1f, 1.1f, 1.1f));
 
     mGift->initialize(mLightSourcePosition);
-    mGift->scale(glm::vec3(0.8f, 0.8f, 0.8f));
+    mGift->scale(glm::vec3(0.7f, 0.7f, 0.7f));
     mGift->rotate(glm::vec3(0.0f, 0.0f, 1.0f), -20.0f);
     mGift->rotate(glm::vec3(0.0f, 0.0f, 1.0f), 90.0f);
     mGift->setTheta(90.0f);
@@ -139,7 +140,6 @@ void Scene::update(float dt) {
         }
     }
 }
-
 
 
 void Scene::interpolateBackground() {

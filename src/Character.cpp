@@ -8,11 +8,11 @@ Character::Character(const char * objPath, std::string tn)
     loadObj(objPath, mVertices, mUvs, mNormals);
 
     mMaterial.color         = glm::vec4(0.3f, 0.7f, 0.7f, 1.0f);
-    mMaterial.ambient       = glm::vec4(0.4f, 0.4f, 0.4f, 1.0f);
+    mMaterial.ambient       = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
     mMaterial.diffuse       = glm::vec4(0.8f, 0.8f, 0.8f, 1.0f);
     mMaterial.specular      = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    mMaterial.specularity   = 10.0f;
-    mMaterial.shinyness     = 0.3f;
+    mMaterial.specularity   = 5.0f;
+    mMaterial.shinyness     = 0.2f;
 }
 
 
@@ -123,7 +123,7 @@ void Character::initialize(glm::vec3 lightSourcePosition) {
 
 void Character::update(float dt) {
 
-	if (mIsMoving && mTheta > 90.0f)
+	if (mIsMoving && mTheta > 105.0f)
 		mTheta -= 0.5f;
 	else
 		mIsMoving = false;

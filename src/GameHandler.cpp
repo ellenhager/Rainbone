@@ -136,27 +136,27 @@ void GameHandler::updateCountDown(float dt) {
         else if(mScene->isLetterComplete(FIVE) && mScene->isLetterRendering(FIVE)) {
             mScene->shallRenderLetter(FIVE, false);
             mScene->shallRenderLetter(FOUR, true);
-            mOutputAudio->playSound(TICK, "tick.ogg");
+            mOutputAudio->playSound(TICK, "tick.wav");
         }
         else if(mScene->isLetterComplete(FOUR) && mScene->isLetterRendering(FOUR)) {
             mScene->shallRenderLetter(FOUR, false);
             mScene->shallRenderLetter(THREE, true);
-            mOutputAudio->playSound(TICK, "tick.ogg");
+            mOutputAudio->playSound(TICK, "tick.wav");
         }
         else if(mScene->isLetterComplete(THREE) && mScene->isLetterRendering(THREE)) {
             mScene->shallRenderLetter(THREE, false);
             mScene->shallRenderLetter(TWO, true);
-            mOutputAudio->playSound(TICK, "tick.ogg");
+            mOutputAudio->playSound(TICK, "tick.wav");
         }
         else if(mScene->isLetterComplete(TWO) && mScene->isLetterRendering(TWO)) {
             mScene->shallRenderLetter(TWO, false);
             mScene->shallRenderLetter(ONE, true);
-            mOutputAudio->playSound(TICK, "tick.ogg");
+            mOutputAudio->playSound(TICK, "tick.wav");
         }
         else if(mScene->isLetterComplete(ONE) && mScene->isLetterRendering(ONE)) {
             mScene->shallRenderLetter(START, false);
             mScene->shallRenderLetter(ONE, false);
-            mOutputAudio->playSound(TICK, "tick.ogg");
+            mOutputAudio->playSound(TICK, "tick.wav");
         }
     }
 }
@@ -283,7 +283,7 @@ void GameHandler::keyCallback(int key, int action) {
             if (action == SGCT_PRESS && mState <= COUNTDOWN) {
                 mScene->setWordComplete(START);
                 mState = COUNTDOWN;
-                mOutputAudio->playSound(TICK, "tick.ogg");
+                mOutputAudio->playSound(TICK, "tick.wav");
             }
             break;
 
