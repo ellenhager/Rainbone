@@ -39,28 +39,28 @@ void Character::initialize(glm::vec3 lightSourcePosition) {
 
     sgct::TextureManager::instance()->setAnisotropicFilterSize(8.0f);
     sgct::TextureManager::instance()->setCompression(sgct::TextureManager::S3TC_DXT);
-    sgct::TextureManager::instance()->loadTexure("characterTexture", "../assets/textures/char_texture.png", true);
+    sgct::TextureManager::instance()->loadTexure(mTextureName, mTextureName, true);
 
-    if(!sgct::ShaderManager::instance()->shaderProgramExists("character")) {
-        sgct::ShaderManager::instance()->addShaderProgram( "character",
+    if(!sgct::ShaderManager::instance()->shaderProgramExists(mTextureName)) {
+        sgct::ShaderManager::instance()->addShaderProgram( mTextureName,
             "../shaders/texturedphongvertexshader.glsl",
             "../shaders/texturedphongfragmentshader.glsl" );
     }
 
-    sgct::ShaderManager::instance()->bindShaderProgram( "character" );
+    sgct::ShaderManager::instance()->bindShaderProgram( mTextureName );
 
-    MVPLoc                  = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "MVP" );
-    MVLoc                   = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "MV" );
-    MVLightLoc              = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "MV_Light" );
-    NMLoc                   = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "NM" );
-    lightPosLoc             = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "lightPosition" );
-    colorLoc                = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "color" );
-    lightAmbLoc             = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "ambientColor" );
-    lightDifLoc             = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "diffuseColor" );
-    lightSpeLoc             = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "specularColor" );
-    specularityLoc          = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "specularity" );
-    shinynessLoc            = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "shinyness" );
-    TexLoc                  = sgct::ShaderManager::instance()->getShaderProgram( "character").getUniformLocation( "tex" );
+    MVPLoc                  = sgct::ShaderManager::instance()->getShaderProgram( mTextureName).getUniformLocation( "MVP" );
+    MVLoc                   = sgct::ShaderManager::instance()->getShaderProgram( mTextureName).getUniformLocation( "MV" );
+    MVLightLoc              = sgct::ShaderManager::instance()->getShaderProgram( mTextureName).getUniformLocation( "MV_Light" );
+    NMLoc                   = sgct::ShaderManager::instance()->getShaderProgram( mTextureName).getUniformLocation( "NM" );
+    lightPosLoc             = sgct::ShaderManager::instance()->getShaderProgram( mTextureName).getUniformLocation( "lightPosition" );
+    colorLoc                = sgct::ShaderManager::instance()->getShaderProgram( mTextureName).getUniformLocation( "color" );
+    lightAmbLoc             = sgct::ShaderManager::instance()->getShaderProgram( mTextureName).getUniformLocation( "ambientColor" );
+    lightDifLoc             = sgct::ShaderManager::instance()->getShaderProgram( mTextureName).getUniformLocation( "diffuseColor" );
+    lightSpeLoc             = sgct::ShaderManager::instance()->getShaderProgram( mTextureName).getUniformLocation( "specularColor" );
+    specularityLoc          = sgct::ShaderManager::instance()->getShaderProgram( mTextureName).getUniformLocation( "specularity" );
+    shinynessLoc            = sgct::ShaderManager::instance()->getShaderProgram( mTextureName).getUniformLocation( "shinyness" );
+    TexLoc                  = sgct::ShaderManager::instance()->getShaderProgram( mTextureName).getUniformLocation( "tex" );
 
     glUniform4f(lightPosLoc, lightSourcePosition.x, lightSourcePosition.y, lightSourcePosition.z, 1.0f);
 
@@ -149,15 +149,15 @@ void Character::render(std::vector<glm::mat4> sceneMatrices) {
     characterAlignment = glm::rotate(characterAlignment, static_cast<float>(M_PI * 90.0f / 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
     // Apply scene transforms to MVP and MV matrices
-    sceneMatrices[I_MVP] = sceneMatrices[I_MVP] * characterDomeTilt * characterSpherical * characterTranslate * characterAlignment;
-    sceneMatrices[I_MV]  = sceneMatrices[I_MV] * characterDomeTilt * characterSpherical * characterTranslate * characterAlignment;
+    sceneMatrices[I_MVP] = sceneMatrices[I_MVP] * characterDomeTilt * characterSpherical * characterTranslate * characterAlignment * mSceneTransform;
+    sceneMatrices[I_MV]  = sceneMatrices[I_MV] * characterDomeTilt * characterSpherical * characterTranslate * characterAlignment * mSceneTransform;
 
     // Bind texture
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, sgct::TextureManager::instance()->getTextureId("characterTexture"));
+    glBindTexture(GL_TEXTURE_2D, sgct::TextureManager::instance()->getTextureId(mTextureName));
 
     // Bind shader program
-    sgct::ShaderManager::instance()->bindShaderProgram("character");
+    sgct::ShaderManager::instance()->bindShaderProgram(mTextureName);
 
     // Set uniform values, so that we have some data to work with in the shaders
     glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, &sceneMatrices[I_MVP][0][0]);
@@ -191,4 +191,19 @@ void Character::render(std::vector<glm::mat4> sceneMatrices) {
 
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
+}
+
+
+void Character::translate(glm::vec3 t) {
+    mSceneTransform = glm::translate(mSceneTransform, t);
+}
+
+
+void Character::scale(glm::vec3 s) {
+    mSceneTransform = glm::scale(mSceneTransform, s);
+}
+
+
+void Character::rotate(glm::vec3 r, float a) {
+    mSceneTransform = glm::rotate(mSceneTransform, static_cast<float>(M_PI * a / 180.0f), r);
 }

@@ -55,6 +55,8 @@ public:
 
     Character *getCharacter() { return mCharacter; }
 
+    Character *getGift() { return mGift; }
+
     void setLevelAngle(unsigned int i, float a) { mLevels[i]->setAngle(a); }
 
     void setSkySphereBrightness(float b) { mSkySphere->setBrightness(b); }
@@ -96,6 +98,8 @@ private:
     std::map<Word, std::vector<Letter *> > mWords;
 
     Character * mCharacter;
+
+    Character * mGift;
 
 	SkySphere * mSkySphere;
 
