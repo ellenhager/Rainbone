@@ -323,7 +323,7 @@ void GameHandler::keyCallback(int key, int action) {
 
         // Play sound and add force, to give the users a hint how to play
         case SGCT_KEY_H:
-            if (action == SGCT_PRESS && mState == GAME) {
+            if (mState == GAME) {
                 mOutputAudio->playSound(CATHELP, "cat-meow3.wav");
                 mScene->getLevel(mCurrentLevel)->applyForce(2.5 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
             }

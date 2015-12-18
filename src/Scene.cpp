@@ -18,6 +18,8 @@ Scene::Scene(unsigned int n) {
 
     mCharacter = new Character("../assets/objs/character.obj", "../assets/textures/char_texture.png");
 
+    mGift = new Character("../assets/objs/gift.obj", "../assets/textures/gift.png");
+
     mSkySphere = new SkySphere(35);
 
     mWords[START].push_back(new Letter("../assets/objs/start.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
@@ -50,6 +52,10 @@ Scene::~Scene() {
 
     delete mCharacter;
 
+    delete mSkySphere;
+
+    delete mGift;
+
     std::cout << "Scene destroyed!\n";
 }
 
@@ -79,6 +85,13 @@ void Scene::initialize() {
     mWords[TACK].front()->translate(glm::vec3(0.0f, 0.5f, 0.0f));
 
     mCharacter->initialize(mLightSourcePosition);
+    mCharacter->scale(glm::vec3(1.2f, 1.2f, 1.2f));
+
+    mGift->initialize(mLightSourcePosition);
+    mGift->scale(glm::vec3(0.8f, 0.8f, 0.8f));
+    mGift->rotate(glm::vec3(0.0f, 0.0f, 1.0f), -20.0f);
+    mGift->rotate(glm::vec3(0.0f, 0.0f, 1.0f), 90.0f);
+    mGift->setTheta(90.0f);
 
 	mSkySphere->initialize();
 
@@ -99,6 +112,7 @@ void Scene::render(std::vector<glm::mat4> sceneMatrices) {
     }
 
     mCharacter->render(sceneMatrices);
+    mGift->render(sceneMatrices);
 	mSkySphere->render(sceneMatrices);
 }
 

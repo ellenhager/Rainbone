@@ -54,6 +54,13 @@ public:
 	void moveCenter() { mIsMoving = true; }
 
 	void update(float dt);
+
+    void translate(glm::vec3);
+
+    void scale(glm::vec3);
+
+    void rotate(glm::vec3, float);
+
 private:
 
 	bool mIsMoving = false;
@@ -62,7 +69,7 @@ private:
 
     std::string mTextureName;
 
-    float mRadius = 5.0f;
+    float mRadius = 7.0f;
 
     float mTheta = 175.0f;
 
@@ -75,6 +82,8 @@ private:
     std::vector<glm::vec3> mNormals;
 
     std::vector<glm::vec2> mUvs;
+
+    glm::mat4 mSceneTransform = glm::mat4(1.0f);
 
     struct Material {
         glm::vec4 color;
