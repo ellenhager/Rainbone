@@ -32,6 +32,8 @@ public:
 
     void fadeSound(SoundFile);
 
+    void incrementSoundVolume(int v);
+
     sf::Music* getMusicObject(SoundFile m) { return mMusics[m].first; }
 
     Timer* getMusicTimer(SoundFile m) { return mMusics[m].second; }
@@ -47,6 +49,8 @@ public:
 private:
 
     sf::SoundBuffer mBuffer;
+
+    int mSoundVolume = 50;
 
     std::map<SoundFile, std::pair<sf::Music*, Timer*> > mMusics;                // Music files
 

@@ -136,22 +136,27 @@ void GameHandler::updateCountDown(float dt) {
         else if(mScene->isLetterComplete(FIVE) && mScene->isLetterRendering(FIVE)) {
             mScene->shallRenderLetter(FIVE, false);
             mScene->shallRenderLetter(FOUR, true);
+            mOutputAudio->playSound(TICK, "tick.ogg");
         }
         else if(mScene->isLetterComplete(FOUR) && mScene->isLetterRendering(FOUR)) {
             mScene->shallRenderLetter(FOUR, false);
             mScene->shallRenderLetter(THREE, true);
+            mOutputAudio->playSound(TICK, "tick.ogg");
         }
         else if(mScene->isLetterComplete(THREE) && mScene->isLetterRendering(THREE)) {
             mScene->shallRenderLetter(THREE, false);
             mScene->shallRenderLetter(TWO, true);
+            mOutputAudio->playSound(TICK, "tick.ogg");
         }
         else if(mScene->isLetterComplete(TWO) && mScene->isLetterRendering(TWO)) {
             mScene->shallRenderLetter(TWO, false);
             mScene->shallRenderLetter(ONE, true);
+            mOutputAudio->playSound(TICK, "tick.ogg");
         }
         else if(mScene->isLetterComplete(ONE) && mScene->isLetterRendering(ONE)) {
             mScene->shallRenderLetter(START, false);
             mScene->shallRenderLetter(ONE, false);
+            mOutputAudio->playSound(TICK, "tick.ogg");
         }
     }
 }
@@ -265,27 +270,29 @@ void GameHandler::keyCallback(int key, int action) {
 
         /* --- Game progresseion controls --- */
 
-        // Start countdown
+        // Set mState to PRECOUNTDOWN
         case SGCT_KEY_1:
-            if (action == SGCT_PRESS) {
+            if (action == SGCT_PRESS && mState <= COUNTDOWN) {
                 mOutputAudio->getMusicTimer(INTROMUSIC)->start();
                 mState = PRECOUNTDOWN;
             }
             break;
 
-        // Play sound, if the users fail to "start" the game
+        // Start Countdown
         case SGCT_KEY_2:
-            if (action == SGCT_PRESS) {
-                mOutputAudio->playSound(CATAAHH, "cat-agressive.wav");
-                resetCountDown();
-                mState = PRECOUNTDOWN;
+            if (action == SGCT_PRESS && mState <= COUNTDOWN) {
+                mScene->setWordComplete(START);
+                mState = COUNTDOWN;
+                mOutputAudio->playSound(TICK, "tick.ogg");
             }
             break;
 
+        // Play "aahh" sound, if the users fail to "start" the game
         case SGCT_KEY_3:
-            if (action == SGCT_PRESS) {
-                mScene->setWordComplete(START);
-                mState = COUNTDOWN;
+            if (action == SGCT_PRESS && mState <= COUNTDOWN) {
+                mOutputAudio->playSound(CATAAHH, "cat-agressive.wav");
+                resetCountDown();
+                mState = PRECOUNTDOWN;
             }
             break;
 
@@ -297,6 +304,13 @@ void GameHandler::keyCallback(int key, int action) {
                 mOutputAudio->playMusic(EVILMUSIC, "evil-intro.wav", false);
                 mScene->setNight();
                 mScene->randomizeStartingPositions();
+            }
+            break;
+
+        // Fade the outro music
+        case SGCT_KEY_5:
+            if (action == SGCT_PRESS && mState == STOP) {
+                mOutputAudio->getMusicTimer(OUTRO)->start();
             }
             break;
 
@@ -324,6 +338,9 @@ void GameHandler::keyCallback(int key, int action) {
             mScene->getLevel(mCurrentLevel)->applyForce(-2.0 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
             break;
 
+
+        /* --- Game Settings --- */
+
         // Change max amplitude, to customize how loud the input need to be
         case SGCT_KEY_UP:
             if (action == SGCT_PRESS) {
@@ -340,15 +357,6 @@ void GameHandler::keyCallback(int key, int action) {
             break;
 
         // Change audio gravity
-        case SGCT_KEY_O:
-            if (action == SGCT_PRESS) {
-                if(mAudioGravityRatio <= 0.49)
-                    mAudioGravityRatio += 0.01;
-
-                std::cout << "Audio gravity: " << mAudioGravityRatio << std::endl;
-            }
-            break;
-
         case SGCT_KEY_I:
             if (action == SGCT_PRESS) {
                 if(mAudioGravityRatio > 0.02)
@@ -359,9 +367,29 @@ void GameHandler::keyCallback(int key, int action) {
             }
             break;
 
-        /* --- Character and Level matrix transformations --- */
+        case SGCT_KEY_O:
+            if (action == SGCT_PRESS) {
+                if(mAudioGravityRatio <= 0.49)
+                    mAudioGravityRatio += 0.01;
 
-        // Translate the levels
+                std::cout << "Audio gravity: " << mAudioGravityRatio << std::endl;
+            }
+            break;
+
+        // Set OutputAudio sound volume
+        case SGCT_KEY_Z:
+            if (action == SGCT_PRESS) {
+                mOutputAudio->incrementSoundVolume(-5);
+            }
+            break;
+
+        case SGCT_KEY_X:
+            if (action == SGCT_PRESS) {
+                mOutputAudio->incrementSoundVolume(5);
+            }
+            break;
+
+        // Translate the levels and the character
         case SGCT_KEY_N:
             if (action == SGCT_PRESS) {
                 for (unsigned int i = 0; i < mNumberOfLevels; i++)
@@ -380,31 +408,6 @@ void GameHandler::keyCallback(int key, int action) {
                 mScene->getCharacter()->incrementTheta(5.0f);
                 mScene->getCharacter()->incrementRadius(-0.5f);
             }
-            break;
-
-        // Controls for moving the character object
-        case SGCT_KEY_W:
-            mScene->getCharacter()->incrementTheta(-2.0f);
-            break;
-
-        case SGCT_KEY_S:
-            mScene->getCharacter()->incrementTheta(2.0f);
-            break;
-
-        case SGCT_KEY_A:
-            mScene->getCharacter()->incrementPhi(2.0f);
-            break;
-
-        case SGCT_KEY_D:
-            mScene->getCharacter()->incrementPhi(-2.0f);
-            break;
-
-        case SGCT_KEY_E:
-            mScene->getCharacter()->incrementRadius(0.2f);
-            break;
-
-        case SGCT_KEY_Q:
-            mScene->getCharacter()->incrementRadius(-0.2f);
             break;
 
         }
@@ -494,8 +497,8 @@ void GameHandler::resolveLevelProgression() {
             //if we are at the last level, we should end the game
             if (mCurrentLevel == mNumberOfLevels - 1) {
                 mScene->setDay();
-
-                mOutputAudio->playSound(WIN, "win.wav");
+                mOutputAudio->playSound(SLOCK, "lock-level-success.wav");
+                mOutputAudio->playMusic(OUTRO, "rickoutro.ogg", false);
 				mScene->resetStartingPositions();
                 mState = END;
             } else {
