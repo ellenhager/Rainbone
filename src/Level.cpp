@@ -46,9 +46,7 @@ Level::~Level() {
 
 void Level::initialize(glm::vec3 lightSourcePosition) {
 
-    std::cout << "\nInitializing Level...";
-
-    srand(time(NULL));
+    std::cout << "Initializing Level...";
 
     if(!sgct::ShaderManager::instance()->shaderProgramExists("level")) {
         sgct::ShaderManager::instance()->addShaderProgram( "level",

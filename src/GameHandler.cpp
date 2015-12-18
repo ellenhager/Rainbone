@@ -198,7 +198,7 @@ void GameHandler::updateGame(float dt) {
         mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
 
 	//make the character follow the levels
-	mScene->getCharacter()->setPhi(mScene->getLevelAngle(mCurrentLevel) + 180.0f);
+	mScene->getCharacter()->setPhi(mScene->getLevelAngle(mCurrentLevel));
 
     // if next level is not the last level...
     if (mCurrentLevel + 1 < mNumberOfLevels) {
@@ -219,7 +219,7 @@ void GameHandler::updateEnd(float dt) {
         mScene->setLevelAngle(i, mScene->getLevelAngle(mCurrentLevel));
 
 	//make the character follow the levels
-	mScene->getCharacter()->setPhi(mScene->getLevelAngle(mCurrentLevel) + 180.0f);
+	mScene->getCharacter()->setPhi(mScene->getLevelAngle(mCurrentLevel));
 
 	mScene->getLevel(mCurrentLevel)->applyForce(0.0f, gravitationalForce, dt);
 
@@ -227,7 +227,7 @@ void GameHandler::updateEnd(float dt) {
 	if (mScene->getLevel(mCurrentLevel)->getVelocity() == 0.0f) {
 		//animation of cat
 		mScene->zoomLevels();
-		mScene->getCharacter()->setRotation(90.0f);
+		mScene->getCharacter()->setRotation(-90.0f);
 		mScene->getCharacter()->moveCenter();
 		mState = FADE;
 		
@@ -236,9 +236,10 @@ void GameHandler::updateEnd(float dt) {
 
 void GameHandler::updateFade(float dt) {
 	if (!mScene->getCharacter()->isMoving()) {
-		mScene->getCharacter()->setRotation(180.0f);
+		mScene->getCharacter()->setRotation(0.0f);
 		mOutputAudio->playSound(CATHELP, "cat-meow3.wav");
-		mScene->setBlack();
+		//mScene->setBlack();
+        mScene->shallRenderLetter(TACK, true);
 		mState = STOP;
 	}
 }
@@ -308,10 +309,10 @@ void GameHandler::keyCallback(int key, int action) {
 
         // Play sound and add force, to give the users a hint how to play
         case SGCT_KEY_H:
-            if (action == SGCT_PRESS) {
+            if (action == SGCT_PRESS && mState == GAME) {
                 mOutputAudio->playSound(CATHELP, "cat-meow3.wav");
+                mScene->getLevel(mCurrentLevel)->applyForce(2.5 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
             }
-            mScene->getLevel(mCurrentLevel)->applyForce(2.5 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
             break;
 
         // Manual level steering of levels, if the users suck
@@ -362,15 +363,23 @@ void GameHandler::keyCallback(int key, int action) {
 
         // Translate the levels
         case SGCT_KEY_N:
-            for (unsigned int i = 0; i < mNumberOfLevels; i++)
-                mScene->getLevel(i)->incrementLevelTrans(1.0f);
-				mScene->getCharacter()->incrementTheta(5.0f);
+            if (action == SGCT_PRESS) {
+                for (unsigned int i = 0; i < mNumberOfLevels; i++)
+                    mScene->getLevel(i)->incrementLevelTrans(1.0f);
+
+				mScene->getCharacter()->incrementTheta(-5.0f);
+                mScene->getCharacter()->incrementRadius(0.5f);
+            }
             break;
 
         case SGCT_KEY_M:
-            for (unsigned int i = 0; i < mNumberOfLevels; i++)
-                mScene->getLevel(i)->incrementLevelTrans(-1.0f);
-				mScene->getCharacter()->incrementTheta(-5.0f);
+            if (action == SGCT_PRESS) {
+                for (unsigned int i = 0; i < mNumberOfLevels; i++)
+                    mScene->getLevel(i)->incrementLevelTrans(-1.0f);
+    				
+                mScene->getCharacter()->incrementTheta(5.0f);
+                mScene->getCharacter()->incrementRadius(-0.5f);
+            }
             break;
 
         // Controls for moving the character object

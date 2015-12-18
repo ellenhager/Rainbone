@@ -2,7 +2,7 @@
 
 Scene::Scene(unsigned int n) {
 
-    std::cout << "\nCreating Scene...\n";
+    std::cout << "\nCreating Scene...";
 
     mLightSourcePosition = glm::vec3(0.0f, 0.0f, 0.0f);
 
@@ -32,7 +32,9 @@ Scene::Scene(unsigned int n) {
 
     mWords[ONE].push_back(new Letter("../assets/objs/1.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
 
-    std::cout << "\nScene created!\n";
+    mWords[TACK].push_back(new Letter("../assets/objs/tack.obj", glm::vec4(0.8f, 0.2f, 0.2f, 1.0f)));
+
+    std::cout << "Scene created!\n";
 }
 
 
@@ -54,7 +56,9 @@ Scene::~Scene() {
 
 void Scene::initialize() {
 
-    std::cout << "\nInitializing Scene...\n";
+    std::cout << "Initializing Scene...\n";
+
+    srand(time(NULL));
 
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
@@ -66,11 +70,13 @@ void Scene::initialize() {
         for(std::vector<Letter *>::iterator it2 = (*it).second.begin(); it2 != (*it).second.end(); ++it2)
             (*it2)->initialize(mLightSourcePosition);
 
+    mWords[START].front()->translate(glm::vec3(0.0f, 0.5f, 0.0f));
     mWords[FIVE].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
     mWords[FOUR].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
     mWords[THREE].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
     mWords[TWO].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
     mWords[ONE].front()->translate(glm::vec3(0.0f, -1.0f, 0.0f));
+    mWords[TACK].front()->translate(glm::vec3(0.0f, 0.5f, 0.0f));
 
     mCharacter->initialize(mLightSourcePosition);
 
@@ -143,6 +149,13 @@ void Scene::randomizeStartingPositions() {
 	for (std::vector<Level *>::iterator it = mLevels.begin(); it != mLevels.end(); ++it) {
 		if (it != mLevels.begin()){
 			float angle = (*it)->randomizeAngle(20.0f, 270.0f);
+            if(angle > (*it-1)->getGravityAngle() - 10.0f && angle < (*it-1)->getGravityAngle() + 10.0f) {
+                if(angle - (*it-1)->getGravityAngle() > 0)
+                    angle += 15.0f;
+                else
+                    angle -= 15.0f;
+            }
+
 			(*it)->setStartingAngle(angle);
 		}
 	}
