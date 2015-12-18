@@ -44,6 +44,7 @@ void OutputAudio::playSound(SoundFile m, std::string file) {
   }
 
   mSounds[m].first->setBuffer(mBuffer);
+  mSounds[m].first->setVolume(mSoundVolume);
   mSounds[m].first->play();
 }
 
@@ -80,4 +81,15 @@ void OutputAudio::fadeSound(SoundFile soundFile) {
   }
   mMusics[soundFile].first->setVolume(100.0f * currentTime);
   //std::cout << "\nVolume: " << mMusics[soundFile].first->getVolume() << std::endl;
+}
+
+void OutputAudio::incrementSoundVolume(int v) {
+  if ((mSoundVolume) < 100 && (mSoundVolume > 0))
+    mSoundVolume += v;
+  else if ((mSoundVolume == 0) && (v > 0))
+    mSoundVolume += v;
+  else if((mSoundVolume == 100) && (v < 0))
+    mSoundVolume += v;
+
+  std::cout << "SoundVolume: " << mSoundVolume << std::endl;
 }
