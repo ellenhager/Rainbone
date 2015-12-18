@@ -85,7 +85,7 @@ void Scene::initialize() {
     mWords[TACK].front()->translate(glm::vec3(0.0f, 0.5f, 0.0f));
 
     mCharacter->initialize(mLightSourcePosition);
-    mCharacter->scale(glm::vec3(1.2f, 1.2f, 1.2f));
+    mCharacter->scale(glm::vec3(1.1f, 1.1f, 1.1f));
 
     mGift->initialize(mLightSourcePosition);
     mGift->scale(glm::vec3(0.8f, 0.8f, 0.8f));
@@ -146,7 +146,7 @@ void Scene::interpolateBackground() {
     if(mSkyState == DAY) { //day
         mSkySphere->setBrightness(mInterpolationTimer / maxInterpolationTime);
     } else if(mSkyState == NIGHT) { //night
-        if(mSkySphere->getBrightness() > 0.2) {
+        if(mSkySphere->getBrightness() > 0.25) {
             mSkySphere->setBrightness(1 - (mInterpolationTimer / maxInterpolationTime));
         }
 	} else if (mSkyState == BLACK) {
