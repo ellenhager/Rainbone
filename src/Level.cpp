@@ -3,18 +3,18 @@
 Level::Level(const char * objPath, glm::vec4 c) {
 
     std::cout << "Creating Level..." << std::endl;
-	mForce = 0;
-	mAcceleration = 0;
-	mVelocity = 0;
-	mMass = 1; //kg
+	mForce = 0.0f;
+	mAcceleration = 0.0f;
+	mVelocity = 0.0f;
+	mMass = 1.0f; //kg
 
-    loadOBJ(objPath, mVertices, mNormals);
+    loadObj(objPath, mVertices, mNormals);
 
     float greyScaleColor = (c.x + c.y + c.z) / 3.0f;
 
     mMaterial.color         = c;
     mMaterial.greyScale     = glm::vec4(greyScaleColor, greyScaleColor, greyScaleColor, 1.0f);
-    mMaterial.currentColor  = glm::vec4(greyScaleColor, greyScaleColor, greyScaleColor, 1.0f);
+    mMaterial.currentColor  = c;
     mMaterial.ambient       = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
     mMaterial.diffuse       = glm::vec4(0.8f, 0.8f, 0.8f, 1.0f);
     mMaterial.specular      = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -23,15 +23,10 @@ Level::Level(const char * objPath, glm::vec4 c) {
 
 
     float aMin = 0.0f, aMax = 270.0f;
-    //std::cout << "\nrandom angle: " << randomizeAngle(aMin, aMax) << std::endl;
-    mAngle = randomizeAngle(aMin, aMax) + (aMin / 2.0f) - 135.0f;
+	mAngle = 0.0f;
 
     if(mAngle < 0.0f)
         mAngle = 360.0f + mAngle;
-
-    /*if(mAngle < 5.0f || mAngle > -5.0f) {
-        mAngle += 15.0f;
-    }*/
 }
 
 
@@ -51,12 +46,7 @@ Level::~Level() {
 
 void Level::initialize(glm::vec3 lightSourcePosition) {
 
-    std::cout << "\nInitializing Level...";
-
-    srand(time(NULL));
-
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
+    std::cout << "Initializing Level...";
 
     if(!sgct::ShaderManager::instance()->shaderProgramExists("level")) {
         sgct::ShaderManager::instance()->addShaderProgram( "level",
@@ -77,6 +67,8 @@ void Level::initialize(glm::vec3 lightSourcePosition) {
     lightSpeLoc             = sgct::ShaderManager::instance()->getShaderProgram( "level").getUniformLocation( "specularColor" );
     specularityLoc          = sgct::ShaderManager::instance()->getShaderProgram( "level").getUniformLocation( "specularity" );
     shinynessLoc            = sgct::ShaderManager::instance()->getShaderProgram( "level").getUniformLocation( "shinyness" );
+
+    glUniform4f(lightPosLoc, lightSourcePosition.x, lightSourcePosition.y, lightSourcePosition.z, 1.0f);
 
     sgct::ShaderManager::instance()->unBindShaderProgram();
 
@@ -124,12 +116,19 @@ void Level::initialize(glm::vec3 lightSourcePosition) {
 void Level::applyForce(float force, float gravitationalForce, float dt) {
 
     // calculate gravitational force
-    if (mAngle < 0.0f) { // for having a pendulum, where 0.0f is the pivot point
+    if (mAngle < mGravityAngle - 1.0f) { // for having a pendulum, where 0.0f is the pivot point
         gravitationalForce = -gravitationalForce;
-    } else if (mAngle > 360.0f) { // make it harder to rotate after a 360, to stop the heavy rotating
+	} else if (mAngle > 360.0f) { // make it harder to rotate after a 360, to stop the heavy rotating
         gravitationalForce *= 2.0f;
-    }
-
+    } else if ((mAngle > mGravityAngle - 1.0f) && (mAngle < mGravityAngle + 1.0f)) {
+		// having a span of 2 degrees at the pivot point where the gravity has no effekt and
+		// a low velocity results in no velocity. without this the level will wiggle a little
+		// at the pivot point.
+		if (fabs(mVelocity) < 5.0f) {
+			mVelocity = 0.0f;
+		}
+		gravitationalForce = 0.0f;
+	}
     // audio acceleraion - gravity
 	float netForce = force - gravitationalForce;
 	mAcceleration = netForce / mMass;
@@ -139,13 +138,13 @@ void Level::applyForce(float force, float gravitationalForce, float dt) {
 
     if (mVelocity > 100.0f) { // cap velocity
         mVelocity = 100.0f;
-    }
+	}
 
 	// calculate angle position
 	float tempAngle = mAngle + mVelocity * dt;
 
     //lower velocity in the pivot point
-    if ((tempAngle < 0.0f && mAngle > 0.0f)||(tempAngle > 0.0f && mAngle < 0.0f)) {
+    if ((tempAngle < mGravityAngle && mAngle > mGravityAngle) || (tempAngle > mGravityAngle && mAngle < mGravityAngle)) {
 		mVelocity *= 0.6f;
 	}
 
@@ -159,7 +158,7 @@ void Level::applyForce(float force, float gravitationalForce, float dt) {
 
 void Level::render(std::vector<glm::mat4> sceneMatrices) {
 
-     // Enable backface culling and depth test, we dont want to draw unnecessary stuff
+    // Enable backface culling and depth test, we dont want to draw unnecessary stuff
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
@@ -167,11 +166,13 @@ void Level::render(std::vector<glm::mat4> sceneMatrices) {
     float tilt = M_PI * 27.0f / 180.0f;
     // Create scene transform (animation)
     glm::mat4 levelTransform = glm::rotate( glm::mat4(1.0f), tilt , glm::vec3(-1.0f, 0.0f, 0.0f));
-    glm::mat4 levelRotation  = glm::rotate( glm::mat4(1.0f), static_cast<float>(mAngle * M_PI / 180.0f) , glm::vec3(0.0f, 1.0f, 0.0f));
+	//add 90 degrees because starting rotation is otherwise to the right.
+    glm::mat4 levelRotation  = glm::rotate( glm::mat4(1.0f), static_cast<float>((mAngle + 90.0f) * M_PI / 180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 levelTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, mLevelsTrans, 0.0f));
 
     // Apply scene transforms to MVP and MV matrices
-    sceneMatrices[I_MVP] = sceneMatrices[I_MVP] * levelTransform * levelRotation;
-    sceneMatrices[I_MV]  = sceneMatrices[I_MV]  * levelTransform;
+    sceneMatrices[I_MVP] = sceneMatrices[I_MVP] * levelTransform * levelRotation * levelTranslate;
+    sceneMatrices[I_MV]  = sceneMatrices[I_MV] * levelTransform * levelTranslate;
 
     // Bind shader program
     sgct::ShaderManager::instance()->bindShaderProgram( "level" );
@@ -212,12 +213,16 @@ void Level::render(std::vector<glm::mat4> sceneMatrices) {
 
 void Level::update(float dt) {
 
-    if(mCurrentLevel && mInterpolationTimer < maxInterpolationTime) {
-        
-        mInterpolationTimer += dt;
+    if(mColorInterpolationTimer <= maxColorInterpolationTime) {
 
-        interpolateColor();
+        mColorInterpolationTimer += dt;
+
+		interpolateColor();
     }
+	if (mZoomInterpolationTimer <= maxZoomInterpolationTime) {
+		mZoomInterpolationTimer += dt;
+		incrementLevelTrans(-(mZoomInterpolationTimer / maxZoomInterpolationTime));
+	}
 }
 
 
@@ -228,13 +233,73 @@ float Level::randomizeAngle(float a, float b) {
 }
 
 
+void Level::setStartingAngle(float angle) {
+	mGravityAngle = angle;
+}
+
+
+void Level::incrementAngle(float a) {
+    
+    mAngle += a;
+
+    if(mAngle > 360.0f)
+        mAngle = mAngle - 360.0f;
+
+    if(mAngle < 0.0f)
+        mAngle = 360.0f - mAngle;
+}
+
+
+void Level::saturate(bool s) {
+	mIsSaturated = s;
+	mColorInterpolationTimer = 0.0f;
+}
+
+
 void Level::interpolateColor() {
 
-    float r = mMaterial.color.x - mMaterial.greyScale.x;
-    float g = mMaterial.color.y - mMaterial.greyScale.y;
-    float b = mMaterial.color.z - mMaterial.greyScale.z;
 
-    mMaterial.currentColor.x = mMaterial.greyScale.x + r * (mInterpolationTimer / maxInterpolationTime);
-    mMaterial.currentColor.y = mMaterial.greyScale.y + g * (mInterpolationTimer / maxInterpolationTime);
-    mMaterial.currentColor.z = mMaterial.greyScale.z + b * (mInterpolationTimer / maxInterpolationTime);
+	float r = mMaterial.color.x - mMaterial.greyScale.x;
+	float g = mMaterial.color.y - mMaterial.greyScale.y;
+	float b = mMaterial.color.z - mMaterial.greyScale.z;
+
+	if (mIsSaturated) {
+		mMaterial.currentColor.x = std::min(mMaterial.greyScale.x + r * (mColorInterpolationTimer / maxColorInterpolationTime), mMaterial.color.x);
+		mMaterial.currentColor.y = std::min(mMaterial.greyScale.y + g * (mColorInterpolationTimer / maxColorInterpolationTime), mMaterial.color.y);
+		mMaterial.currentColor.z = std::min(mMaterial.greyScale.z + b * (mColorInterpolationTimer / maxColorInterpolationTime), mMaterial.color.z);
+	}
+	else {
+		mMaterial.currentColor.x = std::max(mMaterial.color.x - r * (mColorInterpolationTimer / maxColorInterpolationTime), mMaterial.greyScale.x);
+		mMaterial.currentColor.y = std::max(mMaterial.color.y - g * (mColorInterpolationTimer / maxColorInterpolationTime), mMaterial.greyScale.y);
+		mMaterial.currentColor.z = std::max(mMaterial.color.z - b * (mColorInterpolationTimer / maxColorInterpolationTime), mMaterial.greyScale.z);
+	}
+}
+
+void Level::zoom() {
+    mZoomInterpolationTimer = 0.0f;
+    mIsZoom = true;
+}
+
+void Level::updateColor(float previousAngle) {
+
+	//take the angular difference from previous level
+	float angleDiff = std::abs(mAngle - previousAngle);
+
+	// if the difference is within interpolation area
+	if (angleDiff < mInterpolationAngle) {
+
+		float r = mMaterial.color.x - mMaterial.greyScale.x;
+		float g = mMaterial.color.y - mMaterial.greyScale.y;
+		float b = mMaterial.color.z - mMaterial.greyScale.z;
+
+        // update currentColor based on the difference. Multiply with 0.5 to not interpolate all the way.
+		mMaterial.currentColor.x = mMaterial.greyScale.x + r * (1 - angleDiff / mInterpolationAngle) * 0.5;
+		mMaterial.currentColor.y = mMaterial.greyScale.y + g * (1 - angleDiff / mInterpolationAngle) * 0.5;
+		mMaterial.currentColor.z = mMaterial.greyScale.z + b * (1 - angleDiff / mInterpolationAngle) * 0.5;
+	}
+	else {
+		mMaterial.currentColor.x = mMaterial.greyScale.x;
+		mMaterial.currentColor.y = mMaterial.greyScale.y;
+		mMaterial.currentColor.z = mMaterial.greyScale.z;
+	}
 }

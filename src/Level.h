@@ -1,20 +1,20 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 
-#define I_MVP 0
-#define I_MV 1
-#define I_MV_LIGHT 2
-#define I_NM 3
 #define _USE_MATH_DEFINES
+
 #include <cmath>
 #include <vector>
 #include <iostream>
 #include <stdio.h>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <algorithm>
 
 #include "sgct.h"
-#include "objloader.hpp"
+#include "Objloader.hpp"
+#include "time.h"
+#include "Utils.h"
 
 class Level {
 
@@ -30,40 +30,74 @@ public:
 
     void update(float dt);
 
+	void saturate(bool);
+
+	void updateColor(float previousAngle);
+
     void applyForce(float audioForce, float gravitationalForce, float dt);
 
     float getAngle() { return mAngle; }
 
+    float getGravityAngle() { return mGravityAngle; }
+
     float getVelocity() { return mVelocity; }
+
+    glm::vec4 getColor() { return mMaterial.currentColor; }
 
     void setAngle(float a) { mAngle = a; }
 
+	void setStartingAngle(float a);
+
     void setCurrentLevel() { mCurrentLevel = true; }
 
-    void incrementAngle(float a) { mAngle += a; }
+    void setColor(glm::vec4 c) { mMaterial.currentColor = c; }
+
+    void incrementAngle(float a);
+
+    void incrementLevelTrans(float l) { mLevelsTrans += l; }
+
+    float getLevelTrans() { return mLevelsTrans; }
+
+    void setLevelTrans(float l) { mLevelsTrans = l; }
+
+	float randomizeAngle(float, float);
+
+    void zoom();
 
 private:
-
-    float randomizeAngle(float, float);
 
     void interpolateColor();
 
     float mAngle = 0.0f;
 
-    float mInterpolationTimer = 0.0f;
-    
-    const float maxInterpolationTime = 1.0f;
+    float mLevelsTrans = 1.0f;
+
+	bool mIsSaturated = true;
+
+    float mColorInterpolationTimer = 0.0f;
+
+	const float maxColorInterpolationTime = 1.0f;
+
+	float mZoomInterpolationTimer = 5.0f;
+
+	const float maxZoomInterpolationTime = 5.0f;
+
+	float mInterpolationAngle = 60.0f;
 
     // for motion
     float mForce;
-    
+
     float mMass;
-    
+
     float mAcceleration;
-    
+
     float mVelocity;
 
     bool mCurrentLevel = false;
+
+    bool mIsZoom = false;
+
+	float mGravityAngle = 0.0f;
 
     std::vector<glm::vec3> mVertices;
 

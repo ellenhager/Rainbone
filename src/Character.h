@@ -1,17 +1,25 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
+#define _USE_MATH_DEFINES
+
+#include <cmath>
 #include <vector>
 #include <iostream>
 #include <stdio.h>
+#include <string>
+#include <glm/gtc/matrix_inverse.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "sgct.h"
+#include "Objloader.hpp"
+#include "Utils.h"
 
 class Character {
 
 public:
 
-    Character();
+    Character(const char *, std::string);
 
     ~Character();
 
@@ -19,14 +27,63 @@ public:
 
     void render(std::vector<glm::mat4>);
 
+    void incrementTheta(float th) { mTheta += th; }
+
+    void incrementPhi(float ph) { mPhi += ph; }
+
+    void incrementRadius(float r) { mRadius += r; }
+
+	void setPhi(float ph) { mPhi = ph; }
+
+	void setTheta(float th) { mTheta = th; }
+
+	void setRadius(float r) { mRadius = r; }
+
+	void setRotation(float rotation) { mLocalRotation = rotation; }
+
+	float getTheta() { return mTheta; }
+
+	float getRadius() { return mRadius; }
+
+	float getPhi() { return mPhi; }
+
+	float getRotation() { return mLocalRotation; }
+
+	bool isMoving() { return mIsMoving; }
+
+	void moveCenter() { mIsMoving = true; }
+
+	void update(float dt);
+
+    void translate(glm::vec3);
+
+    void scale(glm::vec3);
+
+    void rotate(glm::vec3, float);
 
 private:
 
+	bool mIsMoving = false;
+
     glm::vec3 mPosition;
 
+    std::string mTextureName;
+
+    float mRadius = 7.0f;
+
+    float mTheta = 175.0f;
+
+    float mPhi = 0.0f;
+
+	float mLocalRotation = 0.0f;
+
     std::vector<glm::vec3> mVertices;
+
     std::vector<glm::vec3> mNormals;
-    std::vector<glm::vec3> mUvs;
+
+    std::vector<glm::vec2> mUvs;
+
+    glm::mat4 mSceneTransform = glm::mat4(1.0f);
 
     struct Material {
         glm::vec4 color;
@@ -36,6 +93,24 @@ private:
         float specularity;
         float shinyness;
     } mMaterial;
+
+    GLuint vertexArray;
+    GLuint vertexBuffer;
+    GLuint normalBuffer;
+    GLuint textureBuffer;
+
+    GLint MVPLoc;           // MVP matrix
+    GLint MVLoc;            // MV matrix
+    GLint MVLightLoc;       // MVLight matrix
+    GLint NMLoc;            // NM matrix
+    GLint lightPosLoc;      // Light position
+    GLint colorLoc;         // Color
+    GLint lightAmbLoc;      // Ambient light
+    GLint lightDifLoc;      // Diffuse light
+    GLint lightSpeLoc;      // Specular light
+    GLint specularityLoc;   // Specular constant
+    GLint shinynessLoc;     // How much specularity (magnitude)
+    GLint TexLoc;           // Texture sampler
 
 };
 
