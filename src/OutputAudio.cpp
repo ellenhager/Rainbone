@@ -35,17 +35,17 @@ void OutputAudio::playMusic(SoundFile m, std::string file, bool loop) {
 
 void OutputAudio::playSound(SoundFile m, std::string file) {
 
-  // Play music using SFML
-  mSounds[m] = std::make_pair(new sf::Sound, new Timer(-0.5f, 1.0f, 1.0f, 0.0f));
+    // Play music using SFML
+    mSounds[m] = std::make_pair(new sf::Sound, new Timer(-0.5f, 1.0f, 1.0f, 0.0f));
 
-  if(!mBuffer.loadFromFile("../assets/soundfiles/" + file)) {
-    std::cout << "ERROR WHEN LOADING CUSTOM SOUND FILE!!!" << std::endl;
-    return;
-  }
+    if(!mBuffer.loadFromFile("../assets/soundfiles/" + file)) {
+        std::cout << "ERROR WHEN LOADING CUSTOM SOUND FILE!!!" << std::endl;
+        return;
+    }
 
-  mSounds[m].first->setBuffer(mBuffer);
-  mSounds[m].first->setVolume(mSoundVolume);
-  mSounds[m].first->play();
+    mSounds[m].first->setBuffer(mBuffer);
+    mSounds[m].first->setVolume(mSoundVolume);
+    mSounds[m].first->play();
 }
 
 void OutputAudio::updateSound(float dt) {

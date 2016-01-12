@@ -189,6 +189,6 @@ void Letter::scale(glm::vec3 s) {
 
 
 void Letter::rotate(glm::vec3 r, float a) {
-    mSceneTransform = glm::rotate(mSceneTransform, a, r);
+    mSceneTransform = glm::rotate(mSceneTransform, static_cast<float>(M_PI * a / 180.0f), r);
 }
 
