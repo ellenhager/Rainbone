@@ -1,5 +1,5 @@
 # Rainbone
 
-### [setup] (docs/setup.md)
+### [setup](docs/setup.md)
 
-### [gameplay instructions] (docs/gameplay-instructions.md)
+### [gameplay instructions](docs/gameplay-instructions.md)
