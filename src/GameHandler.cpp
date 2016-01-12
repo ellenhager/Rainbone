@@ -272,7 +272,7 @@ void GameHandler::keyCallback(int key, int action) {
 
         // Set mState to PRECOUNTDOWN
         case SGCT_KEY_1:
-            if (action == SGCT_PRESS && mState <= COUNTDOWN) {
+            if (action == SGCT_PRESS && mState == INTRO) {
                 mOutputAudio->getMusicTimer(INTROMUSIC)->start();
                 mState = PRECOUNTDOWN;
             }
@@ -280,7 +280,7 @@ void GameHandler::keyCallback(int key, int action) {
 
         // Start Countdown
         case SGCT_KEY_2:
-            if (action == SGCT_PRESS && mState <= COUNTDOWN) {
+            if (action == SGCT_PRESS && mState == PRECOUNTDOWN) {
                 mScene->setWordComplete(START);
                 mState = COUNTDOWN;
                 mOutputAudio->playSound(TICK, "tick.wav");
@@ -288,8 +288,9 @@ void GameHandler::keyCallback(int key, int action) {
             break;
 
         // Play "aahh" sound, if the users fail to "start" the game
+        // Set mState to PRECOUNTDOWN
         case SGCT_KEY_3:
-            if (action == SGCT_PRESS && mState <= COUNTDOWN) {
+            if (action == SGCT_PRESS && mState == COUNTDOWN) {
                 mOutputAudio->playSound(CATAAHH, "cat-agressive.wav");
                 resetCountDown();
                 mState = PRECOUNTDOWN;
@@ -298,7 +299,7 @@ void GameHandler::keyCallback(int key, int action) {
 
         // Start the game
         case SGCT_KEY_4:
-            if (action == SGCT_PRESS && mState < STARTING) {
+            if (action == SGCT_PRESS && mState == COUNTDOWN) {
                 mState = STARTING;
 				mOutputAudio->stopAllSounds();
                 mOutputAudio->playMusic(EVILMUSIC, "evil-intro.wav", false);
@@ -324,8 +325,10 @@ void GameHandler::keyCallback(int key, int action) {
         // Play sound and add force, to give the users a hint how to play
         case SGCT_KEY_H:
             if (mState == GAME) {
-                mOutputAudio->playSound(CATHELP, "cat-meow3.wav");
                 mScene->getLevel(mCurrentLevel)->applyForce(2.5 * mAudioMultiplier, mAudioMultiplier * mAudioGravityRatio, 0.01);
+                if (action == SGCT_PRESS) {
+                    mOutputAudio->playSound(CATHELP, "cat-meow3.wav");
+                }
             }
             break;
 
