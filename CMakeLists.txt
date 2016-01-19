@@ -6,12 +6,16 @@ PROJECT(${APP_NAME})
 # include the directory itself as a path to include directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-# set the output path
+# set project paths
 set(CMAKE_BINARY_DIR ${PROJECT_SOURCE_DIR}/build)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
+set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
+
 # SOURCES containing all .cpp files
 file(GLOB SOURCE src/*.cpp)
+
+include_directories(${PROJECT_INCLUDE_DIR})
 
 # create an executable file from SOURCES
 add_executable(${APP_NAME}
